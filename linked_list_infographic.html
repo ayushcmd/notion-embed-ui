@@ -1,146 +1,1035 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Linked List – DSA Visual Guide</title>
-
-<style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html, body {
-  background: #f4f6ff;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  overflow-x: hidden;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 30px auto;
-  background: #ffffff;
-  border-radius: 18px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.15);
-  overflow: hidden;
-}
-
-/* HEADER */
-.header {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: #fff;
-  padding: 50px 30px;
-  text-align: center;
-}
-
-.header h1 {
-  font-size: 3rem;
-  font-weight: 800;
-}
-
-.header p {
-  margin-top: 10px;
-  font-size: 1.2rem;
-  opacity: 0.95;
-}
-
-/* SECTION */
-.section {
-  padding: 45px 40px;
-  border-bottom: 2px solid #f0f0f0;
-}
-
-.section-title {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  font-size: 2rem;
-  font-weight: 700;
-  color: #667eea;
-  margin-bottom: 25px;
-}
-
-.section-number {
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.9rem;
-}
-
-/* CODE */
-.code-snippet {
-  background: #1e1e1e;
-  color: #d4d4d4;
-  padding: 18px;
-  border-radius: 10px;
-  font-family: Consolas, monospace;
-  margin: 20px 0;
-  overflow-x: auto;
-  border: 3px solid #667eea;
-}
-
-/* FOOTER */
-.footer {
-  padding: 30px;
-  text-align: center;
-  background: #f8f9ff;
-  color: #666;
-  font-size: 0.95rem;
-}
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  .section {
-    padding: 30px 22px;
-  }
-  .header h1 {
-    font-size: 2.2rem;
-  }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linked List - Complete DSA Visual Guide (C++)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 3.5em;
+            font-weight: 800;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+        
+        .section {
+            padding: 50px 60px;
+            border-bottom: 3px solid #f0f0f0;
+        }
+        
+        .section:last-child {
+            border-bottom: none;
+        }
+        
+        .section-title {
+            font-size: 2.2em;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .section-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7em;
+            flex-shrink: 0;
+        }
+        
+        .node-diagram {
+            display: inline-flex;
+            background: #f8f9ff;
+            border: 3px solid #667eea;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .node-part {
+            padding: 15px 25px;
+            border-right: 2px solid #667eea;
+            text-align: center;
+        }
+        
+        .node-part:last-child {
+            border-right: none;
+        }
+        
+        .node-part-label {
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .node-part-value {
+            font-weight: 700;
+            color: #333;
+            font-size: 1.2em;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 18px;
+            font-weight: 600;
+            text-align: left;
+        }
+        
+        .comparison-table td {
+            padding: 15px 18px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9ff;
+        }
+        
+        .list-type {
+            background: #f8f9ff;
+            border-left: 5px solid #667eea;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        
+        .list-type h3 {
+            color: #667eea;
+            margin-bottom: 12px;
+            font-size: 1.4em;
+        }
+        
+        .list-type p {
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .visual-representation {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .list-node {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-weight: 600;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+        }
+        
+        .arrow {
+            color: #667eea;
+            font-size: 2em;
+            font-weight: 700;
+        }
+        
+        .null-node {
+            background: #ff6b6b;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        
+        .operation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+        
+        .operation-card {
+            background: #f8f9ff;
+            border: 2px solid #667eea;
+            border-radius: 12px;
+            padding: 25px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .operation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .operation-card h4 {
+            color: #667eea;
+            margin-bottom: 12px;
+            font-size: 1.3em;
+        }
+        
+        .operation-card ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .operation-card li {
+            padding: 8px 0;
+            color: #555;
+            position: relative;
+            padding-left: 25px;
+        }
+        
+        .operation-card li:before {
+            content: "▹";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: 700;
+        }
+        
+        .complexity-box {
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8ebff 100%);
+            border-left: 5px solid #667eea;
+            padding: 20px 25px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .complexity-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .complexity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .complexity-label {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .complexity-value {
+            font-family: 'Courier New', monospace;
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+        
+        .use-case-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+        
+        .use-case {
+            text-align: center;
+            padding: 25px;
+            background: #f8f9ff;
+            border-radius: 12px;
+            border: 2px solid #e0e0e0;
+            transition: all 0.2s;
+        }
+        
+        .use-case:hover {
+            border-color: #667eea;
+            transform: scale(1.05);
+        }
+        
+        .use-case-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+        
+        .use-case-label {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .code-snippet {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            overflow-x: auto;
+            border: 3px solid #667eea;
+        }
+        
+        .code-keyword {
+            color: #569cd6;
+        }
+        
+        .code-type {
+            color: #4ec9b0;
+        }
+        
+        .code-variable {
+            color: #9cdcfe;
+        }
+        
+        .technique-card {
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8ebff 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 15px 0;
+            border-left: 5px solid #667eea;
+        }
+        
+        .technique-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+        
+        .problem-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .problem-item {
+            background: white;
+            padding: 18px;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            transition: all 0.2s;
+        }
+        
+        .problem-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+        
+        .summary-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            margin: 25px 0;
+        }
+        
+        .summary-box h3 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        
+        .summary-box ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .summary-box li {
+            padding: 12px 0;
+            font-size: 1.2em;
+            position: relative;
+            padding-left: 35px;
+        }
+        
+        .summary-box li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            font-weight: 700;
+            font-size: 1.3em;
+        }
+        
+        .footer {
+            background: #f8f9ff;
+            padding: 30px;
+            text-align: center;
+            color: #666;
+            font-size: 0.95em;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+            }
+        }
+    </style>
 </head>
-
 <body>
-
-<div class="container">
-
-  <div class="header">
-    <h1>LINKED LIST</h1>
-    <p>Complete DSA Visual Guide (C++)</p>
-  </div>
-
-  <div class="section">
-    <div class="section-title">
-      <div class="section-number">01</div>
-      What is a Linked List?
-    </div>
-
-    <p style="line-height:1.8;color:#555;">
-      A <strong>Linked List</strong> is a dynamic linear data structure made of nodes.
-      Each node stores data and a pointer to the next node.
-    </p>
-
-    <div class="code-snippet">
-struct Node {
-  int data;
-  Node* next;
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <h1>LINKED LIST</h1>
+            <p>COMPLETE DSA VISUAL GUIDE (C++)</p>
+        </div>
+        
+        <!-- SECTION 1: WHAT IS A LINKED LIST? -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">01</div>
+                <span>What is a Linked List?</span>
+            </div>
+            
+            <p style="font-size: 1.1em; line-height: 1.8; color: #555; margin-bottom: 25px;">
+                A <strong>Linked List</strong> is a dynamic linear data structure consisting of nodes where each node contains data and a pointer/reference to the next node in the sequence. Unlike arrays, linked lists are stored in non-contiguous memory locations on the heap.
+            </p>
+            
+            <h3 style="color: #667eea; margin: 25px 0 15px;">Node Structure:</h3>
+            <div class="node-diagram">
+                <div class="node-part">
+                    <div class="node-part-label">Data</div>
+                    <div class="node-part-value">Value</div>
+                </div>
+                <div class="node-part">
+                    <div class="node-part-label">Next Pointer</div>
+                    <div class="node-part-value">→</div>
+                </div>
+            </div>
+            
+            <div class="code-snippet">
+<span class="code-keyword">struct</span> <span class="code-type">Node</span> {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-type">int</span> <span class="code-variable">data</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-type">Node</span>* <span class="code-variable">next</span>;<br>
 };
+            </div>
+            
+            <h3 style="color: #667eea; margin: 25px 0 15px;">Key Characteristics:</h3>
+            <ul style="list-style-position: inside; color: #555; line-height: 2;">
+                <li>Dynamic memory allocation using <code>new</code> operator</li>
+                <li>Stored in heap memory (non-contiguous)</li>
+                <li>Each node points to the next node</li>
+                <li>No fixed size - grows/shrinks dynamically</li>
+            </ul>
+        </div>
+        
+        <!-- SECTION 2: WHY LINKED LIST? -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">02</div>
+                <span>Why Linked List?</span>
+            </div>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Linked List</th>
+                        <th>Array</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Size</strong></td>
+                        <td>Dynamic (grows/shrinks at runtime)</td>
+                        <td>Fixed (must be declared at compile time)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Memory Allocation</strong></td>
+                        <td>Non-contiguous (Heap)</td>
+                        <td>Contiguous (Stack/Heap)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Insertion/Deletion</strong></td>
+                        <td>O(1) at head, O(n) elsewhere</td>
+                        <td>O(n) - requires shifting elements</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Random Access</strong></td>
+                        <td>Not supported - O(n)</td>
+                        <td>Supported - O(1)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Memory Overhead</strong></td>
+                        <td>Extra space for pointers</td>
+                        <td>No extra overhead</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cache Performance</strong></td>
+                        <td>Poor (scattered memory)</td>
+                        <td>Excellent (contiguous memory)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- SECTION 3: TYPES OF LINKED LIST -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">03</div>
+                <span>Types of Linked List</span>
+            </div>
+            
+            <div class="list-type">
+                <h3>1. Singly Linked List</h3>
+                <p>Each node contains data and a pointer to the next node. Traversal is only in one direction (forward).</p>
+                <div class="visual-representation">
+                    <div class="list-node">10</div>
+                    <span class="arrow">→</span>
+                    <div class="list-node">20</div>
+                    <span class="arrow">→</span>
+                    <div class="list-node">30</div>
+                    <span class="arrow">→</span>
+                    <div class="null-node">NULL</div>
+                </div>
+            </div>
+            
+            <div class="list-type">
+                <h3>2. Doubly Linked List</h3>
+                <p>Each node has data, a pointer to next node, and a pointer to previous node. Bidirectional traversal is possible.</p>
+                <div class="visual-representation">
+                    <div class="null-node">NULL</div>
+                    <span class="arrow">⇄</span>
+                    <div class="list-node">10</div>
+                    <span class="arrow">⇄</span>
+                    <div class="list-node">20</div>
+                    <span class="arrow">⇄</span>
+                    <div class="list-node">30</div>
+                    <span class="arrow">⇄</span>
+                    <div class="null-node">NULL</div>
+                </div>
+            </div>
+            
+            <div class="list-type">
+                <h3>3. Circular Singly Linked List</h3>
+                <p>Last node points back to the head node instead of NULL, forming a circular structure.</p>
+                <div class="visual-representation">
+                    <div class="list-node">10</div>
+                    <span class="arrow">→</span>
+                    <div class="list-node">20</div>
+                    <span class="arrow">→</span>
+                    <div class="list-node">30</div>
+                    <span class="arrow">→</span>
+                    <div style="color: #667eea; font-weight: 600;">(back to 10)</div>
+                </div>
+            </div>
+            
+            <div class="list-type">
+                <h3>4. Circular Doubly Linked List</h3>
+                <p>Combines circular and doubly linked list properties - bidirectional with circular connections.</p>
+            </div>
+            
+            <div class="list-type">
+                <h3>5. Skip List (Advanced)</h3>
+                <p>Multi-level linked structure with express lanes for faster searching (O(log n) average).</p>
+            </div>
+        </div>
+        
+        <!-- SECTION 4: REPRESENTATION -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">04</div>
+                <span>Representation in Memory</span>
+            </div>
+            
+            <h3 style="color: #667eea; margin: 25px 0 15px;">Node Structure in C++:</h3>
+            <div class="code-snippet">
+<span class="code-keyword">class</span> <span class="code-type">Node</span> {<br>
+<span class="code-keyword">public</span>:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-type">int</span> <span class="code-variable">data</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #6a9955;">// Data stored in node</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-type">Node</span>* <span class="code-variable">next</span>;&nbsp;&nbsp;&nbsp;<span style="color: #6a9955;">// Pointer to next node</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">Node</span>(<span class="code-type">int</span> <span class="code-variable">val</span>) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-variable">data</span> = <span class="code-variable">val</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-variable">next</span> = <span class="code-keyword">nullptr</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+};
+            </div>
+            
+            <h3 style="color: #667eea; margin: 25px 0 15px;">Key Components:</h3>
+            <div class="operation-grid">
+                <div class="operation-card">
+                    <h4>Head Pointer</h4>
+                    <p style="color: #555; line-height: 1.6;">Points to the first node in the list. If head is NULL, the list is empty.</p>
+                </div>
+                <div class="operation-card">
+                    <h4>Tail Pointer (Optional)</h4>
+                    <p style="color: #555; line-height: 1.6;">Points to the last node for O(1) insertion at end.</p>
+                </div>
+                <div class="operation-card">
+                    <h4>NULL Termination</h4>
+                    <p style="color: #555; line-height: 1.6;">Last node's next pointer is NULL, marking the end of the list.</p>
+                </div>
+                <div class="operation-card">
+                    <h4>Heap Memory</h4>
+                    <p style="color: #555; line-height: 1.6;">Nodes are dynamically allocated using 'new' operator in C++.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SECTION 5: BASIC OPERATIONS -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">05</div>
+                <span>Basic Operations</span>
+            </div>
+            
+            <div class="operation-grid">
+                <div class="operation-card">
+                    <h4>📥 Insertion</h4>
+                    <ul>
+                        <li>Insert at head (beginning)</li>
+                        <li>Insert at tail (end)</li>
+                        <li>Insert at position</li>
+                        <li>Insert after a node</li>
+                    </ul>
+                </div>
+                
+                <div class="operation-card">
+                    <h4>🗑️ Deletion</h4>
+                    <ul>
+                        <li>Delete from head</li>
+                        <li>Delete from tail</li>
+                        <li>Delete by value</li>
+                        <li>Delete by position</li>
+                    </ul>
+                </div>
+                
+                <div class="operation-card">
+                    <h4>🔍 Traversal</h4>
+                    <ul>
+                        <li>Print all elements</li>
+                        <li>Count nodes</li>
+                        <li>Visit each node once</li>
+                        <li>Process data in order</li>
+                    </ul>
+                </div>
+                
+                <div class="operation-card">
+                    <h4>🔎 Searching</h4>
+                    <ul>
+                        <li>Linear search</li>
+                        <li>Find by value</li>
+                        <li>Find by position</li>
+                        <li>Check if element exists</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SECTION 6: INTERMEDIATE OPERATIONS -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">06</div>
+                <span>Intermediate Operations</span>
+            </div>
+            
+            <div class="technique-card">
+                <h4>🔄 Reverse Linked List</h4>
+                <p style="color: #555; line-height: 1.6; margin-top: 10px;">
+                    <strong>Iterative:</strong> Use three pointers (prev, curr, next) to reverse links<br>
+                    <strong>Recursive:</strong> Reverse sublist and adjust pointers recursively
+                </p>
+            </div>
+            
+            <div class="technique-card">
+                <h4>⚡ Find Middle Node</h4>
+                <p style="color: #555; line-height: 1.6; margin-top: 10px;">
+                    Use <strong>Fast & Slow Pointer</strong> technique: slow moves 1 step, fast moves 2 steps. When fast reaches end, slow is at middle.
+                </p>
+            </div>
+            
+            <div class="technique-card">
+                <h4>🔁 Detect Loop/Cycle</h4>
+                <p style="color: #555; line-height: 1.6; margin-top: 10px;">
+                    <strong>Floyd's Cycle Detection Algorithm:</strong> Use two pointers at different speeds. If they meet, a cycle exists.
+                </p>
+            </div>
+            
+            <div class="technique-card">
+                <h4>❌ Remove Loop</h4>
+                <p style="color: #555; line-height: 1.6; margin-top: 10px;">
+                    After detecting loop, find the start of loop and break the cycle by setting appropriate pointer to NULL.
+                </p>
+            </div>
+            
+            <div class="technique-card">
+                <h4>🔗 Merge Two Sorted Lists</h4>
+                <p style="color: #555; line-height: 1.6; margin-top: 10px;">
+                    Compare nodes from both lists and build a new sorted list by adjusting pointers.
+                </p>
+            </div>
+            
+            <div class="technique-card">
+                <h4>📊 Sort Linked List</h4>
+                <p style="color: #555; line-height: 1.6; margin-top: 10px;">
+                    <strong>Merge Sort</strong> is preferred for linked lists (O(n log n)) as it doesn't require random access.
+                </p>
+            </div>
+        </div>
+        
+        <!-- SECTION 7: ADVANCED PROBLEMS -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">07</div>
+                <span>Advanced Linked List Problems</span>
+            </div>
+            
+            <div class="problem-list">
+                <div class="problem-item">
+                    <strong>🔢 Reverse in Groups of K</strong><br>
+                    <small style="color: #666;">Reverse nodes in groups of size K</small>
+                </div>
+                
+                <div class="problem-item">
+                    <strong>🔄 Rotate List by K</strong><br>
+                    <small style="color: #666;">Rotate the list K positions to right/left</small>
+                </div>
+                
+                <div class="problem-item">
+                    <strong>➕ Add Two Numbers</strong><br>
+                    <small style="color: #666;">Add numbers represented as linked lists</small>
+                </div>
+                
+                <div class="problem-item">
+                    <strong>🔁 Palindrome Check</strong><br>
+                    <small style="color: #666;">Check if linked list is palindrome</small>
+                </div>
+                
+                <div class="problem-item">
+                    <strong>🔀 Intersection of Lists</strong><br>
+                    <small style="color: #666;">Find intersection point of two lists</small>
+                </div>
+                
+                <div class="problem-item">
+                    <strong>📋 Clone with Random Pointer</strong><br>
+                    <small style="color: #666;">Deep copy list with random pointers</small>
+                </div>
+                
+                <div class="problem-item">
+                    <strong>📁 Flatten Multilevel List</strong><br>
+                    <small style="color: #666;">Flatten a multilevel doubly linked list</small>
+                </div>
+                
+                <div class="problem-item">
+                    <strong>🔢 LRU Cache</strong><br>
+                    <small style="color: #666;">Implement LRU cache using DLL + HashMap</small>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SECTION 8: POINTER TECHNIQUES -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">08</div>
+                <span>Pointer Techniques Used</span>
+            </div>
+            
+            <div class="technique-card">
+                <h4>🐢🐇 Fast & Slow Pointers (Floyd's Algorithm)</h4>
+                <p style="color: #555; line-height: 1.6; margin-top: 10px;">
+                    <strong>Use Case:</strong> Finding middle, detecting cycles, finding loop start<br>
+                    <strong>Concept:</strong> Two pointers moving at different speeds (1x and 2x)
+                </p>
+            </div>
+            
+            <div class="technique-card">
+                <h4>🔗 Three-Pointer Technique</h4>
+                <p style="color: #555; line-height: 1.6; margin-top: 10px;">
+                    <strong>Use Case:</strong> Reversing linked lists, rearranging nodes<br>
+                    <strong>Pointers:</strong> prev (previous), curr (current), next (next)
+                </p>
+            </div>
+            
+            <div class="technique-card">
+                <h4>🎯 Dummy Node Usage</h4>
+                <p style="color: #555; line-height: 1.6; margin-top: 10px;">
+                    <strong>Use Case:</strong> Simplifying edge cases in insertion/deletion<br>
+                    <strong>Concept:</strong> Create a dummy node before head to avoid special handling
+                </p>
+            </div>
+        </div>
+        
+        <!-- SECTION 9: TIME & SPACE COMPLEXITY -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">09</div>
+                <span>Time & Space Complexity</span>
+            </div>
+            
+            <div class="complexity-box">
+                <div class="complexity-item">
+                    <span class="complexity-label">Insertion at Head</span>
+                    <span class="complexity-value">O(1)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">Insertion at Tail (without tail pointer)</span>
+                    <span class="complexity-value">O(n)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">Insertion at Tail (with tail pointer)</span>
+                    <span class="complexity-value">O(1)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">Deletion from Head</span>
+                    <span class="complexity-value">O(1)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">Deletion by Value/Position</span>
+                    <span class="complexity-value">O(n)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">Searching</span>
+                    <span class="complexity-value">O(n)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">Access by Index</span>
+                    <span class="complexity-value">O(n)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">Space Complexity</span>
+                    <span class="complexity-value">O(n)</span>
+                </div>
+            </div>
+            
+            <h3 style="color: #667eea; margin: 30px 0 15px;">Comparison with Array:</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Operation</th>
+                        <th>Linked List</th>
+                        <th>Array</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Access</td>
+                        <td>O(n)</td>
+                        <td>O(1)</td>
+                    </tr>
+                    <tr>
+                        <td>Insert at Beginning</td>
+                        <td>O(1)</td>
+                        <td>O(n)</td>
+                    </tr>
+                    <tr>
+                        <td>Insert at End</td>
+                        <td>O(1) with tail / O(n) without</td>
+                        <td>O(1) amortized</td>
+                    </tr>
+                    <tr>
+                        <td>Delete at Beginning</td>
+                        <td>O(1)</td>
+                        <td>O(n)</td>
+                    </tr>
+                    <tr>
+                        <td>Search</td>
+                        <td>O(n)</td>
+                        <td>O(n) / O(log n) if sorted</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- SECTION 10: USE CASES -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">10</div>
+                <span>Use Cases & Applications</span>
+            </div>
+            
+            <div class="use-case-grid">
+                <div class="use-case">
+                    <div class="use-case-icon">🎵</div>
+                    <div class="use-case-label">Music Playlists</div>
+                </div>
+                
+                <div class="use-case">
+                    <div class="use-case-icon">🌐</div>
+                    <div class="use-case-label">Browser Navigation<br>(Back/Forward)</div>
+                </div>
+                
+                <div class="use-case">
+                    <div class="use-case-icon">↩️</div>
+                    <div class="use-case-label">Undo/Redo<br>Systems</div>
+                </div>
+                
+                <div class="use-case">
+                    <div class="use-case-icon">💾</div>
+                    <div class="use-case-label">Memory<br>Management</div>
+                </div>
+                
+                <div class="use-case">
+                    <div class="use-case-icon">🔗</div>
+                    <div class="use-case-label">Hash Table<br>Chaining</div>
+                </div>
+                
+                <div class="use-case">
+                    <div class="use-case-icon">🕸️</div>
+                    <div class="use-case-label">Graph Adjacency<br>List</div>
+                </div>
+                
+                <div class="use-case">
+                    <div class="use-case-icon">🔢</div>
+                    <div class="use-case-label">Big Integer<br>Arithmetic</div>
+                </div>
+                
+                <div class="use-case">
+                    <div class="use-case-icon">📝</div>
+                    <div class="use-case-label">Text Editor<br>Operations</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SECTION 11: STL IN C++ -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">11</div>
+                <span>STL in C++</span>
+            </div>
+            
+            <h3 style="color: #667eea; margin: 25px 0 15px;">Standard Template Library Support:</h3>
+            
+            <div class="code-snippet">
+<span style="color: #6a9955;">// Singly Linked List</span><br>
+<span class="code-keyword">#include</span> <span style="color: #ce9178;">&lt;forward_list&gt;</span><br>
+<span class="code-type">std::forward_list</span>&lt;<span class="code-type">int</span>&gt; <span class="code-variable">flist</span> = {<span style="color: #b5cea8;">1</span>, <span style="color: #b5cea8;">2</span>, <span style="color: #b5cea8;">3</span>};<br>
+<span class="code-variable">flist</span>.<span class="code-variable">push_front</span>(<span style="color: #b5cea8;">0</span>);&nbsp;&nbsp;<span style="color: #6a9955;">// Insert at beginning</span><br>
+<br>
+<span style="color: #6a9955;">// Doubly Linked List</span><br>
+<span class="code-keyword">#include</span> <span style="color: #ce9178;">&lt;list&gt;</span><br>
+<span class="code-type">std::list</span>&lt;<span class="code-type">int</span>&gt; <span class="code-variable">dlist</span> = {<span style="color: #b5cea8;">1</span>, <span style="color: #b5cea8;">2</span>, <span style="color: #b5cea8;">3</span>};<br>
+<span class="code-variable">dlist</span>.<span class="code-variable">push_back</span>(<span style="color: #b5cea8;">4</span>);&nbsp;&nbsp;&nbsp;<span style="color: #6a9955;">// Insert at end</span><br>
+<span class="code-variable">dlist</span>.<span class="code-variable">push_front</span>(<span style="color: #b5cea8;">0</span>);&nbsp;&nbsp;<span style="color: #6a9955;">// Insert at beginning</span>
+            </div>
+            
+            <div class="operation-grid">
+                <div class="operation-card">
+                    <h4>std::forward_list</h4>
+                    <ul>
+                        <li>Singly linked list</li>
+                        <li>More memory efficient</li>
+                        <li>Forward iteration only</li>
+                        <li>No size() method</li>
+                    </ul>
+                </div>
+                
+                <div class="operation-card">
+                    <h4>std::list</h4>
+                    <ul>
+                        <li>Doubly linked list</li>
+                        <li>Bidirectional iteration</li>
+                        <li>Has size() method</li>
+                        <li>More flexible operations</li>
+                    </ul>
+                </div>
+                
+                <div class="operation-card">
+                    <h4>Common Operations</h4>
+                    <ul>
+                        <li>insert(), erase()</li>
+                        <li>begin(), end()</li>
+                        <li>front(), back()</li>
+                        <li>sort(), reverse()</li>
+                    </ul>
+                </div>
+                
+                <div class="operation-card">
+                    <h4>Iterator-Based</h4>
+                    <ul>
+                        <li>Uses iterators for traversal</li>
+                        <li>Range-based for loops</li>
+                        <li>Algorithm library compatible</li>
+                        <li>Type-safe operations</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SECTION 12: KEY PROPERTIES SUMMARY -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">12</div>
+                <span>Key Properties Summary</span>
+            </div>
+            
+            <div class="summary-box">
+                <h3>Essential Takeaways</h3>
+                <ul>
+                    <li>Dynamic size - grows and shrinks at runtime</li>
+                    <li>Non-contiguous memory - nodes scattered in heap</li>
+                    <li>Pointer-based structure - nodes connected via pointers</li>
+                    <li>Linear traversal required - must start from head</li>
+                    <li>No random access - cannot directly access by index</li>
+                    <li>Efficient insertion/deletion at beginning - O(1)</li>
+                    <li>Extra memory overhead - for storing pointers</li>
+                    <li>Poor cache locality - compared to arrays</li>
+                </ul>
+            </div>
+            
+            <div style="background: #f8f9ff; padding: 30px; border-radius: 12px; margin-top: 30px; border-left: 5px solid #667eea;">
+                <h3 style="color: #667eea; margin-bottom: 15px;">When to Use Linked Lists:</h3>
+                <p style="line-height: 1.8; color: #555;">
+                    ✓ Frequent insertions/deletions at beginning<br>
+                    ✓ Unknown or dynamically changing size<br>
+                    ✓ No need for random access<br>
+                    ✓ Implementing other data structures (stacks, queues, graphs)<br>
+                    ✓ Memory fragmentation is acceptable<br><br>
+                    
+                    ✗ Avoid when: Need frequent random access, working with sorted data requiring binary search, memory overhead is critical, or cache performance is important
+                </p>
+            </div>
+        </div>
+        
+        <!-- FOOTER -->
+        <div class="footer">
+            <p><strong>LINKED LIST - COMPLETE DSA VISUAL GUIDE (C++)</strong></p>
+            <p style="margin-top: 10px;">Master Data Structures & Algorithms • Perfect for Interviews, Exams & Revision</p>
+        </div>
     </div>
-  </div>
-
-  <div class="footer">
-    <strong>DSA Revision • Linked List</strong><br>
-    Perfect for Notion, Interviews & Exams
-  </div>
-
-</div>
-
 </body>
 </html>
