@@ -1,0 +1,1715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>String - Complete DSA Visual Guide (C++)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --teal-dark: #008B8B;
+            --teal-main: #20B2AA;
+            --cyan-main: #00CED1;
+            --cyan-light: #AFEEEE;
+            --ocean-blue: #006994;
+            --deep-blue: #004D73;
+            --navy: #001F3F;
+            --aqua: #40E0D0;
+        }
+        
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: linear-gradient(135deg, var(--deep-blue) 0%, var(--ocean-blue) 30%, var(--teal-main) 70%, var(--cyan-light) 100%);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,139,139,0.4);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--deep-blue) 0%, var(--ocean-blue) 50%, var(--teal-dark) 100%);
+            color: white;
+            padding: 80px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 3px,
+                    rgba(255,255,255,0.05) 3px,
+                    rgba(255,255,255,0.05) 6px
+                );
+            pointer-events: none;
+        }
+        
+        .header h1 {
+            font-family: 'Source Code Pro', monospace;
+            font-size: 4.5em;
+            font-weight: 900;
+            margin-bottom: 15px;
+            letter-spacing: 12px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+            position: relative;
+        }
+        
+        .header p {
+            font-family: 'Source Code Pro', monospace;
+            font-size: 1.4em;
+            letter-spacing: 4px;
+            font-weight: 600;
+            opacity: 0.95;
+        }
+        
+        .section {
+            padding: 50px 60px;
+            border-bottom: 3px solid var(--cyan-light);
+        }
+        
+        .section:nth-child(even) {
+            background: linear-gradient(to right, #f0ffff 0%, #ffffff 100%);
+        }
+        
+        .section:last-child {
+            border-bottom: none;
+        }
+        
+        .section-title {
+            font-family: 'Source Code Pro', monospace;
+            font-size: 2.2em;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: var(--ocean-blue);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .section-number {
+            background: linear-gradient(135deg, var(--teal-dark) 0%, var(--cyan-main) 50%, var(--cyan-light) 100%);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            font-weight: 900;
+            box-shadow: 0 4px 15px rgba(0,139,139,0.4);
+            border: 3px solid var(--ocean-blue);
+        }
+        
+        h3 {
+            color: var(--ocean-blue);
+            font-family: 'Source Code Pro', monospace;
+            margin: 25px 0 15px;
+            font-size: 1.5em;
+        }
+        
+        p {
+            color: var(--navy);
+            line-height: 1.9;
+            margin-bottom: 15px;
+        }
+        
+        .string-visual {
+            display: inline-flex;
+            gap: 0;
+            margin: 25px 0;
+            box-shadow: 0 6px 20px rgba(0,139,139,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .char-cell {
+            background: linear-gradient(to bottom, var(--cyan-light) 0%, var(--teal-main) 100%);
+            border: 3px solid var(--ocean-blue);
+            border-right: none;
+            padding: 20px 18px;
+            text-align: center;
+            min-width: 60px;
+        }
+        
+        .char-cell:first-child {
+            border-radius: 10px 0 0 10px;
+        }
+        
+        .char-cell:last-child {
+            border-radius: 0 10px 10px 0;
+            border-right: 3px solid var(--ocean-blue);
+        }
+        
+        .char-index {
+            font-size: 0.7em;
+            color: var(--deep-blue);
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+        
+        .char-value {
+            font-weight: 900;
+            color: white;
+            font-size: 1.5em;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        .null-terminator {
+            background: linear-gradient(to bottom, #FFE5E5 0%, #FFB3B3 100%);
+            border-color: #CC0000;
+        }
+        
+        .null-terminator .char-value {
+            color: #CC0000;
+            font-size: 1.2em;
+        }
+        
+        .code-snippet {
+            background: var(--navy);
+            color: var(--cyan-light);
+            padding: 25px;
+            border-radius: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            margin: 25px 0;
+            overflow-x: auto;
+            font-size: 0.95em;
+            border: 3px solid var(--teal-dark);
+            box-shadow: 0 4px 15px rgba(0,139,139,0.2);
+            position: relative;
+        }
+        
+        .code-snippet::before {
+            content: 'C++';
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            font-size: 0.7em;
+            color: var(--teal-main);
+            font-weight: 700;
+        }
+        
+        .code-keyword { color: #5DADE2; }
+        .code-type { color: #52BE80; }
+        .code-string { color: #F8C471; }
+        .code-comment { color: #85929E; font-style: italic; }
+        .code-number { color: #EC7063; }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            box-shadow: 0 4px 20px rgba(0,139,139,0.15);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .comparison-table th {
+            background: linear-gradient(135deg, var(--ocean-blue) 0%, var(--teal-dark) 100%);
+            color: white;
+            padding: 20px;
+            text-align: left;
+            font-family: 'Source Code Pro', monospace;
+            font-weight: 700;
+        }
+        
+        .comparison-table td {
+            padding: 18px 20px;
+            border-bottom: 2px solid var(--cyan-light);
+            color: var(--navy);
+        }
+        
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background: linear-gradient(to right, #f0ffff 0%, #ffffff 100%);
+        }
+        
+        .type-card, .technique-card {
+            background: linear-gradient(135deg, #E0F7F7 0%, #F0FFFF 100%);
+            border-left: 6px solid var(--teal-dark);
+            padding: 28px;
+            margin: 22px 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,139,139,0.15);
+        }
+        
+        .type-card h3, .type-card h4 {
+            color: var(--ocean-blue);
+            margin-bottom: 12px;
+            font-family: 'Source Code Pro', monospace;
+        }
+        
+        .operation-grid, .problem-grid, .use-case-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 22px;
+            margin: 28px 0;
+        }
+        
+        .operation-card, .problem-item, .use-case {
+            background: linear-gradient(135deg, #ffffff 0%, #E0F7F7 100%);
+            border: 3px solid var(--cyan-main);
+            border-radius: 14px;
+            padding: 28px;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0,139,139,0.1);
+        }
+        
+        .operation-card:hover, .problem-item:hover, .use-case:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0,139,139,0.25);
+            border-color: var(--teal-dark);
+        }
+        
+        .operation-card h4 {
+            font-family: 'Source Code Pro', monospace;
+            color: var(--ocean-blue);
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .operation-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .operation-card li {
+            padding: 9px 0;
+            position: relative;
+            padding-left: 28px;
+            color: var(--navy);
+        }
+        
+        .operation-card li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--teal-main);
+            font-weight: 700;
+            font-size: 1.3em;
+        }
+        
+        .complexity-box {
+            background: linear-gradient(135deg, #E0F7F7 0%, #ffffff 100%);
+            border: 3px solid var(--cyan-main);
+            padding: 28px 32px;
+            margin: 22px 0;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0,139,139,0.12);
+        }
+        
+        .complexity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 2px solid var(--cyan-light);
+        }
+        
+        .complexity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .complexity-label {
+            font-weight: 600;
+            color: var(--navy);
+        }
+        
+        .complexity-value {
+            font-family: 'Source Code Pro', monospace;
+            background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal-main) 100%);
+            color: white;
+            padding: 8px 22px;
+            border-radius: 8px;
+            font-weight: 700;
+            box-shadow: 0 3px 10px rgba(0,139,139,0.3);
+        }
+        
+        .tip-box {
+            background: linear-gradient(135deg, #FFF9E6 0%, #FFFBF0 100%);
+            border-left: 6px solid #FFB800;
+            padding: 22px 28px;
+            margin: 22px 0;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px rgba(255, 184, 0, 0.2);
+        }
+        
+        .tip-box strong {
+            color: #C59100;
+            font-size: 1.15em;
+            font-family: 'Source Code Pro', monospace;
+        }
+        
+        .mistake-card {
+            background: linear-gradient(135deg, #FFE8E8 0%, #FFF5F5 100%);
+            border-left: 6px solid #D32F2F;
+            padding: 28px;
+            margin: 22px 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.15);
+        }
+        
+        .mistake-card h4 {
+            color: #C62828;
+            margin-bottom: 14px;
+            font-family: 'Source Code Pro', monospace;
+            font-size: 1.3em;
+        }
+        
+        .mistake-card p {
+            color: #5D4037;
+            line-height: 1.8;
+        }
+        
+        .problem-difficulty {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 700;
+            margin-bottom: 12px;
+            font-family: 'Source Code Pro', monospace;
+        }
+        
+        .difficulty-easy { background: #4CAF50; color: white; }
+        .difficulty-medium { background: #FF9800; color: white; }
+        .difficulty-hard { background: #F44336; color: white; }
+        
+        .problem-title {
+            font-weight: 700;
+            color: var(--ocean-blue);
+            font-size: 1.15em;
+            margin-bottom: 10px;
+            font-family: 'Source Code Pro', monospace;
+        }
+        
+        .problem-approach {
+            color: var(--navy);
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+        
+        .use-case {
+            text-align: center;
+        }
+        
+        .use-case-icon {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+        }
+        
+        .use-case-label {
+            font-weight: 700;
+            font-family: 'Source Code Pro', monospace;
+            color: var(--ocean-blue);
+            font-size: 1em;
+        }
+        
+        .summary-box {
+            background: linear-gradient(135deg, var(--deep-blue) 0%, var(--ocean-blue) 50%, var(--teal-dark) 100%);
+            color: white;
+            padding: 50px;
+            border-radius: 20px;
+            margin: 32px 0;
+            box-shadow: 0 10px 30px rgba(0,139,139,0.4);
+        }
+        
+        .summary-box h3 {
+            font-family: 'Source Code Pro', monospace;
+            font-size: 2.2em;
+            margin-bottom: 28px;
+            color: white;
+        }
+        
+        .summary-box ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .summary-box li {
+            padding: 14px 0;
+            font-size: 1.12em;
+            position: relative;
+            padding-left: 42px;
+            line-height: 1.7;
+        }
+        
+        .summary-box li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            font-weight: 700;
+            font-size: 1.5em;
+            color: var(--cyan-light);
+        }
+        
+        .decision-tree {
+            background: white;
+            padding: 32px;
+            border-radius: 16px;
+            margin: 28px 0;
+            border: 3px solid var(--cyan-main);
+            box-shadow: 0 4px 18px rgba(0,139,139,0.15);
+        }
+        
+        .decision-tree h3 {
+            font-family: 'Source Code Pro', monospace;
+            color: var(--ocean-blue);
+            margin-bottom: 22px;
+            font-size: 1.8em;
+        }
+        
+        .decision-item {
+            padding: 16px;
+            margin: 12px 0;
+            border-left: 5px solid var(--teal-dark);
+            background: linear-gradient(to right, #E0F7F7 0%, #ffffff 100%);
+            border-radius: 6px;
+        }
+        
+        .decision-item strong {
+            color: var(--ocean-blue);
+            font-family: 'Source Code Pro', monospace;
+        }
+        
+        .footer {
+            background: linear-gradient(to right, #E0F7F7 0%, #F0FFFF 100%);
+            padding: 42px;
+            text-align: center;
+            color: var(--navy);
+            border-top: 4px solid var(--cyan-main);
+        }
+        
+        .footer strong {
+            font-family: 'Source Code Pro', monospace;
+            color: var(--ocean-blue);
+            font-size: 1.1em;
+        }
+        
+        .algorithm-card {
+            background: linear-gradient(135deg, #ffffff 0%, #E0F7F7 100%);
+            border: 3px solid var(--teal-main);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(0,139,139,0.12);
+        }
+        
+        .algorithm-card h4 {
+            color: var(--ocean-blue);
+            font-family: 'Source Code Pro', monospace;
+            margin-bottom: 12px;
+            font-size: 1.4em;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>STRING</h1>
+            <p>COMPLETE DSA VISUAL GUIDE (C++)</p>
+        </div>
+        
+        <!-- SECTION 1: WHAT IS A STRING? -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">01</div>
+                <span>What is a String?</span>
+            </div>
+            
+            <p style="font-size: 1.1em;">A <strong>String</strong> is a sequence of characters representing text data. In C++, strings can be represented as character arrays (C-style) or as std::string objects with rich functionality and automatic memory management.</p>
+            
+            <h3>Visual Representation of "HELLO":</h3>
+            
+            <div class="string-visual">
+                <div class="char-cell">
+                    <div class="char-index">[0]</div>
+                    <div class="char-value">H</div>
+                </div>
+                <div class="char-cell">
+                    <div class="char-index">[1]</div>
+                    <div class="char-value">E</div>
+                </div>
+                <div class="char-cell">
+                    <div class="char-index">[2]</div>
+                    <div class="char-value">L</div>
+                </div>
+                <div class="char-cell">
+                    <div class="char-index">[3]</div>
+                    <div class="char-value">L</div>
+                </div>
+                <div class="char-cell">
+                    <div class="char-index">[4]</div>
+                    <div class="char-value">O</div>
+                </div>
+                <div class="char-cell null-terminator">
+                    <div class="char-index">[5]</div>
+                    <div class="char-value">\0</div>
+                </div>
+            </div>
+            
+            <div class="code-snippet"><span class="code-comment">// C-style string (null-terminated)</span>
+<span class="code-keyword">char</span> str1[] = <span class="code-string">"Hello"</span>;
+
+<span class="code-comment">// C++ std::string</span>
+<span class="code-type">std::string</span> str2 = <span class="code-string">"Hello"</span>;
+
+<span class="code-comment">// Access characters</span>
+<span class="code-keyword">char</span> ch = str2[<span class="code-number">0</span>];  <span class="code-comment">// 'H'</span>
+<span class="code-keyword">char</span> last = str2[str2.<span class="code-type">length</span>() - <span class="code-number">1</span>];  <span class="code-comment">// 'O'</span></div>
+            
+            <h3>Key Characteristics:</h3>
+            <ul style="list-style-position: inside; margin-left: 20px; color: var(--navy); line-height: 2.2;">
+                <li><strong>Sequence of characters</strong> - ordered collection</li>
+                <li><strong>Zero-based indexing</strong> - first character at index 0</li>
+                <li><strong>Null-terminated (C-style)</strong> - ends with '\0'</li>
+                <li><strong>Mutable in C++</strong> - can modify characters</li>
+                <li><strong>Dynamic sizing (std::string)</strong> - grows automatically</li>
+                <li><strong>Rich standard library</strong> - extensive string operations</li>
+            </ul>
+        </div>
+        
+        <!-- SECTION 2: MEMORY REPRESENTATION -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">02</div>
+                <span>Memory Representation</span>
+            </div>
+            
+            <h3>C-Style String Memory Layout:</h3>
+            
+            <div style="background: linear-gradient(135deg, #E0F7F7 0%, #F0FFFF 100%); padding: 30px; border-radius: 12px; margin: 25px 0; border: 3px solid var(--cyan-main);">
+                <p style="margin-bottom: 20px;"><strong>String "CAT" in memory:</strong></p>
+                
+                <div style="display: flex; gap: 15px; flex-wrap: wrap; margin: 20px 0;">
+                    <div style="text-align: center; flex: 1; min-width: 100px;">
+                        <div style="background: var(--cyan-light); border: 2px solid var(--ocean-blue); padding: 10px; border-radius: 5px; margin-bottom: 8px;">
+                            <strong>1000</strong>
+                        </div>
+                        <div style="background: linear-gradient(to bottom, var(--cyan-light), var(--teal-main)); border: 3px solid var(--ocean-blue); padding: 18px; border-radius: 8px; font-weight: 900; color: white; font-size: 1.3em;">C</div>
+                        <small style="color: var(--ocean-blue); font-weight: 600;">67 (ASCII)</small>
+                    </div>
+                    <div style="text-align: center; flex: 1; min-width: 100px;">
+                        <div style="background: var(--cyan-light); border: 2px solid var(--ocean-blue); padding: 10px; border-radius: 5px; margin-bottom: 8px;">
+                            <strong>1001</strong>
+                        </div>
+                        <div style="background: linear-gradient(to bottom, var(--cyan-light), var(--teal-main)); border: 3px solid var(--ocean-blue); padding: 18px; border-radius: 8px; font-weight: 900; color: white; font-size: 1.3em;">A</div>
+                        <small style="color: var(--ocean-blue); font-weight: 600;">65 (ASCII)</small>
+                    </div>
+                    <div style="text-align: center; flex: 1; min-width: 100px;">
+                        <div style="background: var(--cyan-light); border: 2px solid var(--ocean-blue); padding: 10px; border-radius: 5px; margin-bottom: 8px;">
+                            <strong>1002</strong>
+                        </div>
+                        <div style="background: linear-gradient(to bottom, var(--cyan-light), var(--teal-main)); border: 3px solid var(--ocean-blue); padding: 18px; border-radius: 8px; font-weight: 900; color: white; font-size: 1.3em;">T</div>
+                        <small style="color: var(--ocean-blue); font-weight: 600;">84 (ASCII)</small>
+                    </div>
+                    <div style="text-align: center; flex: 1; min-width: 100px;">
+                        <div style="background: #FFE5E5; border: 2px solid #CC0000; padding: 10px; border-radius: 5px; margin-bottom: 8px;">
+                            <strong>1003</strong>
+                        </div>
+                        <div style="background: linear-gradient(to bottom, #FFE5E5, #FFB3B3); border: 3px solid #CC0000; padding: 18px; border-radius: 8px; font-weight: 900; color: #CC0000; font-size: 1.3em;">\0</div>
+                        <small style="color: #CC0000; font-weight: 600;">0 (NULL)</small>
+                    </div>
+                </div>
+                
+                <p style="margin-top: 20px; color: var(--navy);"><strong>Note:</strong> Each character occupies 1 byte. The null terminator '\0' marks the end of the string.</p>
+            </div>
+            
+            <div class="code-snippet"><span class="code-comment">// C-style string</span>
+<span class="code-keyword">char</span> cstr[] = <span class="code-string">"Hello"</span>;
+cout &lt;&lt; <span class="code-keyword">sizeof</span>(cstr);  <span class="code-comment">// 6 bytes (includes '\0')</span>
+
+<span class="code-comment">// C++ std::string</span>
+<span class="code-type">std::string</span> str = <span class="code-string">"Hello"</span>;
+cout &lt;&lt; str.<span class="code-type">length</span>();    <span class="code-comment">// 5 characters</span>
+cout &lt;&lt; str.<span class="code-type">size</span>();      <span class="code-comment">// 5 characters (same as length)</span>
+cout &lt;&lt; str.<span class="code-type">capacity</span>(); <span class="code-comment">// May be larger (allocated space)</span></div>
+            
+            <div class="tip-box">
+                <strong>💡 QUICK TIP:</strong> std::string handles memory automatically and doesn't require manual null termination!
+            </div>
+        </div>
+        
+        <!-- SECTION 3: TYPES OF STRINGS -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">03</div>
+                <span>Types of Strings</span>
+            </div>
+            
+            <div class="type-card">
+                <h3>1. C-Style String (Character Array)</h3>
+                <p>Null-terminated array of characters with manual memory management.</p>
+                <div class="code-snippet"><span class="code-keyword">char</span> str[] = <span class="code-string">"Hello"</span>;
+<span class="code-keyword">char</span>* ptr = <span class="code-string">"World"</span>;  <span class="code-comment">// Pointer to string literal</span></div>
+                <p style="margin-top: 12px;"><strong>Features:</strong> Fixed size, manual null termination, pointer arithmetic</p>
+            </div>
+            
+            <div class="type-card">
+                <h3>2. C++ std::string</h3>
+                <p>Modern C++ string class with automatic memory management and rich API.</p>
+                <div class="code-snippet"><span class="code-keyword">#include</span> &lt;string&gt;
+<span class="code-type">std::string</span> str = <span class="code-string">"Hello"</span>;
+str += <span class="code-string">" World"</span>;  <span class="code-comment">// Easy concatenation</span></div>
+                <p style="margin-top: 12px;"><strong>Features:</strong> Dynamic sizing, operator overloading, bounds checking, automatic cleanup</p>
+            </div>
+            
+            <div class="type-card">
+                <h3>3. std::string_view (C++17)</h3>
+                <p>Non-owning, read-only reference to a string. Zero-copy string passing.</p>
+                <div class="code-snippet"><span class="code-keyword">#include</span> &lt;string_view&gt;
+<span class="code-type">std::string_view</span> sv = <span class="code-string">"Hello"</span>;
+<span class="code-comment">// No memory allocation, just a view</span></div>
+                <p style="margin-top: 12px;"><strong>Features:</strong> No allocation, efficient for read-only operations, prevents unnecessary copies</p>
+            </div>
+            
+            <div class="type-card">
+                <h3>4. Raw String Literals (C++11)</h3>
+                <p>Strings without escape sequence processing.</p>
+                <div class="code-snippet"><span class="code-type">string</span> path = <span class="code-string">R"(C:\Users\Name\file.txt)"</span>;
+<span class="code-type">string</span> json = <span class="code-string">R"({"key": "value"})"</span>;</div>
+                <p style="margin-top: 12px;"><strong>Features:</strong> No escaping needed, multiline support, great for regex/JSON/paths</p>
+            </div>
+            
+            <div class="type-card">
+                <h3>5. Wide Strings (wstring)</h3>
+                <p>For Unicode and international character support.</p>
+                <div class="code-snippet"><span class="code-type">std::wstring</span> ws = <span class="code-string">L"Hello 世界"</span>;
+<span class="code-comment">// UTF-16 encoding on most platforms</span></div>
+                <p style="margin-top: 12px;"><strong>Features:</strong> Unicode support, larger character size (2-4 bytes)</p>
+            </div>
+            
+            <div class="type-card">
+                <h3>6. String Streams</h3>
+                <p>String-based I/O operations and conversions.</p>
+                <div class="code-snippet"><span class="code-keyword">#include</span> &lt;sstream&gt;
+<span class="code-type">stringstream</span> ss;
+ss &lt;&lt; <span class="code-string">"Value: "</span> &lt;&lt; <span class="code-number">123</span>;
+<span class="code-type">string</span> result = ss.<span class="code-type">str</span>();</div>
+                <p style="margin-top: 12px;"><strong>Features:</strong> String manipulation, type conversion, parsing</p>
+            </div>
+        </div>
+        
+        <!-- SECTION 4: WHY STRINGS? COMPARISON -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">04</div>
+                <span>Why Strings? (Comparison)</span>
+            </div>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>C-Style String</th>
+                        <th>C++ std::string</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Memory</strong></td>
+                        <td>Fixed, stack allocated</td>
+                        <td>Dynamic, heap allocated</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Safety</strong></td>
+                        <td>❌ No bounds checking</td>
+                        <td>✅ Bounds checking with .at()</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Operations</strong></td>
+                        <td>Manual functions (strcpy, strcat)</td>
+                        <td>Rich API (methods, operators)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Memory Management</strong></td>
+                        <td>Manual (risk of leaks)</td>
+                        <td>Automatic (RAII)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Concatenation</strong></td>
+                        <td>strcat() - buffer overflow risk</td>
+                        <td>+ operator - safe & easy</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Comparison</strong></td>
+                        <td>strcmp() returns int</td>
+                        <td>==, <, > operators</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Length</strong></td>
+                        <td>strlen() - O(n)</td>
+                        <td>length() / size() - O(1)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Resizable</strong></td>
+                        <td>❌ Fixed size</td>
+                        <td>✅ Dynamic resize</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Null Terminator</strong></td>
+                        <td>Required, manual</td>
+                        <td>Handled internally</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Best For</strong></td>
+                        <td>Legacy code, low-level</td>
+                        <td>Modern C++, safety</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="tip-box">
+                <strong>💡 RECOMMENDATION:</strong> Always prefer std::string for modern C++ code. Use C-style only when interfacing with legacy code or C libraries.
+            </div>
+        </div>
+        
+        <!-- SECTION 5: BASIC OPERATIONS -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">05</div>
+                <span>Basic Operations</span>
+            </div>
+            
+            <div class="operation-grid">
+                <div class="operation-card">
+                    <h4>📥 Input/Output</h4>
+                    <ul>
+                        <li>cin >> str (single word)</li>
+                        <li>getline(cin, str) (with spaces)</li>
+                        <li>cout << str (output)</li>
+                        <li>Reading from files</li>
+                    </ul>
+                </div>
+                
+                <div class="operation-card">
+                    <h4>✂️ Substring</h4>
+                    <ul>
+                        <li>substr(start, length)</li>
+                        <li>Extract portion of string</li>
+                        <li>Returns new string</li>
+                        <li>O(m) where m = length</li>
+                    </ul>
+                </div>
+                
+                <div class="operation-card">
+                    <h4>🔗 Concatenation</h4>
+                    <ul>
+                        <li>+ operator (s1 + s2)</li>
+                        <li>+= operator (s1 += s2)</li>
+                        <li>append() method</li>
+                        <li>O(n+m) complexity</li>
+                    </ul>
+                </div>
+                
+                <div class="operation-card">
+                    <h4>🔍 Searching</h4>
+                    <ul>
+                        <li>find() - first occurrence</li>
+                        <li>rfind() - last occurrence</li>
+                        <li>find_first_of() - any char</li>
+                        <li>find_last_of() - last match</li>
+                    </ul>
+                </div>
+                
+                <div class="operation-card">
+                    <h4>✏️ Modification</h4>
+                    <ul>
+                        <li>insert(pos, str)</li>
+                        <li>erase(pos, len)</li>
+                        <li>replace(pos, len, str)</li>
+                        <li>Direct access s[i] = 'x'</li>
+                    </ul>
+                </div>
+                
+                <div class="operation-card">
+                    <h4>🔤 Case Conversion</h4>
+                    <ul>
+                        <li>toupper(c) - char to upper</li>
+                        <li>tolower(c) - char to lower</li>
+                        <li>transform() with lambda</li>
+                        <li>Loop through each char</li>
+                    </ul>
+                </div>
+                
+                <div class="operation-card">
+                    <h4>📊 Comparison</h4>
+                    <ul>
+                        <li>== operator (equality)</li>
+                        <li><, >, <=, >= (lexicographic)</li>
+                        <li>compare() method</li>
+                        <li>Case-insensitive compare</li>
+                    </ul>
+                </div>
+                
+                <div class="operation-card">
+                    <h4>🔢 Conversions</h4>
+                    <ul>
+                        <li>stoi() - string to int</li>
+                        <li>stod() - string to double</li>
+                        <li>to_string() - number to string</li>
+                        <li>stringstream for complex</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="code-snippet"><span class="code-comment">// Input with spaces</span>
+<span class="code-type">string</span> str;
+<span class="code-type">getline</span>(cin, str);
+
+<span class="code-comment">// Substring</span>
+<span class="code-type">string</span> sub = str.<span class="code-type">substr</span>(<span class="code-number">0</span>, <span class="code-number">5</span>);  <span class="code-comment">// First 5 chars</span>
+
+<span class="code-comment">// Concatenation</span>
+<span class="code-type">string</span> result = str1 + <span class="code-string">" "</span> + str2;
+
+<span class="code-comment">// Search</span>
+<span class="code-keyword">size_t</span> pos = str.<span class="code-type">find</span>(<span class="code-string">"hello"</span>);
+<span class="code-keyword">if</span> (pos != <span class="code-type">string</span>::npos) {
+    cout &lt;&lt; <span class="code-string">"Found at: "</span> &lt;&lt; pos;
+}
+
+<span class="code-comment">// Modification</span>
+str.<span class="code-type">insert</span>(<span class="code-number">5</span>, <span class="code-string">"World"</span>);
+str.<span class="code-type">erase</span>(<span class="code-number">0</span>, <span class="code-number">5</span>);
+str.<span class="code-type">replace</span>(<span class="code-number">0</span>, <span class="code-number">5</span>, <span class="code-string">"Hi"</span>);
+
+<span class="code-comment">// Case conversion</span>
+<span class="code-type">transform</span>(str.<span class="code-type">begin</span>(), str.<span class="code-type">end</span>(), str.<span class="code-type">begin</span>(), ::toupper);
+
+<span class="code-comment">// Conversion</span>
+<span class="code-keyword">int</span> num = <span class="code-type">stoi</span>(<span class="code-string">"123"</span>);
+<span class="code-type">string</span> s = <span class="code-type">to_string</span>(<span class="code-number">456</span>);</div>
+        </div>
+        
+        <!-- Continue in next message due to length -->
+        
+        <!-- SECTION 6: COMMON MISTAKES & PITFALLS -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">06</div>
+                <span>Common Mistakes & Pitfalls</span>
+            </div>
+            
+            <div class="mistake-card">
+                <h4>❌ Buffer Overflow (C-style)</h4>
+                <p>Most dangerous string error - writing beyond allocated memory.</p>
+                <div class="code-snippet"><span class="code-comment">// ❌ WRONG - Buffer overflow!</span>
+<span class="code-keyword">char</span> str[<span class="code-number">5</span>];
+<span class="code-type">strcpy</span>(str, <span class="code-string">"Hello World"</span>);  <span class="code-comment">// Overflow!</span>
+
+<span class="code-comment">// ✅ CORRECT - Use std::string</span>
+<span class="code-type">std::string</span> str = <span class="code-string">"Hello World"</span>;  <span class="code-comment">// Safe</span></div>
+            </div>
+            
+            <div class="mistake-card">
+                <h4>❌ Not Null-Terminating</h4>
+                <p>Forgetting '\0' causes undefined behavior.</p>
+                <div class="code-snippet"><span class="code-comment">// ❌ WRONG - No null terminator</span>
+<span class="code-keyword">char</span> str[<span class="code-number">6</span>] = {<span class="code-string">'H'</span>,<span class="code-string">'e'</span>,<span class="code-string">'l'</span>,<span class="code-string">'l'</span>,<span class="code-string">'o'</span>};
+cout &lt;&lt; str;  <span class="code-comment">// Undefined!</span>
+
+<span class="code-comment">// ✅ CORRECT</span>
+<span class="code-keyword">char</span> str[<span class="code-number">6</span>] = {<span class="code-string">'H'</span>,<span class="code-string">'e'</span>,<span class="code-string">'l'</span>,<span class="code-string">'l'</span>,<span class="code-string">'o'</span>,<span class="code-string">'\0'</span>};</div>
+            </div>
+            
+            <div class="mistake-card">
+                <h4>❌ Modifying String Literals</h4>
+                <p>String literals are read-only in memory.</p>
+                <div class="code-snippet"><span class="code-comment">// ❌ WRONG - Undefined behavior</span>
+<span class="code-keyword">char</span>* str = <span class="code-string">"Hello"</span>;
+str[<span class="code-number">0</span>] = <span class="code-string">'h'</span>;  <span class="code-comment">// CRASH!</span>
+
+<span class="code-comment">// ✅ CORRECT - Use array</span>
+<span class="code-keyword">char</span> str[] = <span class="code-string">"Hello"</span>;
+str[<span class="code-number">0</span>] = <span class="code-string">'h'</span>;  <span class="code-comment">// OK</span></div>
+            </div>
+            
+            <div class="mistake-card">
+                <h4>❌ Comparing with == (C-style)</h4>
+                <p>== compares pointers, not content.</p>
+                <div class="code-snippet"><span class="code-comment">// ❌ WRONG - Compares addresses</span>
+<span class="code-keyword">char</span> s1[] = <span class="code-string">"Hello"</span>;
+<span class="code-keyword">char</span> s2[] = <span class="code-string">"Hello"</span>;
+<span class="code-keyword">if</span> (s1 == s2)  <span class="code-comment">// Always false!</span>
+
+<span class="code-comment">// ✅ CORRECT - Use strcmp</span>
+<span class="code-keyword">if</span> (<span class="code-type">strcmp</span>(s1, s2) == <span class="code-number">0</span>)  <span class="code-comment">// Correct</span></div>
+            </div>
+            
+            <div class="mistake-card">
+                <h4>❌ Off-by-One in Loops</h4>
+                <p>Using <= instead of < causes out-of-bounds access.</p>
+                <div class="code-snippet"><span class="code-comment">// ❌ WRONG</span>
+<span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = <span class="code-number">0</span>; i &lt;= str.<span class="code-type">length</span>(); i++)  <span class="code-comment">// Out of bounds!</span>
+
+<span class="code-comment">// ✅ CORRECT</span>
+<span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = <span class="code-number">0</span>; i &lt; str.<span class="code-type">length</span>(); i++)</div>
+            </div>
+            
+            <div class="mistake-card">
+                <h4>❌ Not Handling Empty Strings</h4>
+                <p>Always check if string is empty before accessing.</p>
+                <div class="code-snippet"><span class="code-comment">// ❌ WRONG</span>
+<span class="code-keyword">char</span> first = str[<span class="code-number">0</span>];  <span class="code-comment">// Crash if empty!</span>
+
+<span class="code-comment">// ✅ CORRECT</span>
+<span class="code-keyword">if</span> (!str.<span class="code-type">empty</span>()) {
+    <span class="code-keyword">char</span> first = str[<span class="code-number">0</span>];
+}</div>
+            </div>
+            
+            <div class="tip-box">
+                <strong>💡 PRO TIP:</strong> Always use std::string for new code. It prevents most common string errors automatically!
+            </div>
+        </div>
+        
+        <!-- SECTION 7: TIME & SPACE COMPLEXITY -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">07</div>
+                <span>Time & Space Complexity</span>
+            </div>
+            
+            <div class="complexity-box">
+                <h3>String Operations Complexity:</h3>
+                
+                <div class="complexity-item">
+                    <span class="complexity-label">Access by Index</span>
+                    <span class="complexity-value">O(1)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">Length (std::string)</span>
+                    <span class="complexity-value">O(1)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">Length (strlen C-style)</span>
+                    <span class="complexity-value">O(n)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">Concatenation</span>
+                    <span class="complexity-value">O(n+m)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">Substring</span>
+                    <span class="complexity-value">O(m)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">Search (Naive)</span>
+                    <span class="complexity-value">O(n×m)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">Search (KMP)</span>
+                    <span class="complexity-value">O(n+m)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">Insert/Delete</span>
+                    <span class="complexity-value">O(n)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">Comparison</span>
+                    <span class="complexity-value">O(n)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">Space</span>
+                    <span class="complexity-value">O(n)</span>
+                </div>
+            </div>
+            
+            <h3 style="margin-top: 35px;">Pattern Matching Algorithms:</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Algorithm</th>
+                        <th>Time Complexity</th>
+                        <th>Preprocessing</th>
+                        <th>Best For</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Naive</td>
+                        <td>O(n×m)</td>
+                        <td>None</td>
+                        <td>Small strings</td>
+                    </tr>
+                    <tr>
+                        <td>KMP</td>
+                        <td>O(n+m)</td>
+                        <td>O(m)</td>
+                        <td>General purpose</td>
+                    </tr>
+                    <tr>
+                        <td>Rabin-Karp</td>
+                        <td>O(n+m) avg</td>
+                        <td>O(m)</td>
+                        <td>Multiple patterns</td>
+                    </tr>
+                    <tr>
+                        <td>Boyer-Moore</td>
+                        <td>O(n/m) best</td>
+                        <td>O(m+σ)</td>
+                        <td>Large alphabets</td>
+                    </tr>
+                    <tr>
+                        <td>Z-Algorithm</td>
+                        <td>O(n+m)</td>
+                        <td>O(n+m)</td>
+                        <td>Pattern matching</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="tip-box">
+                <strong>💡 QUICK TIP:</strong> For single pattern search, KMP is your go-to. For multiple patterns, use Rabin-Karp with rolling hash!
+            </div>
+        </div>
+        
+        <!-- SECTION 8: INTERMEDIATE OPERATIONS -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">08</div>
+                <span>Intermediate Operations</span>
+            </div>
+            
+            <div class="technique-card">
+                <h4>🔄 Reverse String</h4>
+                <p>Two-pointer technique - swap from both ends.</p>
+                <div class="code-snippet"><span class="code-keyword">void</span> <span class="code-type">reverseString</span>(<span class="code-type">string</span>&amp; s) {
+    <span class="code-keyword">int</span> left = <span class="code-number">0</span>, right = s.<span class="code-type">length</span>() - <span class="code-number">1</span>;
+    <span class="code-keyword">while</span> (left &lt; right) {
+        <span class="code-type">swap</span>(s[left++], s[right--]);
+    }
+}  <span class="code-comment">// O(n) time, O(1) space</span></div>
+            </div>
+            
+            <div class="technique-card">
+                <h4>🔁 Check Palindrome</h4>
+                <p>Compare characters from both ends moving inward.</p>
+                <div class="code-snippet"><span class="code-keyword">bool</span> <span class="code-type">isPalindrome</span>(<span class="code-type">string</span> s) {
+    <span class="code-keyword">int</span> left = <span class="code-number">0</span>, right = s.<span class="code-type">length</span>() - <span class="code-number">1</span>;
+    <span class="code-keyword">while</span> (left &lt; right) {
+        <span class="code-keyword">if</span> (s[left++] != s[right--])
+            <span class="code-keyword">return false</span>;
+    }
+    <span class="code-keyword">return true</span>;
+}  <span class="code-comment">// O(n) time</span></div>
+            </div>
+            
+            <div class="technique-card">
+                <h4>🔀 Anagram Check</h4>
+                <p>Two strings are anagrams if they have same character frequencies.</p>
+                <div class="code-snippet"><span class="code-comment">// Method 1: Sort</span>
+<span class="code-keyword">bool</span> <span class="code-type">isAnagram</span>(<span class="code-type">string</span> s1, <span class="code-type">string</span> s2) {
+    <span class="code-type">sort</span>(s1.<span class="code-type">begin</span>(), s1.<span class="code-type">end</span>());
+    <span class="code-type">sort</span>(s2.<span class="code-type">begin</span>(), s2.<span class="code-type">end</span>());
+    <span class="code-keyword">return</span> s1 == s2;
+}  <span class="code-comment">// O(n log n)</span>
+
+<span class="code-comment">// Method 2: Hash map</span>
+<span class="code-keyword">bool</span> <span class="code-type">isAnagram</span>(<span class="code-type">string</span> s1, <span class="code-type">string</span> s2) {
+    <span class="code-keyword">if</span> (s1.<span class="code-type">length</span>() != s2.<span class="code-type">length</span>()) <span class="code-keyword">return false</span>;
+    <span class="code-type">unordered_map</span>&lt;<span class="code-keyword">char</span>, <span class="code-keyword">int</span>&gt; freq;
+    <span class="code-keyword">for</span> (<span class="code-keyword">char</span> c : s1) freq[c]++;
+    <span class="code-keyword">for</span> (<span class="code-keyword">char</span> c : s2) {
+        <span class="code-keyword">if</span> (--freq[c] &lt; <span class="code-number">0</span>) <span class="code-keyword">return false</span>;
+    }
+    <span class="code-keyword">return true</span>;
+}  <span class="code-comment">// O(n)</span></div>
+            </div>
+            
+            <div class="technique-card">
+                <h4>📊 Character Frequency</h4>
+                <p>Count occurrences of each character.</p>
+                <div class="code-snippet"><span class="code-type">unordered_map</span>&lt;<span class="code-keyword">char</span>, <span class="code-keyword">int</span>&gt; <span class="code-type">getFrequency</span>(<span class="code-type">string</span> s) {
+    <span class="code-type">unordered_map</span>&lt;<span class="code-keyword">char</span>, <span class="code-keyword">int</span>&gt; freq;
+    <span class="code-keyword">for</span> (<span class="code-keyword">char</span> c : s) {
+        freq[c]++;
+    }
+    <span class="code-keyword">return</span> freq;
+}  <span class="code-comment">// O(n) time, O(k) space where k = unique chars</span></div>
+            </div>
+            
+            <div class="technique-card">
+                <h4>🔢 String Compression</h4>
+                <p>Run-length encoding: "aaabbc" → "a3b2c1"</p>
+                <div class="code-snippet"><span class="code-type">string</span> <span class="code-type">compress</span>(<span class="code-type">string</span> s) {
+    <span class="code-type">string</span> result;
+    <span class="code-keyword">int</span> count = <span class="code-number">1</span>;
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = <span class="code-number">1</span>; i &lt;= s.<span class="code-type">length</span>(); i++) {
+        <span class="code-keyword">if</span> (i &lt; s.<span class="code-type">length</span>() &amp;&amp; s[i] == s[i-<span class="code-number">1</span>]) {
+            count++;
+        } <span class="code-keyword">else</span> {
+            result += s[i-<span class="code-number">1</span>];
+            result += <span class="code-type">to_string</span>(count);
+            count = <span class="code-number">1</span>;
+        }
+    }
+    <span class="code-keyword">return</span> result.<span class="code-type">length</span>() &lt; s.<span class="code-type">length</span>() ? result : s;
+}</div>
+            </div>
+            
+            <div class="technique-card">
+                <h4>✂️ Remove Duplicates</h4>
+                <p>Keep only first occurrence of each character.</p>
+                <div class="code-snippet"><span class="code-type">string</span> <span class="code-type">removeDuplicates</span>(<span class="code-type">string</span> s) {
+    <span class="code-type">unordered_set</span>&lt;<span class="code-keyword">char</span>&gt; seen;
+    <span class="code-type">string</span> result;
+    <span class="code-keyword">for</span> (<span class="code-keyword">char</span> c : s) {
+        <span class="code-keyword">if</span> (seen.<span class="code-type">find</span>(c) == seen.<span class="code-type">end</span>()) {
+            result += c;
+            seen.<span class="code-type">insert</span>(c);
+        }
+    }
+    <span class="code-keyword">return</span> result;
+}</div>
+            </div>
+        </div>
+        
+        <!-- SECTION 9: COMMON TECHNIQUES -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">09</div>
+                <span>Common Techniques & Patterns</span>
+            </div>
+            
+            <div class="technique-card">
+                <h4>🎯 Two-Pointer Technique</h4>
+                <p><strong>When:</strong> Palindromes, reversing, removing characters, in-place modifications</p>
+                <p style="margin-top: 12px;"><strong>Pattern:</strong> Start from both ends, move toward center or same direction</p>
+                <div class="code-snippet"><span class="code-comment">// Valid Palindrome (ignore non-alphanumeric)</span>
+<span class="code-keyword">bool</span> <span class="code-type">isPalindrome</span>(<span class="code-type">string</span> s) {
+    <span class="code-keyword">int</span> left = <span class="code-number">0</span>, right = s.<span class="code-type">length</span>() - <span class="code-number">1</span>;
+    <span class="code-keyword">while</span> (left &lt; right) {
+        <span class="code-keyword">while</span> (left &lt; right &amp;&amp; !<span class="code-type">isalnum</span>(s[left])) left++;
+        <span class="code-keyword">while</span> (left &lt; right &amp;&amp; !<span class="code-type">isalnum</span>(s[right])) right--;
+        <span class="code-keyword">if</span> (<span class="code-type">tolower</span>(s[left++]) != <span class="code-type">tolower</span>(s[right--]))
+            <span class="code-keyword">return false</span>;
+    }
+    <span class="code-keyword">return true</span>;
+}</div>
+            </div>
+            
+            <div class="technique-card">
+                <h4>🪟 Sliding Window</h4>
+                <p><strong>When:</strong> Substrings with constraints, longest/shortest substring problems</p>
+                <p style="margin-top: 12px;"><strong>Pattern:</strong> Expand right, shrink left when condition violated</p>
+                <div class="code-snippet"><span class="code-comment">// Longest Substring Without Repeating Characters</span>
+<span class="code-keyword">int</span> <span class="code-type">lengthOfLongestSubstring</span>(<span class="code-type">string</span> s) {
+    <span class="code-type">unordered_set</span>&lt;<span class="code-keyword">char</span>&gt; seen;
+    <span class="code-keyword">int</span> maxLen = <span class="code-number">0</span>, left = <span class="code-number">0</span>;
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> right = <span class="code-number">0</span>; right &lt; s.<span class="code-type">length</span>(); right++) {
+        <span class="code-keyword">while</span> (seen.<span class="code-type">count</span>(s[right])) {
+            seen.<span class="code-type">erase</span>(s[left++]);
+        }
+        seen.<span class="code-type">insert</span>(s[right]);
+        maxLen = <span class="code-type">max</span>(maxLen, right - left + <span class="code-number">1</span>);
+    }
+    <span class="code-keyword">return</span> maxLen;
+}  <span class="code-comment">// O(n) time</span></div>
+            </div>
+            
+            <div class="technique-card">
+                <h4>📊 Hashing / Frequency Map</h4>
+                <p><strong>When:</strong> Anagrams, character counting, first unique character</p>
+                <p style="margin-top: 12px;"><strong>Pattern:</strong> Store character frequencies in hash map or array</p>
+                <div class="code-snippet"><span class="code-comment">// Group Anagrams</span>
+<span class="code-type">vector</span>&lt;<span class="code-type">vector</span>&lt;<span class="code-type">string</span>&gt;&gt; <span class="code-type">groupAnagrams</span>(<span class="code-type">vector</span>&lt;<span class="code-type">string</span>&gt;&amp; strs) {
+    <span class="code-type">unordered_map</span>&lt;<span class="code-type">string</span>, <span class="code-type">vector</span>&lt;<span class="code-type">string</span>&gt;&gt; groups;
+    <span class="code-keyword">for</span> (<span class="code-type">string</span> s : strs) {
+        <span class="code-type">string</span> key = s;
+        <span class="code-type">sort</span>(key.<span class="code-type">begin</span>(), key.<span class="code-type">end</span>());
+        groups[key].<span class="code-type">push_back</span>(s);
+    }
+    <span class="code-type">vector</span>&lt;<span class="code-type">vector</span>&lt;<span class="code-type">string</span>&gt;&gt; result;
+    <span class="code-keyword">for</span> (<span class="code-keyword">auto</span>&amp; pair : groups) {
+        result.<span class="code-type">push_back</span>(pair.second);
+    }
+    <span class="code-keyword">return</span> result;
+}</div>
+            </div>
+            
+            <div class="technique-card">
+                <h4>🔍 Pattern Matching (KMP)</h4>
+                <p><strong>When:</strong> Finding substring in O(n+m) time</p>
+                <p style="margin-top: 12px;"><strong>Pattern:</strong> Build LPS array for pattern, use it to avoid backtracking</p>
+                <div class="code-snippet"><span class="code-comment">// KMP Pattern Matching</span>
+<span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt; <span class="code-type">computeLPS</span>(<span class="code-type">string</span> pattern) {
+    <span class="code-keyword">int</span> m = pattern.<span class="code-type">length</span>();
+    <span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt; lps(m, <span class="code-number">0</span>);
+    <span class="code-keyword">int</span> len = <span class="code-number">0</span>, i = <span class="code-number">1</span>;
+    <span class="code-keyword">while</span> (i &lt; m) {
+        <span class="code-keyword">if</span> (pattern[i] == pattern[len]) {
+            lps[i++] = ++len;
+        } <span class="code-keyword">else</span> {
+            <span class="code-keyword">if</span> (len != <span class="code-number">0</span>) len = lps[len-<span class="code-number">1</span>];
+            <span class="code-keyword">else</span> lps[i++] = <span class="code-number">0</span>;
+        }
+    }
+    <span class="code-keyword">return</span> lps;
+}</div>
+            </div>
+            
+            <div class="tip-box">
+                <strong>💡 PRO TIP:</strong> Master these 4 patterns (Two-Pointer, Sliding Window, Hashing, KMP) to solve 90% of string problems!
+            </div>
+        </div>
+        
+        <!-- SECTION 10: ADVANCED PROBLEMS -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">10</div>
+                <span>Advanced String Problems</span>
+            </div>
+            
+            <div class="problem-grid">
+                <div class="problem-item">
+                    <span class="problem-difficulty difficulty-easy">EASY</span>
+                    <div class="problem-title">Valid Palindrome</div>
+                    <p class="problem-approach">Two-pointer | Ignore non-alphanumeric</p>
+                </div>
+                
+                <div class="problem-item">
+                    <span class="problem-difficulty difficulty-easy">EASY</span>
+                    <div class="problem-title">Valid Anagram</div>
+                    <p class="problem-approach">Sort O(n log n) | Hash O(n)</p>
+                </div>
+                
+                <div class="problem-item">
+                    <span class="problem-difficulty difficulty-easy">EASY</span>
+                    <div class="problem-title">First Unique Character</div>
+                    <p class="problem-approach">Frequency map</p>
+                </div>
+                
+                <div class="problem-item">
+                    <span class="problem-difficulty difficulty-easy">EASY</span>
+                    <div class="problem-title">Reverse String</div>
+                    <p class="problem-approach">Two-pointer swap</p>
+                </div>
+                
+                <div class="problem-item">
+                    <span class="problem-difficulty difficulty-medium">MEDIUM</span>
+                    <div class="problem-title">Longest Substring Without Repeating</div>
+                    <p class="problem-approach">Sliding window + set</p>
+                </div>
+                
+                <div class="problem-item">
+                    <span class="problem-difficulty difficulty-medium">MEDIUM</span>
+                    <div class="problem-title">Longest Palindromic Substring</div>
+                    <p class="problem-approach">Expand around center | DP</p>
+                </div>
+                
+                <div class="problem-item">
+                    <span class="problem-difficulty difficulty-medium">MEDIUM</span>
+                    <div class="problem-title">Group Anagrams</div>
+                    <p class="problem-approach">Hash with sorted key</p>
+                </div>
+                
+                <div class="problem-item">
+                    <span class="problem-difficulty difficulty-medium">MEDIUM</span>
+                    <div class="problem-title">String to Integer (atoi)</div>
+                    <p class="problem-approach">Parsing + edge cases</p>
+                </div>
+                
+                <div class="problem-item">
+                    <span class="problem-difficulty difficulty-medium">MEDIUM</span>
+                    <div class="problem-title">Longest Common Prefix</div>
+                    <p class="problem-approach">Vertical scan | Binary search</p>
+                </div>
+                
+                <div class="problem-item">
+                    <span class="problem-difficulty difficulty-medium">MEDIUM</span>
+                    <div class="problem-title">Generate Parentheses</div>
+                    <p class="problem-approach">Backtracking</p>
+                </div>
+                
+                <div class="problem-item">
+                    <span class="problem-difficulty difficulty-medium">MEDIUM</span>
+                    <div class="problem-title">Letter Combinations</div>
+                    <p class="problem-approach">Backtracking + phone mapping</p>
+                </div>
+                
+                <div class="problem-item">
+                    <span class="problem-difficulty difficulty-medium">MEDIUM</span>
+                    <div class="problem-title">Decode String</div>
+                    <p class="problem-approach">Stack-based parsing</p>
+                </div>
+                
+                <div class="problem-item">
+                    <span class="problem-difficulty difficulty-hard">HARD</span>
+                    <div class="problem-title">Minimum Window Substring</div>
+                    <p class="problem-approach">Sliding window + hash</p>
+                </div>
+                
+                <div class="problem-item">
+                    <span class="problem-difficulty difficulty-hard">HARD</span>
+                    <div class="problem-title">Edit Distance</div>
+                    <p class="problem-approach">DP (Levenshtein)</p>
+                </div>
+                
+                <div class="problem-item">
+                    <span class="problem-difficulty difficulty-hard">HARD</span>
+                    <div class="problem-title">Regular Expression Matching</div>
+                    <p class="problem-approach">DP with * and .</p>
+                </div>
+                
+                <div class="problem-item">
+                    <span class="problem-difficulty difficulty-hard">HARD</span>
+                    <div class="problem-title">Wildcard Matching</div>
+                    <p class="problem-approach">DP with * and ?</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Continue with remaining sections -->
+        
+        <!-- SECTION 11: STRING ALGORITHMS -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">11</div>
+                <span>String Algorithms</span>
+            </div>
+            
+            <div class="algorithm-card">
+                <h4>1. KMP (Knuth-Morris-Pratt) Algorithm</h4>
+                <p><strong>Time:</strong> O(n+m) | <strong>Space:</strong> O(m)</p>
+                <p style="margin: 12px 0;">Linear time pattern matching using LPS (Longest Prefix Suffix) array to avoid backtracking.</p>
+                <div class="code-snippet"><span class="code-comment">// KMP Search</span>
+<span class="code-keyword">int</span> <span class="code-type">KMPSearch</span>(<span class="code-type">string</span> text, <span class="code-type">string</span> pattern) {
+    <span class="code-keyword">int</span> n = text.<span class="code-type">length</span>(), m = pattern.<span class="code-type">length</span>();
+    <span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt; lps = <span class="code-type">computeLPS</span>(pattern);
+    <span class="code-keyword">int</span> i = <span class="code-number">0</span>, j = <span class="code-number">0</span>;
+    <span class="code-keyword">while</span> (i &lt; n) {
+        <span class="code-keyword">if</span> (text[i] == pattern[j]) {
+            i++; j++;
+        }
+        <span class="code-keyword">if</span> (j == m) <span class="code-keyword">return</span> i - j;  <span class="code-comment">// Found</span>
+        <span class="code-keyword">else if</span> (i &lt; n &amp;&amp; text[i] != pattern[j]) {
+            <span class="code-keyword">if</span> (j != <span class="code-number">0</span>) j = lps[j-<span class="code-number">1</span>];
+            <span class="code-keyword">else</span> i++;
+        }
+    }
+    <span class="code-keyword">return</span> -<span class="code-number">1</span>;  <span class="code-comment">// Not found</span>
+}</div>
+            </div>
+            
+            <div class="algorithm-card">
+                <h4>2. Rabin-Karp Algorithm</h4>
+                <p><strong>Time:</strong> O(n+m) average | <strong>Space:</strong> O(1)</p>
+                <p style="margin: 12px 0;">Rolling hash for pattern matching. Excellent for multiple pattern search.</p>
+                <div class="code-snippet"><span class="code-comment">// Rabin-Karp with rolling hash</span>
+<span class="code-keyword">int</span> <span class="code-type">rabinKarp</span>(<span class="code-type">string</span> text, <span class="code-type">string</span> pattern) {
+    <span class="code-keyword">int</span> n = text.<span class="code-type">length</span>(), m = pattern.<span class="code-type">length</span>();
+    <span class="code-keyword">int</span> d = <span class="code-number">256</span>;  <span class="code-comment">// Number of characters</span>
+    <span class="code-keyword">int</span> q = <span class="code-number">101</span>; <span class="code-comment">// Prime for hash</span>
+    <span class="code-keyword">int</span> h = <span class="code-number">1</span>, p = <span class="code-number">0</span>, t = <span class="code-number">0</span>;
+    
+    <span class="code-comment">// Calculate h = d^(m-1) % q</span>
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = <span class="code-number">0</span>; i &lt; m-<span class="code-number">1</span>; i++)
+        h = (h * d) % q;
+    
+    <span class="code-comment">// Calculate hash for pattern and first window</span>
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = <span class="code-number">0</span>; i &lt; m; i++) {
+        p = (d * p + pattern[i]) % q;
+        t = (d * t + text[i]) % q;
+    }
+    
+    <span class="code-comment">// Slide window</span>
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = <span class="code-number">0</span>; i &lt;= n - m; i++) {
+        <span class="code-keyword">if</span> (p == t) {  <span class="code-comment">// Hash match, verify</span>
+            <span class="code-keyword">if</span> (text.<span class="code-type">substr</span>(i, m) == pattern)
+                <span class="code-keyword">return</span> i;
+        }
+        <span class="code-keyword">if</span> (i &lt; n - m) {
+            t = (d*(t - text[i]*h) + text[i+m]) % q;
+            <span class="code-keyword">if</span> (t &lt; <span class="code-number">0</span>) t += q;
+        }
+    }
+    <span class="code-keyword">return</span> -<span class="code-number">1</span>;
+}</div>
+            </div>
+            
+            <div class="algorithm-card">
+                <h4>3. Z-Algorithm</h4>
+                <p><strong>Time:</strong> O(n+m) | <strong>Space:</strong> O(n+m)</p>
+                <p style="margin: 12px 0;">Builds Z-array for linear time pattern matching.</p>
+                <div class="code-snippet"><span class="code-comment">// Z-Algorithm for pattern matching</span>
+<span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt; <span class="code-type">buildZArray</span>(<span class="code-type">string</span> s) {
+    <span class="code-keyword">int</span> n = s.<span class="code-type">length</span>();
+    <span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt; z(n);
+    <span class="code-keyword">int</span> l = <span class="code-number">0</span>, r = <span class="code-number">0</span>;
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = <span class="code-number">1</span>; i &lt; n; i++) {
+        <span class="code-keyword">if</span> (i &gt; r) {
+            l = r = i;
+            <span class="code-keyword">while</span> (r &lt; n &amp;&amp; s[r] == s[r-l]) r++;
+            z[i] = r - l; r--;
+        } <span class="code-keyword">else</span> {
+            <span class="code-keyword">int</span> k = i - l;
+            <span class="code-keyword">if</span> (z[k] &lt; r - i + <span class="code-number">1</span>) z[i] = z[k];
+            <span class="code-keyword">else</span> {
+                l = i;
+                <span class="code-keyword">while</span> (r &lt; n &amp;&amp; s[r] == s[r-l]) r++;
+                z[i] = r - l; r--;
+            }
+        }
+    }
+    <span class="code-keyword">return</span> z;
+}</div>
+            </div>
+            
+            <h3 style="margin: 35px 0 20px;">Applications of String Algorithms:</h3>
+            <div class="use-case-grid">
+                <div class="use-case">
+                    <div class="use-case-icon">🔍</div>
+                    <div class="use-case-label">Text Search</div>
+                </div>
+                <div class="use-case">
+                    <div class="use-case-icon">🧬</div>
+                    <div class="use-case-label">DNA Sequencing</div>
+                </div>
+                <div class="use-case">
+                    <div class="use-case-icon">📄</div>
+                    <div class="use-case-label">Plagiarism Detection</div>
+                </div>
+                <div class="use-case">
+                    <div class="use-case-icon">✍️</div>
+                    <div class="use-case-label">Spell Checking</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SECTION 12: STL STRING FUNCTIONS -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">12</div>
+                <span>STL String Functions</span>
+            </div>
+            
+            <h3>Complete std::string Reference:</h3>
+            
+            <div class="type-card">
+                <h4>Construction & Assignment</h4>
+                <div class="code-snippet"><span class="code-type">string</span> s;                     <span class="code-comment">// Empty string</span>
+<span class="code-type">string</span> s(<span class="code-number">5</span>, <span class="code-string">'a'</span>);           <span class="code-comment">// "aaaaa"</span>
+<span class="code-type">string</span> s(str, pos, len);   <span class="code-comment">// Substring</span>
+<span class="code-type">string</span> s = <span class="code-string">"Hello"</span>;        <span class="code-comment">// From literal</span></div>
+            </div>
+            
+            <div class="type-card">
+                <h4>Capacity & Size</h4>
+                <div class="code-snippet">s.<span class="code-type">size</span>();           <span class="code-comment">// Number of characters</span>
+s.<span class="code-type">length</span>();        <span class="code-comment">// Same as size()</span>
+s.<span class="code-type">empty</span>();         <span class="code-comment">// Check if empty</span>
+s.<span class="code-type">capacity</span>();      <span class="code-comment">// Allocated space</span>
+s.<span class="code-type">reserve</span>(<span class="code-number">100</span>);     <span class="code-comment">// Reserve space</span>
+s.<span class="code-type">shrink_to_fit</span>(); <span class="code-comment">// Reduce capacity</span></div>
+            </div>
+            
+            <div class="type-card">
+                <h4>Element Access</h4>
+                <div class="code-snippet">s[<span class="code-number">0</span>];              <span class="code-comment">// Unchecked access</span>
+s.<span class="code-type">at</span>(<span class="code-number">0</span>);           <span class="code-comment">// Checked (throws exception)</span>
+s.<span class="code-type">front</span>();         <span class="code-comment">// First character</span>
+s.<span class="code-type">back</span>();          <span class="code-comment">// Last character</span>
+s.<span class="code-type">c_str</span>();         <span class="code-comment">// C-style string</span>
+s.<span class="code-type">data</span>();          <span class="code-comment">// Pointer to data</span></div>
+            </div>
+            
+            <div class="type-card">
+                <h4>Modifiers</h4>
+                <div class="code-snippet">s += <span class="code-string">"text"</span>;            <span class="code-comment">// Append</span>
+s.<span class="code-type">append</span>(<span class="code-string">"text"</span>);       <span class="code-comment">// Append</span>
+s.<span class="code-type">push_back</span>(<span class="code-string">'c'</span>);      <span class="code-comment">// Add character</span>
+s.<span class="code-type">pop_back</span>();           <span class="code-comment">// Remove last char</span>
+s.<span class="code-type">insert</span>(pos, <span class="code-string">"text"</span>); <span class="code-comment">// Insert at position</span>
+s.<span class="code-type">erase</span>(pos, len);      <span class="code-comment">// Remove characters</span>
+s.<span class="code-type">replace</span>(pos, len, <span class="code-string">"x"</span>);<span class="code-comment">// Replace</span>
+s.<span class="code-type">swap</span>(s2);             <span class="code-comment">// Swap with another</span>
+s.<span class="code-type">clear</span>();              <span class="code-comment">// Empty string</span></div>
+            </div>
+            
+            <div class="type-card">
+                <h4>String Operations</h4>
+                <div class="code-snippet">s.<span class="code-type">substr</span>(pos, len);    <span class="code-comment">// Extract substring</span>
+s.<span class="code-type">find</span>(<span class="code-string">"text"</span>);          <span class="code-comment">// Find first occurrence</span>
+s.<span class="code-type">rfind</span>(<span class="code-string">"text"</span>);         <span class="code-comment">// Find last occurrence</span>
+s.<span class="code-type">find_first_of</span>(<span class="code-string">"abc"</span>); <span class="code-comment">// Find any char</span>
+s.<span class="code-type">find_last_of</span>(<span class="code-string">"abc"</span>);  <span class="code-comment">// Last any char</span>
+s.<span class="code-type">compare</span>(s2);          <span class="code-comment">// Lexicographic compare</span></div>
+            </div>
+            
+            <div class="type-card">
+                <h4>Iterators</h4>
+                <div class="code-snippet">s.<span class="code-type">begin</span>(), s.<span class="code-type">end</span>();   <span class="code-comment">// Forward iterators</span>
+s.<span class="code-type">rbegin</span>(), s.<span class="code-type">rend</span>(); <span class="code-comment">// Reverse iterators</span>
+
+<span class="code-comment">// Range-based loop</span>
+<span class="code-keyword">for</span> (<span class="code-keyword">char</span> c : s) {
+    cout &lt;&lt; c;
+}</div>
+            </div>
+        </div>
+        
+        <!-- SECTION 13: SUMMARY & DECISION TREE -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">13</div>
+                <span>Summary & Decision Tree</span>
+            </div>
+            
+            <div class="summary-box">
+                <h3>Key Properties Summary</h3>
+                <ul>
+                    <li>Sequence of characters representing text</li>
+                    <li>Zero-based indexing like arrays</li>
+                    <li>C-style: null-terminated, fixed size</li>
+                    <li>std::string: dynamic, automatic memory</li>
+                    <li>Rich standard library support</li>
+                    <li>Mutable in C++ (unlike Java/Python)</li>
+                    <li>O(1) character access</li>
+                    <li>O(n) concatenation and modification</li>
+                </ul>
+            </div>
+            
+            <div class="decision-tree">
+                <h3>🎯 Decision Tree: Which String Type?</h3>
+                
+                <div class="decision-item">
+                    <strong>Legacy C code?</strong> → char[] (C-style)
+                </div>
+                
+                <div class="decision-item">
+                    <strong>Modern C++ application?</strong> → std::string ✅
+                </div>
+                
+                <div class="decision-item">
+                    <strong>Read-only reference to avoid copies?</strong> → std::string_view (C++17) ✅
+                </div>
+                
+                <div class="decision-item">
+                    <strong>Unicode / international text?</strong> → std::wstring or UTF-8 ✅
+                </div>
+                
+                <div class="decision-item">
+                    <strong>No escape sequences needed?</strong> → Raw string literals R"(...)" ✅
+                </div>
+                
+                <div class="decision-item">
+                    <strong>String I/O and conversions?</strong> → std::stringstream ✅
+                </div>
+                
+                <div class="decision-item">
+                    <strong>Performance critical with small strings?</strong> → std::string (has SSO) ✅
+                </div>
+            </div>
+            
+            <div class="type-card" style="margin-top: 35px;">
+                <h3>📌 Top 15 Must-Know String Problems</h3>
+                <ol style="list-style-position: inside; line-height: 2.2; color: var(--navy);">
+                    <li><strong>Valid Palindrome</strong> - Two-pointer technique</li>
+                    <li><strong>Valid Anagram</strong> - Sort or hash frequency</li>
+                    <li><strong>Longest Substring Without Repeating</strong> - Sliding window</li>
+                    <li><strong>Longest Palindromic Substring</strong> - Expand around center / DP</li>
+                    <li><strong>Group Anagrams</strong> - Hash with sorted key</li>
+                    <li><strong>String to Integer (atoi)</strong> - Parsing with edge cases</li>
+                    <li><strong>Implement strStr()</strong> - KMP or naive</li>
+                    <li><strong>Longest Common Prefix</strong> - Vertical scan</li>
+                    <li><strong>Letter Combinations</strong> - Backtracking</li>
+                    <li><strong>Generate Parentheses</strong> - Backtracking</li>
+                    <li><strong>Minimum Window Substring</strong> - Sliding window + hash</li>
+                    <li><strong>Edit Distance</strong> - Dynamic programming</li>
+                    <li><strong>Regular Expression Matching</strong> - DP with wildcards</li>
+                    <li><strong>Word Break</strong> - DP or BFS</li>
+                    <li><strong>Decode String</strong> - Stack-based parsing</li>
+                </ol>
+            </div>
+            
+            <div class="type-card" style="margin-top: 25px;">
+                <h3>🎓 Pattern Recognition Guide</h3>
+                <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                    <tr style="border-bottom: 2px solid var(--cyan-main);">
+                        <td style="padding: 12px; font-weight: 700; color: var(--ocean-blue);">If Problem Asks For</td>
+                        <td style="padding: 12px; font-weight: 700; color: var(--ocean-blue);">Use This Pattern</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--cyan-light);">
+                        <td style="padding: 12px;">Palindrome check, reverse</td>
+                        <td style="padding: 12px;"><strong>Two-Pointer</strong></td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--cyan-light);">
+                        <td style="padding: 12px;">Substrings with constraints</td>
+                        <td style="padding: 12px;"><strong>Sliding Window</strong></td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--cyan-light);">
+                        <td style="padding: 12px;">Anagrams, frequency</td>
+                        <td style="padding: 12px;"><strong>Hash Map</strong></td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--cyan-light);">
+                        <td style="padding: 12px;">Pattern matching</td>
+                        <td style="padding: 12px;"><strong>KMP / Rabin-Karp</strong></td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--cyan-light);">
+                        <td style="padding: 12px;">Longest palindrome, edit distance</td>
+                        <td style="padding: 12px;"><strong>Dynamic Programming</strong></td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--cyan-light);">
+                        <td style="padding: 12px;">Generate combinations</td>
+                        <td style="padding: 12px;"><strong>Backtracking</strong></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px;">Nested structures, decode</td>
+                        <td style="padding: 12px;"><strong>Stack</strong></td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="tip-box" style="margin-top: 30px;">
+                <strong>💡 FINAL TIP:</strong> Always use std::string in modern C++. Master two-pointer, sliding window, and hashing - these three patterns solve 80% of string interview problems!
+            </div>
+        </div>
+        
+        <!-- FOOTER -->
+        <div class="footer">
+            <p><strong>STRING - COMPLETE DSA VISUAL GUIDE (C++)</strong></p>
+            <p style="margin-top: 12px;">Master Data Structures & Algorithms • Perfect for Interviews, Exams & Revision</p>
+            <p style="margin-top: 20px; font-size: 0.9em; color: var(--ocean-blue);">
+                🌊 Remember: Strings flow like water - flexible, dynamic, and powerful when handled correctly!
+            </p>
+        </div>
+    </div>
+</body>
+</html>
