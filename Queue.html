@@ -1,0 +1,1895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Queue - Complete DSA Visual Guide (C++)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700;800&family=Lato:wght@400;500;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --green-dark: #1B5E20;
+            --green-main: #2E7D32;
+            --green-medium: #4CAF50;
+            --green-light: #66BB6A;
+            --green-bright: #81C784;
+            --green-lime: #AED581;
+            --green-pale: #C5E1A5;
+            --green-deep: #388E3C;
+            --charcoal: #1A1A1A;
+            --gray-dark: #333333;
+            --gray-light: #F5F5F5;
+        }
+        
+        body {
+            font-family: 'Lato', sans-serif;
+            background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-main) 30%, var(--green-medium) 60%, var(--green-light) 100%);
+            padding: 40px 20px;
+            line-height: 1.6;
+            color: var(--charcoal);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(27, 94, 32, 0.4);
+            overflow: hidden;
+        }
+        
+        /* HEADER */
+        .header {
+            background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-deep) 50%, var(--green-medium) 100%);
+            color: white;
+            padding: 80px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 15px,
+                    rgba(255,255,255,0.05) 15px,
+                    rgba(255,255,255,0.05) 30px
+                );
+            pointer-events: none;
+        }
+        
+        .header h1 {
+            font-family: 'Raleway', sans-serif;
+            font-size: 4.5em;
+            font-weight: 800;
+            margin-bottom: 15px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            letter-spacing: 8px;
+        }
+        
+        .header p {
+            font-family: 'Raleway', sans-serif;
+            font-size: 1.5em;
+            letter-spacing: 3px;
+            font-weight: 600;
+            opacity: 0.95;
+        }
+        
+        /* SECTION STYLING */
+        .section {
+            padding: 50px 60px;
+            border-bottom: 3px solid var(--green-pale);
+        }
+        
+        .section:nth-child(even) {
+            background: linear-gradient(to right, #F8FFF8 0%, #ffffff 100%);
+        }
+        
+        .section:last-child {
+            border-bottom: none;
+        }
+        
+        .section-title {
+            font-family: 'Raleway', sans-serif;
+            font-size: 2.3em;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: var(--green-dark);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .section-number {
+            background: linear-gradient(135deg, var(--green-medium) 0%, var(--green-light) 50%, var(--green-lime) 100%);
+            color: white;
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+            font-weight: 700;
+            box-shadow: 0 5px 20px rgba(76, 175, 80, 0.5);
+            border: 4px solid var(--green-dark);
+            flex-shrink: 0;
+        }
+        
+        h3 {
+            color: var(--green-dark);
+            font-family: 'Raleway', sans-serif;
+            margin: 30px 0 20px;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        
+        p {
+            color: var(--gray-dark);
+            line-height: 2;
+            margin-bottom: 18px;
+            font-size: 1.05em;
+        }
+        
+        /* QUEUE VISUALIZATION */
+        .queue-visual {
+            display: inline-flex;
+            align-items: center;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(46, 125, 50, 0.3);
+            border-radius: 12px;
+            overflow: hidden;
+            background: white;
+            border: 4px solid var(--green-dark);
+        }
+        
+        .queue-item {
+            background: linear-gradient(to right, var(--green-light) 0%, var(--green-medium) 100%);
+            border-right: 4px solid var(--green-dark);
+            padding: 25px 40px;
+            text-align: center;
+            min-width: 120px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .queue-item:first-child {
+            background: linear-gradient(to right, var(--green-lime) 0%, var(--green-bright) 100%);
+            box-shadow: -4px 0 15px rgba(174, 213, 129, 0.5);
+        }
+        
+        .queue-item:last-child {
+            border-right: none;
+            background: linear-gradient(to right, var(--green-medium) 0%, var(--green-light) 100%);
+        }
+        
+        .queue-value {
+            font-weight: 900;
+            color: white;
+            font-size: 1.8em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .queue-label {
+            font-size: 0.8em;
+            color: var(--green-dark);
+            margin-top: 5px;
+            font-weight: 600;
+            font-family: 'Raleway', sans-serif;
+        }
+        
+        .queue-pointer {
+            position: absolute;
+            font-weight: 700;
+            color: var(--green-dark);
+            font-family: 'Raleway', sans-serif;
+            font-size: 1.1em;
+        }
+        
+        .front-pointer {
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .rear-pointer {
+            bottom: -35px;
+            right: 50%;
+            transform: translateX(50%);
+        }
+        
+        /* CODE SNIPPETS */
+        .code-snippet {
+            background: var(--charcoal);
+            color: var(--green-pale);
+            padding: 28px;
+            border-radius: 14px;
+            font-family: 'Source Code Pro', monospace;
+            margin: 28px 0;
+            overflow-x: auto;
+            font-size: 0.95em;
+            border: 4px solid var(--green-dark);
+            box-shadow: 0 6px 20px rgba(26, 26, 26, 0.3);
+            position: relative;
+        }
+        
+        .code-snippet::before {
+            content: 'C++';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 0.75em;
+            color: var(--green-light);
+            font-weight: 700;
+            font-family: 'Raleway', sans-serif;
+        }
+        
+        .code-keyword { color: #66BB6A; }
+        .code-type { color: #4CAF50; }
+        .code-string { color: #81C784; }
+        .code-comment { color: #888; font-style: italic; }
+        .code-number { color: #AED581; }
+        .code-function { color: #4CAF50; }
+        
+        /* COMPARISON TABLES */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 28px 0;
+            box-shadow: 0 6px 25px rgba(46, 125, 50, 0.2);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+        
+        .comparison-table th {
+            background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-medium) 100%);
+            color: white;
+            padding: 22px;
+            text-align: left;
+            font-family: 'Raleway', sans-serif;
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+        
+        .comparison-table td {
+            padding: 20px 22px;
+            border-bottom: 2px solid var(--green-pale);
+            color: var(--gray-dark);
+        }
+        
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background: linear-gradient(to right, #F8FFF8 0%, #ffffff 100%);
+        }
+        
+        /* CARDS AND BOXES */
+        .type-card, .technique-card {
+            background: linear-gradient(135deg, #F8FFF8 0%, #ffffff 100%);
+            border-left: 6px solid var(--green-medium);
+            padding: 30px;
+            margin: 25px 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.15);
+        }
+        
+        .type-card h3, .type-card h4, .technique-card h4 {
+            color: var(--green-dark);
+            margin-bottom: 15px;
+            font-family: 'Raleway', sans-serif;
+        }
+        
+        .operation-grid, .problem-grid, .use-case-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        
+        .operation-card, .problem-item, .use-case {
+            background: linear-gradient(135deg, #ffffff 0%, #F8FFF8 100%);
+            border: 4px solid var(--green-medium);
+            border-radius: 16px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(102, 187, 106, 0.15);
+        }
+        
+        .operation-card:hover, .problem-item:hover, .use-case:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 30px rgba(76, 175, 80, 0.3);
+            border-color: var(--green-light);
+        }
+        
+        .operation-card h4 {
+            font-family: 'Raleway', sans-serif;
+            color: var(--green-dark);
+            margin-bottom: 18px;
+            font-size: 1.4em;
+        }
+        
+        .operation-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .operation-card li {
+            padding: 10px 0;
+            position: relative;
+            padding-left: 30px;
+            color: var(--gray-dark);
+        }
+        
+        .operation-card li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--green-medium);
+            font-weight: 700;
+            font-size: 1.2em;
+        }
+        
+        /* COMPLEXITY BOX */
+        .complexity-box {
+            background: linear-gradient(135deg, #F8FFF8 0%, #ffffff 100%);
+            border: 4px solid var(--green-medium);
+            padding: 30px 35px;
+            margin: 25px 0;
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(102, 187, 106, 0.15);
+        }
+        
+        .complexity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 2px solid var(--green-pale);
+        }
+        
+        .complexity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .complexity-label {
+            font-weight: 600;
+            color: var(--gray-dark);
+            font-size: 1.05em;
+        }
+        
+        .complexity-value {
+            font-family: 'Source Code Pro', monospace;
+            background: linear-gradient(135deg, var(--green-medium) 0%, var(--green-light) 100%);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 10px;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+        
+        /* TIP BOX */
+        .tip-box {
+            background: linear-gradient(135deg, #F1F8E9 0%, #DCEDC8 100%);
+            border-left: 6px solid var(--green-lime);
+            padding: 25px 30px;
+            margin: 25px 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(174, 213, 129, 0.2);
+        }
+        
+        .tip-box strong {
+            color: var(--green-dark);
+            font-size: 1.2em;
+            font-family: 'Raleway', sans-serif;
+        }
+        
+        /* MISTAKE CARD */
+        .mistake-card {
+            background: linear-gradient(135deg, #FFEBEE 0%, #FFF5F5 100%);
+            border-left: 6px solid #D32F2F;
+            padding: 30px;
+            margin: 25px 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 18px rgba(211, 47, 47, 0.2);
+        }
+        
+        .mistake-card h4 {
+            color: #C62828;
+            margin-bottom: 16px;
+            font-family: 'Raleway', sans-serif;
+            font-size: 1.4em;
+        }
+        
+        /* PROBLEM STYLING */
+        .problem-difficulty {
+            display: inline-block;
+            padding: 7px 18px;
+            border-radius: 25px;
+            font-size: 0.8em;
+            font-weight: 700;
+            margin-bottom: 14px;
+            font-family: 'Raleway', sans-serif;
+        }
+        
+        .difficulty-easy { background: var(--green-medium); color: white; }
+        .difficulty-medium { background: #FF9800; color: white; }
+        .difficulty-hard { background: #F44336; color: white; }
+        
+        .problem-title {
+            font-weight: 700;
+            color: var(--green-dark);
+            font-size: 1.2em;
+            margin-bottom: 12px;
+            font-family: 'Raleway', sans-serif;
+        }
+        
+        .problem-approach {
+            color: var(--gray-dark);
+            font-size: 0.95em;
+            line-height: 1.7;
+        }
+        
+        /* USE CASE */
+        .use-case {
+            text-align: center;
+        }
+        
+        .use-case-icon {
+            font-size: 3.8em;
+            margin-bottom: 18px;
+        }
+        
+        .use-case-label {
+            font-weight: 700;
+            font-family: 'Raleway', sans-serif;
+            color: var(--green-dark);
+            font-size: 1.1em;
+        }
+        
+        /* SUMMARY BOX */
+        .summary-box {
+            background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-deep) 50%, var(--green-medium) 100%);
+            color: white;
+            padding: 55px;
+            border-radius: 22px;
+            margin: 35px 0;
+            box-shadow: 0 12px 35px rgba(27, 94, 32, 0.5);
+        }
+        
+        .summary-box h3 {
+            font-family: 'Raleway', sans-serif;
+            font-size: 2.4em;
+            margin-bottom: 30px;
+            color: white;
+        }
+        
+        .summary-box ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .summary-box li {
+            padding: 16px 0;
+            font-size: 1.15em;
+            position: relative;
+            padding-left: 45px;
+            line-height: 1.8;
+        }
+        
+        .summary-box li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            font-weight: 700;
+            font-size: 1.6em;
+            color: var(--green-lime);
+        }
+        
+        /* DECISION TREE */
+        .decision-tree {
+            background: white;
+            padding: 35px;
+            border-radius: 18px;
+            margin: 30px 0;
+            border: 4px solid var(--green-medium);
+            box-shadow: 0 6px 22px rgba(102, 187, 106, 0.2);
+        }
+        
+        .decision-tree h3 {
+            font-family: 'Raleway', sans-serif;
+            color: var(--green-dark);
+            margin-bottom: 25px;
+            font-size: 2em;
+        }
+        
+        .decision-item {
+            padding: 18px;
+            margin: 14px 0;
+            border-left: 5px solid var(--green-light);
+            background: linear-gradient(to right, #F8FFF8 0%, #ffffff 100%);
+            border-radius: 8px;
+        }
+        
+        .decision-item strong {
+            color: var(--green-dark);
+            font-family: 'Raleway', sans-serif;
+        }
+        
+        /* FOOTER */
+        .footer {
+            background: linear-gradient(to right, #F8FFF8 0%, #ffffff 100%);
+            padding: 45px;
+            text-align: center;
+            color: var(--gray-dark);
+            border-top: 5px solid var(--green-medium);
+        }
+        
+        .footer strong {
+            font-family: 'Raleway', sans-serif;
+            color: var(--green-dark);
+            font-size: 1.15em;
+        }
+        
+        /* FLOOR DIAGRAM */
+        .fifo-diagram {
+            background: linear-gradient(135deg, #F8FFF8 0%, #ffffff 100%);
+            border: 4px solid var(--green-medium);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .fifo-arrow {
+            color: var(--green-light);
+            font-size: 2.5em;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+        
+        /* CIRCULAR QUEUE VISUAL */
+        .circular-queue {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 30px 0;
+            position: relative;
+            height: 200px;
+        }
+        
+        .circular-element {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--green-light), var(--green-medium));
+            border: 3px solid var(--green-dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2em;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        /* PRINT STYLES */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+            }
+            .operation-card, .problem-item, .use-case {
+                break-inside: avoid;
+            }
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 3em;
+                letter-spacing: 4px;
+            }
+            
+            .section {
+                padding: 30px 20px;
+            }
+            
+            .section-title {
+                font-size: 1.8em;
+            }
+            
+            .queue-item {
+                padding: 15px 20px;
+                min-width: 80px;
+            }
+            
+            .operation-grid, .problem-grid, .use-case-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <h1>QUEUE</h1>
+            <p>COMPLETE DSA VISUAL GUIDE (C++)</p>
+        </div>
+        
+        <!-- SECTION 1: WHAT IS A QUEUE? -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">01</div>
+                <span>What is a Queue?</span>
+            </div>
+            
+            <p style="font-size: 1.15em;">A <strong>Queue</strong> is a linear data structure that follows the FIFO (First In First Out) principle. Think of it like a ticket counter line - the first person to join the line is the first one to get served. Elements are added at the rear and removed from the front.</p>
+            
+            <h3>Visual Representation - Ticket Counter Line:</h3>
+            
+            <div class="queue-visual">
+                <div class="queue-item">
+                    <div class="queue-value">10</div>
+                    <div class="queue-label">FRONT</div>
+                    <div class="queue-pointer front-pointer">DEQUEUE HERE</div>
+                </div>
+                <div class="queue-item">
+                    <div class="queue-value">20</div>
+                </div>
+                <div class="queue-item">
+                    <div class="queue-value">30</div>
+                </div>
+                <div class="queue-item">
+                    <div class="queue-value">40</div>
+                    <div class="queue-label">REAR</div>
+                    <div class="queue-pointer rear-pointer">ENQUEUE HERE</div>
+                </div>
+            </div>
+            
+            <div class="fifo-diagram">
+                <h3 style="color: var(--green-dark); margin-bottom: 20px;">FIFO Principle</h3>
+                <div style="font-size: 1.3em; color: var(--gray-dark);">
+                    <div style="margin: 15px 0;">
+                        <strong>ENQUEUE (Insert):</strong> Add to REAR
+                        <div class="fifo-arrow">→</div>
+                    </div>
+                    <div style="margin: 15px 0;">
+                        <strong>DEQUEUE (Remove):</strong> Remove from FRONT
+                        <div class="fifo-arrow">←</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="code-snippet"><span class="code-comment">// Array-based queue</span>
+<span class="code-keyword">int</span> queue[<span class="code-number">100</span>];
+<span class="code-keyword">int</span> front = -<span class="code-number">1</span>, rear = -<span class="code-number">1</span>;
+
+<span class="code-comment">// C++ STL queue</span>
+<span class="code-keyword">#include</span> <span class="code-string">&lt;queue&gt;</span>
+<span class="code-type">std::queue</span>&lt;<span class="code-keyword">int</span>&gt; q;
+q.<span class="code-type">push</span>(<span class="code-number">10</span>);      <span class="code-comment">// Add to rear (enqueue)</span>
+q.<span class="code-type">pop</span>();        <span class="code-comment">// Remove from front (dequeue)</span>
+<span class="code-keyword">int</span> front = q.<span class="code-type">front</span>();  <span class="code-comment">// Access front element</span></div>
+            
+            <h3>Key Characteristics:</h3>
+            <ul style="list-style-position: inside; margin-left: 20px; color: var(--gray-dark); line-height: 2.3;">
+                <li><strong>FIFO Structure</strong> - First In First Out order</li>
+                <li><strong>Two-end access</strong> - Enqueue at rear, dequeue from front</li>
+                <li><strong>O(1) operations</strong> - Enqueue, dequeue, front all constant time</li>
+                <li><strong>No random access</strong> - Can only access front element</li>
+                <li><strong>Dynamic or fixed size</strong> - Depends on implementation</li>
+                <li><strong>Essential for BFS</strong> - Graph/tree level-order traversal</li>
+                <li><strong>Scheduling</strong> - Perfect for task scheduling systems</li>
+            </ul>
+        </div>
+        
+        <!-- SECTION 2: MEMORY REPRESENTATION -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">02</div>
+                <span>Memory Representation</span>
+            </div>
+            
+            <h3>Array-Based Queue Memory:</h3>
+            
+            <div style="background: linear-gradient(135deg, #F8FFF8 0%, #ffffff 100%); padding: 35px; border-radius: 14px; margin: 28px 0; border: 4px solid var(--green-medium);">
+                <p style="margin-bottom: 22px;"><strong>Queue with elements [10, 20, 30, 40]:</strong></p>
+                
+                <div style="display: flex; gap: 12px; flex-wrap: wrap; margin: 25px 0; justify-content: center;">
+                    <div style="text-align: center; flex: 1; min-width: 90px; max-width: 100px;">
+                        <div style="background: var(--green-lime); border: 3px solid var(--green-dark); padding: 12px; border-radius: 8px; margin-bottom: 10px;">
+                            <strong>[0] ← FRONT</strong>
+                        </div>
+                        <div style="background: linear-gradient(to bottom, var(--green-lime), var(--green-bright)); border: 4px solid var(--green-dark); padding: 20px; border-radius: 10px; font-weight: 900; color: white; font-size: 1.5em; box-shadow: 0 4px 15px rgba(174,213,129,0.5);">10</div>
+                    </div>
+                    <div style="text-align: center; flex: 1; min-width: 90px; max-width: 100px;">
+                        <div style="background: var(--green-light); border: 3px solid var(--green-dark); padding: 12px; border-radius: 8px; margin-bottom: 10px;">
+                            <strong>[1]</strong>
+                        </div>
+                        <div style="background: linear-gradient(to bottom, var(--green-light), var(--green-medium)); border: 4px solid var(--green-dark); padding: 20px; border-radius: 10px; font-weight: 900; color: white; font-size: 1.5em;">20</div>
+                    </div>
+                    <div style="text-align: center; flex: 1; min-width: 90px; max-width: 100px;">
+                        <div style="background: var(--green-light); border: 3px solid var(--green-dark); padding: 12px; border-radius: 8px; margin-bottom: 10px;">
+                            <strong>[2]</strong>
+                        </div>
+                        <div style="background: linear-gradient(to bottom, var(--green-light), var(--green-medium)); border: 4px solid var(--green-dark); padding: 20px; border-radius: 10px; font-weight: 900; color: white; font-size: 1.5em;">30</div>
+                    </div>
+                    <div style="text-align: center; flex: 1; min-width: 90px; max-width: 100px;">
+                        <div style="background: var(--green-light); border: 3px solid var(--green-dark); padding: 12px; border-radius: 8px; margin-bottom: 10px;">
+                            <strong>[3] ← REAR</strong>
+                        </div>
+                        <div style="background: linear-gradient(to bottom, var(--green-light), var(--green-medium)); border: 4px solid var(--green-dark); padding: 20px; border-radius: 10px; font-weight: 900; color: white; font-size: 1.5em;">40</div>
+                    </div>
+                    <div style="text-align: center; flex: 1; min-width: 90px; max-width: 100px;">
+                        <div style="background: #E0E0E0; border: 3px solid #9E9E9E; padding: 12px; border-radius: 8px; margin-bottom: 10px;">
+                            <strong>[4]</strong>
+                        </div>
+                        <div style="background: #F5F5F5; border: 4px dashed #BDBDBD; padding: 20px; border-radius: 10px; color: #9E9E9E; font-size: 1.5em;">Empty</div>
+                    </div>
+                </div>
+                
+                <p style="margin-top: 25px; color: var(--gray-dark); font-size: 1.05em;"><strong>Front = 0, Rear = 3</strong> (indices of first and last elements)</p>
+            </div>
+            
+            <h3>Circular Queue Memory:</h3>
+            
+            <div style="background: linear-gradient(135deg, #F8FFF8 0%, #ffffff 100%); padding: 35px; border-radius: 14px; margin: 28px 0; border: 4px solid var(--green-medium); text-align: center;">
+                <p style="margin-bottom: 22px;"><strong>Circular Queue wraps around when full:</strong></p>
+                
+                <div class="circular-queue">
+                    <div class="circular-element" style="top: 20px; left: calc(50% - 100px);">40</div>
+                    <div class="circular-element" style="top: 70px; left: calc(50% - 50px);">50</div>
+                    <div class="circular-element" style="top: 120px; left: calc(50% - 0px); background: var(--green-lime);">[EMPTY]</div>
+                    <div class="circular-element" style="top: 120px; left: calc(50% + 50px); background: var(--green-lime);">[EMPTY]</div>
+                    <div class="circular-element" style="top: 70px; left: calc(50% + 100px);">10</div>
+                    <div class="circular-element" style="top: 20px; left: calc(50% + 50px);">20</div>
+                    <div class="circular-element" style="top: -30px; left: calc(50% + 0px);">30</div>
+                </div>
+                
+                <div style="margin-top: 30px; color: var(--green-dark); font-weight: 600;">
+                    <div>Front = 4 (element 10) ← WRAPS AROUND → Rear = 1 (element 50)</div>
+                </div>
+            </div>
+            
+            <div class="code-snippet"><span class="code-comment">// Array implementation - Linear Queue</span>
+<span class="code-keyword">class</span> <span class="code-type">Queue</span> {
+    <span class="code-keyword">int</span> arr[<span class="code-number">100</span>];
+    <span class="code-keyword">int</span> front, rear;
+<span class="code-keyword">public</span>:
+    <span class="code-type">Queue</span>() : front(-<span class="code-number">1</span>), rear(-<span class="code-number">1</span>) {}
+    
+    <span class="code-keyword">void</span> <span class="code-function">enqueue</span>(<span class="code-keyword">int</span> x) {
+        <span class="code-keyword">if</span> (rear &gt;= <span class="code-number">99</span>) <span class="code-keyword">return</span>;  <span class="code-comment">// Overflow</span>
+        <span class="code-keyword">if</span> (front == -<span class="code-number">1</span>) front = <span class="code-number">0</span>;
+        arr[++rear] = x;
+    }
+    
+    <span class="code-keyword">int</span> <span class="code-function">dequeue</span>() {
+        <span class="code-keyword">if</span> (front == -<span class="code-number">1</span> || front &gt; rear) <span class="code-keyword">return</span> -<span class="code-number">1</span>;  <span class="code-comment">// Underflow</span>
+        <span class="code-keyword">return</span> arr[front++];
+    }
+};
+
+<span class="code-comment">// Circular Queue implementation</span>
+<span class="code-keyword">class</span> <span class="code-type">CircularQueue</span> {
+    <span class="code-keyword">int</span> arr[<span class="code-number">100</span>];
+    <span class="code-keyword">int</span> front, rear;
+<span class="code-keyword">public</span>:
+    <span class="code-type">CircularQueue</span>() : front(-<span class="code-number">1</span>), rear(-<span class="code-number">1</span>) {}
+    
+    <span class="code-keyword">bool</span> <span class="code-function">isEmpty</span>() { <span class="code-keyword">return</span> front == -<span class="code-number">1</span>; }
+    
+    <span class="code-keyword">bool</span> <span class="code-function">isFull</span>() { 
+        <span class="code-keyword">return</span> (rear + <span class="code-number">1</span>) % <span class="code-number">100</span> == front; 
+    }
+};</div>
+            
+            <div class="tip-box">
+                <strong>💡 QUICK TIP:</strong> Linear queues waste space after dequeue. Use circular queues to efficiently reuse space with modulo arithmetic!
+            </div>
+        </div>
+        
+        <!-- SECTION 3: TYPES OF QUEUES -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">03</div>
+                <span>Types of Queues</span>
+            </div>
+            
+            <div class="type-card">
+                <h3>1. Simple Queue (Linear Queue)</h3>
+                <p>Basic FIFO structure with front and rear pointers.</p>
+                <div class="code-snippet"><span class="code-keyword">int</span> queue[MAX_SIZE];
+<span class="code-keyword">int</span> front = -<span class="code-number">1</span>, rear = -<span class="code-number">1</span>;</div>
+                <p style="margin-top: 15px;"><strong>Pros:</strong> Simple implementation | <strong>Cons:</strong> Wastes space after dequeue</p>
+            </div>
+            
+            <div class="type-card">
+                <h3>2. Circular Queue</h3>
+                <p>Front and rear wrap around using modulo arithmetic.</p>
+                <div class="code-snippet"><span class="code-comment">// Key operations</span>
+rear = (rear + <span class="code-number">1</span>) % MAX_SIZE;
+front = (front + <span class="code-number">1</span>) % MAX_SIZE;</div>
+                <p style="margin-top: 15px;"><strong>Pros:</strong> Efficient space utilization | <strong>Cons:</strong> Slightly more complex</p>
+            </div>
+            
+            <div class="type-card">
+                <h3>3. Double-Ended Queue (Deque)</h3>
+                <p>Insertion and deletion at both ends.</p>
+                <div class="code-snippet"><span class="code-keyword">#include</span> <span class="code-string">&lt;deque&gt;</span>
+<span class="code-type">std::deque</span>&lt;<span class="code-keyword">int</span>&gt; dq;
+dq.<span class="code-type">push_front</span>(<span class="code-number">10</span>);
+dq.<span class="code-type">push_back</span>(<span class="code-number">20</span>);
+dq.<span class="code-type">pop_front</span>();
+dq.<span class="code-type">pop_back</span>();</div>
+                <p style="margin-top: 15px;"><strong>Pros:</strong> Maximum flexibility | <strong>Use:</strong> Sliding window problems</p>
+            </div>
+            
+            <div class="type-card">
+                <h3>4. Priority Queue</h3>
+                <p>Elements dequeued based on priority, not insertion order.</p>
+                <div class="code-snippet"><span class="code-keyword">#include</span> <span class="code-string">&lt;queue&gt;</span>
+<span class="code-comment">// Max heap (default)</span>
+<span class="code-type">std::priority_queue</span>&lt;<span class="code-keyword">int</span>&gt; pq;
+
+<span class="code-comment">// Min heap</span>
+<span class="code-type">std::priority_queue</span>&lt;<span class="code-keyword">int</span>, <span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt;, <span class="code-type">greater</span>&lt;<span class="code-keyword">int</span>&gt;&gt; minPQ;</div>
+                <p style="margin-top: 15px;"><strong>Use Case:</strong> Dijkstra's algorithm, task scheduling</p>
+            </div>
+            
+            <div class="type-card">
+                <h3>5. std::queue (STL Adapter)</h3>
+                <p>Standard template library queue - most commonly used.</p>
+                <div class="code-snippet"><span class="code-keyword">#include</span> <span class="code-string">&lt;queue&gt;</span>
+<span class="code-type">std::queue</span>&lt;<span class="code-keyword">int</span>&gt; q;
+q.<span class="code-type">push</span>(<span class="code-number">10</span>);      <span class="code-comment">// Enqueue</span>
+q.<span class="code-type">pop</span>();        <span class="code-comment">// Dequeue</span>
+<span class="code-keyword">int</span> f = q.<span class="code-type">front</span>();  <span class="code-comment">// Front element</span></div>
+                <p style="margin-top: 15px;"><strong>Pros:</strong> Easy to use, well-tested | <strong>Container:</strong> Uses deque by default</p>
+            </div>
+            
+            <div class="type-card">
+                <h3>6. Blocking Queue (Thread-Safe)</h3>
+                <p>Thread-safe queue for concurrent programming.</p>
+                <div class="code-snippet"><span class="code-comment">// Concept - blocks when empty/full</span>
+<span class="code-keyword">template</span>&lt;<span class="code-keyword">typename</span> T&gt;
+<span class="code-keyword">class</span> <span class="code-type">BlockingQueue</span> {
+    <span class="code-type">std::queue</span>&lt;T&gt; q;
+    <span class="code-type">std::mutex</span> mtx;
+    <span class="code-type">std::condition_variable</span> cv;
+    <span class="code-comment">// Thread-safe push/pop</span>
+};</div>
+                <p style="margin-top: 15px;"><strong>Use Case:</strong> Producer-consumer patterns</p>
+            </div>
+        </div>
+        
+        <!-- SECTION 4: WHY QUEUES? -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">04</div>
+                <span>Why Queues? (Comparison)</span>
+            </div>
+            
+            <h3>Queue vs Stack:</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Queue</th>
+                        <th>Stack</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Order</strong></td>
+                        <td>FIFO (First In First Out)</td>
+                        <td>LIFO (Last In First Out)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Operations</strong></td>
+                        <td>Enqueue rear, Dequeue front</td>
+                        <td>Push/Pop from top</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Access Points</strong></td>
+                        <td>Two ends (front & rear)</td>
+                        <td>One end (top)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Use Case</strong></td>
+                        <td>Job scheduling, BFS</td>
+                        <td>Function calls, backtracking</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Real-world</strong></td>
+                        <td>Ticket counter line</td>
+                        <td>Stack of plates</td>
+                    </tr>
+                    <tr>
+                        <td><strong>BFS/DFS</strong></td>
+                        <td>✅ BFS traversal</td>
+                        <td>✅ DFS traversal</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3 style="margin-top: 35px;">Queue vs Array:</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Queue</th>
+                        <th>Array</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Access</strong></td>
+                        <td>Front only - O(1)</td>
+                        <td>Any index - O(1)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Insert</strong></td>
+                        <td>Enqueue at rear - O(1)</td>
+                        <td>End O(1), Elsewhere O(n)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Delete</strong></td>
+                        <td>Dequeue from front - O(1)</td>
+                        <td>End O(1), Elsewhere O(n)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Order</strong></td>
+                        <td>FIFO (First In First Out)</td>
+                        <td>Sequential access</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Use Case</strong></td>
+                        <td>Task scheduling, buffers</td>
+                        <td>General data storage</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Random Access</strong></td>
+                        <td>❌ No</td>
+                        <td>✅ Yes</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3 style="margin-top: 35px;">When to Use Queue:</h3>
+            <div class="type-card">
+                <ul style="list-style-position: inside; line-height: 2.2;">
+                    <li>✅ Need FIFO (First In First Out) behavior</li>
+                    <li>✅ Job scheduling / task management systems</li>
+                    <li>✅ Breadth-First Search (BFS) traversal</li>
+                    <li>✅ Printer queue / IO buffers</li>
+                    <li>✅ Request handling (web servers)</li>
+                    <li>✅ Asynchronous data transfer</li>
+                    <li>✅ Call center systems</li>
+                    <li>✅ CPU process scheduling</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- SECTION 5: BASIC OPERATIONS -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">05</div>
+                <span>Basic Operations</span>
+            </div>
+            
+            <div class="operation-grid">
+                <div class="operation-card">
+                    <h4>📥 Enqueue (Insert)</h4>
+                    <p style="margin-bottom: 15px;">Add element to rear of queue</p>
+                    <ul>
+                        <li>Time: O(1)</li>
+                        <li>Check for overflow first</li>
+                        <li>Increment rear pointer</li>
+                        <li>Add element at rear</li>
+                    </ul>
+                    <div class="code-snippet" style="margin-top: 15px; font-size: 0.85em;"><span class="code-keyword">void</span> <span class="code-function">enqueue</span>(<span class="code-keyword">int</span> x) {
+    <span class="code-keyword">if</span> (rear &gt;= MAX-<span class="code-number">1</span>)
+        <span class="code-keyword">return</span>;  <span class="code-comment">// Overflow</span>
+    <span class="code-keyword">if</span> (front == -<span class="code-number">1</span>) front = <span class="code-number">0</span>;
+    arr[++rear] = x;
+}</div>
+                </div>
+                
+                <div class="operation-card">
+                    <h4>📤 Dequeue (Remove)</h4>
+                    <p style="margin-bottom: 15px;">Remove and return front element</p>
+                    <ul>
+                        <li>Time: O(1)</li>
+                        <li>Check for underflow first</li>
+                        <li>Return front element</li>
+                        <li>Increment front pointer</li>
+                    </ul>
+                    <div class="code-snippet" style="margin-top: 15px; font-size: 0.85em;"><span class="code-keyword">int</span> <span class="code-function">dequeue</span>() {
+    <span class="code-keyword">if</span> (front == -<span class="code-number">1</span> || front &gt; rear)
+        <span class="code-keyword">return</span> -<span class="code-number">1</span>;  <span class="code-comment">// Underflow</span>
+    <span class="code-keyword">return</span> arr[front++];
+}</div>
+                </div>
+                
+                <div class="operation-card">
+                    <h4>👀 Front / Peek</h4>
+                    <p style="margin-bottom: 15px;">View front element without removing</p>
+                    <ul>
+                        <li>Time: O(1)</li>
+                        <li>Check if queue empty</li>
+                        <li>Return front element</li>
+                        <li>Don't modify queue</li>
+                    </ul>
+                    <div class="code-snippet" style="margin-top: 15px; font-size: 0.85em;"><span class="code-keyword">int</span> <span class="code-function">front</span>() {
+    <span class="code-keyword">if</span> (front == -<span class="code-number">1</span>)
+        <span class="code-keyword">return</span> -<span class="code-number">1</span>;
+    <span class="code-keyword">return</span> arr[front];
+}</div>
+                </div>
+                
+                <div class="operation-card">
+                    <h4>❓ isEmpty</h4>
+                    <p style="margin-bottom: 15px;">Check if queue has no elements</p>
+                    <ul>
+                        <li>Time: O(1)</li>
+                        <li>Compare front with -1</li>
+                        <li>Return true if empty</li>
+                        <li>Essential before dequeue/front</li>
+                    </ul>
+                    <div class="code-snippet" style="margin-top: 15px; font-size: 0.85em;"><span class="code-keyword">bool</span> <span class="code-function">isEmpty</span>() {
+    <span class="code-keyword">return</span> (front == -<span class="code-number">1</span> || front &gt; rear);
+}</div>
+                </div>
+                
+                <div class="operation-card">
+                    <h4>⚠️ isFull</h4>
+                    <p style="margin-bottom: 15px;">Check if queue reached capacity</p>
+                    <ul>
+                        <li>Time: O(1)</li>
+                        <li>Only for array-based</li>
+                        <li>Compare rear with MAX-1</li>
+                        <li>Prevents overflow</li>
+                    </ul>
+                    <div class="code-snippet" style="margin-top: 15px; font-size: 0.85em;"><span class="code-keyword">bool</span> <span class="code-function">isFull</span>() {
+    <span class="code-keyword">return</span> rear &gt;= MAX-<span class="code-number">1</span>;
+}</div>
+                </div>
+                
+                <div class="operation-card">
+                    <h4>📏 Size</h4>
+                    <p style="margin-bottom: 15px;">Get number of elements in queue</p>
+                    <ul>
+                        <li>Time: O(1)</li>
+                        <li>Return rear - front + 1</li>
+                        <li>0 if queue empty</li>
+                        <li>Useful for iteration</li>
+                    </ul>
+                    <div class="code-snippet" style="margin-top: 15px; font-size: 0.85em;"><span class="code-keyword">int</span> <span class="code-function">size</span>() {
+    <span class="code-keyword">if</span> (front == -<span class="code-number">1</span>) <span class="code-keyword">return</span> <span class="code-number">0</span>;
+    <span class="code-keyword">return</span> rear - front + <span class="code-number">1</span>;
+}</div>
+                </div>
+            </div>
+            
+            <div class="tip-box">
+                <strong>💡 REMEMBER:</strong> Always check isEmpty() before dequeue() or front() to avoid underflow errors!
+            </div>
+        </div>
+        
+        <!-- SECTION 6: COMMON MISTAKES -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">06</div>
+                <span>Common Mistakes & Pitfalls</span>
+            </div>
+            
+            <div class="mistake-card">
+                <h4>❌ Queue Overflow (Enqueue when full)</h4>
+                <p>Most common error - adding to a full queue causes overflow.</p>
+                <div class="code-snippet"><span class="code-comment">// ❌ WRONG - No overflow check</span>
+<span class="code-keyword">void</span> <span class="code-function">enqueue</span>(<span class="code-keyword">int</span> x) {
+    arr[++rear] = x;  <span class="code-comment">// May overflow!</span>
+}
+
+<span class="code-comment">// ✅ CORRECT - Check before enqueue</span>
+<span class="code-keyword">void</span> <span class="code-function">enqueue</span>(<span class="code-keyword">int</span> x) {
+    <span class="code-keyword">if</span> (<span class="code-function">isFull</span>()) {
+        <span class="code-keyword">throw</span> <span class="code-type">std::overflow_error</span>(<span class="code-string">"Queue overflow!"</span>);
+    }
+    <span class="code-keyword">if</span> (front == -<span class="code-number">1</span>) front = <span class="code-number">0</span>;
+    arr[++rear] = x;
+}</div>
+            </div>
+            
+            <div class="mistake-card">
+                <h4>❌ Queue Underflow (Dequeue when empty)</h4>
+                <p>Attempting to dequeue from an empty queue.</p>
+                <div class="code-snippet"><span class="code-comment">// ❌ WRONG - No underflow check</span>
+<span class="code-keyword">int</span> <span class="code-function">dequeue</span>() {
+    <span class="code-keyword">return</span> arr[front++];  <span class="code-comment">// May underflow!</span>
+}
+
+<span class="code-comment">// ✅ CORRECT - Check before dequeue</span>
+<span class="code-keyword">int</span> <span class="code-function">dequeue</span>() {
+    <span class="code-keyword">if</span> (<span class="code-function">isEmpty</span>()) {
+        <span class="code-keyword">throw</span> <span class="code-type">std::underflow_error</span>(<span class="code-string">"Queue underflow!"</span>);
+    }
+    <span class="code-keyword">return</span> arr[front++];
+}</div>
+            </div>
+            
+            <div class="mistake-card">
+                <h4>❌ Not Setting Front on First Enqueue</h4>
+                <p>Forgetting to initialize front when adding first element.</p>
+                <div class="code-snippet"><span class="code-comment">// ❌ WRONG - Front stays -1</span>
+<span class="code-keyword">void</span> <span class="code-function">enqueue</span>(<span class="code-keyword">int</span> x) {
+    arr[++rear] = x;
+    <span class="code-comment">// Forgot: if (front == -1) front = 0;</span>
+}
+
+<span class="code-comment">// ✅ CORRECT - Initialize front</span>
+<span class="code-keyword">void</span> <span class="code-function">enqueue</span>(<span class="code-keyword">int</span> x) {
+    <span class="code-keyword">if</span> (front == -<span class="code-number">1</span>) front = <span class="code-number">0</span>;
+    arr[++rear] = x;
+}</div>
+            </div>
+            
+            <div class="mistake-card">
+                <h4>❌ Incorrect Circular Queue Full Condition</h4>
+                <p>Wrong logic for checking if circular queue is full.</p>
+                <div class="code-snippet"><span class="code-comment">// ❌ WRONG - For circular queue</span>
+<span class="code-keyword">bool</span> <span class="code-function">isFull</span>() {
+    <span class="code-keyword">return</span> rear == MAX_SIZE - <span class="code-number">1</span>;
+}
+
+<span class="code-comment">// ✅ CORRECT - Circular queue</span>
+<span class="code-keyword">bool</span> <span class="code-function">isFull</span>() {
+    <span class="code-keyword">return</span> (rear + <span class="code-number">1</span>) % MAX_SIZE == front;
+}</div>
+            </div>
+            
+            <div class="mistake-card">
+                <h4>❌ Wasting Space in Linear Queue</h4>
+                <p>After many dequeue operations, front moves forward, wasting space.</p>
+                <div class="code-snippet"><span class="code-comment">// ❌ PROBLEM - Linear queue wastes space</span>
+<span class="code-comment">// After: enqueue(10), enqueue(20), enqueue(30)</span>
+<span class="code-comment">// Then: dequeue(), dequeue() → front=2, rear=2</span>
+<span class="code-comment">// Space at indexes 0,1 wasted!</span>
+
+<span class="code-comment">// ✅ SOLUTION - Use Circular Queue</span>
+<span class="code-keyword">void</span> <span class="code-function">enqueue</span>(<span class="code-keyword">int</span> x) {
+    rear = (rear + <span class="code-number">1</span>) % MAX_SIZE;  <span class="code-comment">// Wraps around</span>
+    arr[rear] = x;
+}</div>
+            </div>
+            
+            <div class="mistake-card">
+                <h4>❌ Not Checking Empty Before Front/Rear</h4>
+                <p>Accessing front/back of empty queue causes crash.</p>
+                <div class="code-snippet"><span class="code-comment">// ❌ WRONG</span>
+<span class="code-keyword">int</span> val = q.<span class="code-function">front</span>();  <span class="code-comment">// Crash if empty!</span>
+
+<span class="code-comment">// ✅ CORRECT</span>
+<span class="code-keyword">if</span> (!q.<span class="code-function">empty</span>()) {
+    <span class="code-keyword">int</span> val = q.<span class="code-function">front</span>();
+}</div>
+            </div>
+        </div>
+        
+        <!-- SECTION 7: TIME & SPACE COMPLEXITY -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">07</div>
+                <span>Time & Space Complexity</span>
+            </div>
+            
+            <div class="complexity-box">
+                <h3 style="font-family: 'Raleway', sans-serif; color: var(--green-dark); margin-bottom: 25px; font-size: 1.7em;">Queue Operations Complexity:</h3>
+                
+                <div class="complexity-item">
+                    <span class="complexity-label">Enqueue</span>
+                    <span class="complexity-value">O(1)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">Dequeue</span>
+                    <span class="complexity-value">O(1)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">Front / Peek</span>
+                    <span class="complexity-value">O(1)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">Rear</span>
+                    <span class="complexity-value">O(1)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">isEmpty</span>
+                    <span class="complexity-value">O(1)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">isFull (array only)</span>
+                    <span class="complexity-value">O(1)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">Size</span>
+                    <span class="complexity-value">O(1)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">Search</span>
+                    <span class="complexity-value">O(n)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">Space Complexity</span>
+                    <span class="complexity-value">O(n)</span>
+                </div>
+            </div>
+            
+            <h3 style="margin-top: 40px;">Implementation Comparison:</h3>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Array (Linear)</th>
+                        <th>Circular Array</th>
+                        <th>Linked List</th>
+                        <th>std::queue</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Enqueue</strong></td>
+                        <td>O(1)</td>
+                        <td>O(1)</td>
+                        <td>O(1)</td>
+                        <td>O(1)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dequeue</strong></td>
+                        <td>O(1)</td>
+                        <td>O(1)</td>
+                        <td>O(1)</td>
+                        <td>O(1)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Memory</strong></td>
+                        <td>Fixed size</td>
+                        <td>Fixed size</td>
+                        <td>Dynamic</td>
+                        <td>Depends on container</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Space Waste</strong></td>
+                        <td>High (after dequeue)</td>
+                        <td>None</td>
+                        <td>None</td>
+                        <td>Depends on container</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cache</strong></td>
+                        <td>Excellent</td>
+                        <td>Excellent</td>
+                        <td>Poor</td>
+                        <td>Depends on container</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Overhead</strong></td>
+                        <td>None</td>
+                        <td>Modulo arithmetic</td>
+                        <td>Pointer/node</td>
+                        <td>Container overhead</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="tip-box">
+                <strong>💡 PERFORMANCE TIP:</strong> For maximum performance with known max size, use circular array queue. For dynamic sizing, use std::queue with deque container!
+            </div>
+        </div>
+        
+        <!-- SECTION 8: INTERMEDIATE OPERATIONS -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">08</div>
+                <span>Intermediate Operations</span>
+            </div>
+            
+            <div class="technique-card">
+                <h4>🔄 Reverse a Queue</h4>
+                <p>Reverse queue elements using a stack.</p>
+                <div class="code-snippet"><span class="code-keyword">void</span> <span class="code-function">reverseQueue</span>(<span class="code-type">queue</span>&lt;<span class="code-keyword">int</span>&gt;&amp; q) {
+    <span class="code-type">stack</span>&lt;<span class="code-keyword">int</span>&gt; st;
+    
+    <span class="code-comment">// Push all elements to stack</span>
+    <span class="code-keyword">while</span> (!q.<span class="code-function">empty</span>()) {
+        st.<span class="code-function">push</span>(q.<span class="code-function">front</span>());
+        q.<span class="code-function">pop</span>();
+    }
+    
+    <span class="code-comment">// Pop from stack and enqueue back</span>
+    <span class="code-keyword">while</span> (!st.<span class="code-function">empty</span>()) {
+        q.<span class="code-function">push</span>(st.<span class="code-function">top</span>());
+        st.<span class="code-function">pop</span>();
+    }
+}  <span class="code-comment">// O(n) time, O(n) space</span></div>
+            </div>
+            
+            <div class="technique-card">
+                <h4>🔢 Generate Binary Numbers 1 to N</h4>
+                <p>Generate binary numbers using queue.</p>
+                <div class="code-snippet"><span class="code-type">vector</span>&lt;<span class="code-type">string</span>&gt; <span class="code-function">generateBinary</span>(<span class="code-keyword">int</span> n) {
+    <span class="code-type">queue</span>&lt;<span class="code-type">string</span>&gt; q;
+    <span class="code-type">vector</span>&lt;<span class="code-type">string</span>&gt; result;
+    
+    q.<span class="code-function">push</span>(<span class="code-string">"1"</span>);
+    
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = <span class="code-number">0</span>; i &lt; n; i++) {
+        <span class="code-type">string</span> curr = q.<span class="code-function">front</span>();
+        q.<span class="code-function">pop</span>();
+        result.<span class="code-function">push_back</span>(curr);
+        
+        q.<span class="code-function">push</span>(curr + <span class="code-string">"0"</span>);
+        q.<span class="code-function">push</span>(curr + <span class="code-string">"1"</span>);
+    }
+    
+    <span class="code-keyword">return</span> result;
+}  <span class="code-comment">// O(n) time</span></div>
+            </div>
+            
+            <div class="technique-card">
+                <h4>🔀 Interleave Queue Halves</h4>
+                <p>Interleave first half with second half.</p>
+                <div class="code-snippet"><span class="code-keyword">void</span> <span class="code-function">interleave</span>(<span class="code-type">queue</span>&lt;<span class="code-keyword">int</span>&gt;&amp; q) {
+    <span class="code-keyword">int</span> n = q.<span class="code-function">size</span>();
+    <span class="code-keyword">int</span> k = n / <span class="code-number">2</span>;
+    <span class="code-type">queue</span>&lt;<span class="code-keyword">int</span>&gt; temp;
+    
+    <span class="code-comment">// Move first half to temp queue</span>
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = <span class="code-number">0</span>; i &lt; k; i++) {
+        temp.<span class="code-function">push</span>(q.<span class="code-function">front</span>());
+        q.<span class="code-function">pop</span>();
+    }
+    
+    <span class="code-comment">// Interleave elements</span>
+    <span class="code-keyword">while</span> (!temp.<span class="code-function">empty</span>()) {
+        q.<span class="code-function">push</span>(temp.<span class="code-function">front</span>());
+        temp.<span class="code-function">pop</span>();
+        q.<span class="code-function">push</span>(q.<span class="code-function">front</span>());
+        q.<span class="code-function">pop</span>();
+    }
+}  <span class="code-comment">// O(n) time, O(n) space</span></div>
+            </div>
+            
+            <div class="technique-card">
+                <h4>📊 First Non-Repeating Character in Stream</h4>
+                <p>Find first non-repeating character using queue and hash map.</p>
+                <div class="code-snippet"><span class="code-type">string</span> <span class="code-function">firstNonRepeating</span>(<span class="code-type">string</span> stream) {
+    <span class="code-type">unordered_map</span>&lt;<span class="code-type">char</span>, <span class="code-keyword">int</span>&gt; freq;
+    <span class="code-type">queue</span>&lt;<span class="code-type">char</span>&gt; q;
+    <span class="code-type">string</span> result = <span class="code-string">""</span>;
+    
+    <span class="code-keyword">for</span> (<span class="code-type">char</span> c : stream) {
+        freq[c]++;
+        q.<span class="code-function">push</span>(c);
+        
+        <span class="code-comment">// Remove repeating characters from front</span>
+        <span class="code-keyword">while</span> (!q.<span class="code-function">empty</span>() &amp;&amp; freq[q.<span class="code-function">front</span>()] &gt; <span class="code-number">1</span>) {
+            q.<span class="code-function">pop</span>();
+        }
+        
+        <span class="code-keyword">if</span> (q.<span class="code-function">empty</span>()) {
+            result.<span class="code-function">push_back</span>(<span class="code-string">'#'</span>);
+        } <span class="code-keyword">else</span> {
+            result.<span class="code-function">push_back</span>(q.<span class="code-function">front</span>());
+        }
+    }
+    
+    <span class="code-keyword">return</span> result;
+}  <span class="code-comment">// O(n) time, O(n) space</span></div>
+            </div>
+        </div>
+        
+        <!-- SECTION 9: COMMON TECHNIQUES -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">09</div>
+                <span>Common Techniques & Patterns</span>
+            </div>
+            
+            <div class="technique-card">
+                <h4>🔍 BFS (Breadth-First Search)</h4>
+                <p><strong>When:</strong> Level-order traversal, shortest path in unweighted graph</p>
+                <div class="code-snippet"><span class="code-keyword">void</span> <span class="code-function">BFS</span>(<span class="code-type">Graph</span> g, <span class="code-keyword">int</span> start) {
+    <span class="code-type">queue</span>&lt;<span class="code-keyword">int</span>&gt; q;
+    <span class="code-type">vector</span>&lt;<span class="code-keyword">bool</span>&gt; visited(g.V, <span class="code-keyword">false</span>);
+    
+    q.<span class="code-function">push</span>(start);
+    visited[start] = <span class="code-keyword">true</span>;
+    
+    <span class="code-keyword">while</span> (!q.<span class="code-function">empty</span>()) {
+        <span class="code-keyword">int</span> v = q.<span class="code-function">front</span>();
+        q.<span class="code-function">pop</span>();
+        
+        <span class="code-comment">// Process vertex v</span>
+        cout &lt;&lt; v &lt;&lt; <span class="code-string">" "</span>;
+        
+        <span class="code-comment">// Visit all adjacent vertices</span>
+        <span class="code-keyword">for</span> (<span class="code-keyword">int</span> u : g.adj[v]) {
+            <span class="code-keyword">if</span> (!visited[u]) {
+                visited[u] = <span class="code-keyword">true</span>;
+                q.<span class="code-function">push</span>(u);
+            }
+        }
+    }
+}</div>
+            </div>
+            
+            <div class="technique-card">
+                <h4>🪟 Sliding Window Maximum (Deque)</h4>
+                <p><strong>When:</strong> Maximum/minimum in sliding window problems</p>
+                <div class="code-snippet"><span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt; <span class="code-function">maxSlidingWindow</span>(<span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt;&amp; nums, <span class="code-keyword">int</span> k) {
+    <span class="code-type">deque</span>&lt;<span class="code-keyword">int</span>&gt; dq;
+    <span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt; result;
+    
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = <span class="code-number">0</span>; i &lt; nums.<span class="code-function">size</span>(); i++) {
+        <span class="code-comment">// Remove elements outside window</span>
+        <span class="code-keyword">if</span> (!dq.<span class="code-function">empty</span>() &amp;&amp; dq.<span class="code-function">front</span>() == i - k)
+            dq.<span class="code-function">pop_front</span>();
+        
+        <span class="code-comment">// Maintain decreasing order</span>
+        <span class="code-keyword">while</span> (!dq.<span class="code-function">empty</span>() &amp;&amp; nums[dq.<span class="code-function">back</span>()] &lt;= nums[i])
+            dq.<span class="code-function">pop_back</span>();
+        
+        dq.<span class="code-function">push_back</span>(i);
+        
+        <span class="code-comment">// Add to result when window is full</span>
+        <span class="code-keyword">if</span> (i &gt;= k - <span class="code-number">1</span>)
+            result.<span class="code-function">push_back</span>(nums[dq.<span class="code-function">front</span>()]);
+    }
+    
+    <span class="code-keyword">return</span> result;
+}  <span class="code-comment">// O(n) time</span></div>
+            </div>
+            
+            <div class="technique-card">
+                <h4>📚 Two Queue Technique</h4>
+                <p><strong>When:</strong> Implement stack using queues, level order traversal</p>
+                <div class="code-snippet"><span class="code-comment">// Implement Stack using Two Queues</span>
+<span class="code-keyword">class</span> <span class="code-type">Stack</span> {
+    <span class="code-type">queue</span>&lt;<span class="code-keyword">int</span>&gt; q1, q2;
+<span class="code-keyword">public</span>:
+    <span class="code-keyword">void</span> <span class="code-function">push</span>(<span class="code-keyword">int</span> x) {
+        <span class="code-comment">// Push to q2</span>
+        q2.<span class="code-function">push</span>(x);
+        
+        <span class="code-comment">// Move all elements from q1 to q2</span>
+        <span class="code-keyword">while</span> (!q1.<span class="code-function">empty</span>()) {
+            q2.<span class="code-function">push</span>(q1.<span class="code-function">front</span>());
+            q1.<span class="code-function">pop</span>();
+        }
+        
+        <span class="code-comment">// Swap queues</span>
+        <span class="code-function">swap</span>(q1, q2);
+    }
+    
+    <span class="code-keyword">int</span> <span class="code-function">pop</span>() {
+        <span class="code-keyword">int</span> val = q1.<span class="code-function">front</span>();
+        q1.<span class="code-function">pop</span>();
+        <span class="code-keyword">return</span> val;
+    }
+};</div>
+            </div>
+            
+            <div class="technique-card">
+                <h4>⭐ Priority Queue Applications</h4>
+                <p><strong>When:</strong> Top K elements, Dijkstra's algorithm, Huffman coding</p>
+                <div class="code-snippet"><span class="code-comment">// Top K Frequent Elements using Min-Heap</span>
+<span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt; <span class="code-function">topKFrequent</span>(<span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt;&amp; nums, <span class="code-keyword">int</span> k) {
+    <span class="code-type">unordered_map</span>&lt;<span class="code-keyword">int</span>, <span class="code-keyword">int</span>&gt; freq;
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> num : nums) freq[num]++;
+    
+    <span class="code-comment">// Min-heap to store top K frequent</span>
+    <span class="code-type">priority_queue</span>&lt;<span class="code-type">pair</span>&lt;<span class="code-keyword">int</span>, <span class="code-keyword">int</span>&gt;, 
+                     <span class="code-type">vector</span>&lt;<span class="code-type">pair</span>&lt;<span class="code-keyword">int</span>, <span class="code-keyword">int</span>&gt;&gt;,
+                     <span class="code-type">greater</span>&lt;<span class="code-type">pair</span>&lt;<span class="code-keyword">int</span>, <span class="code-keyword">int</span>&gt;&gt;&gt; minHeap;
+    
+    <span class="code-keyword">for</span> (<span class="code-keyword">auto</span>&amp; [num, count] : freq) {
+        minHeap.<span class="code-function">push</span>({count, num});
+        <span class="code-keyword">if</span> (minHeap.<span class="code-function">size</span>() &gt; k) {
+            minHeap.<span class="code-function">pop</span>();
+        }
+    }
+    
+    <span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt; result;
+    <span class="code-keyword">while</span> (!minHeap.<span class="code-function">empty</span>()) {
+        result.<span class="code-function">push_back</span>(minHeap.<span class="code-function">top</span>().second);
+        minHeap.<span class="code-function">pop</span>();
+    }
+    
+    <span class="code-keyword">return</span> result;
+}</div>
+            </div>
+            
+            <div class="tip-box">
+                <strong>💡 PATTERN TIP:</strong> Queue + BFS + Sliding Window + Priority Queue = 90% of queue interview problems!
+            </div>
+        </div>
+        
+        <!-- SECTION 10: ADVANCED PROBLEMS -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">10</div>
+                <span>Advanced Queue Problems</span>
+            </div>
+            
+            <h3>Top Queue Problems by Difficulty:</h3>
+            
+            <div class="problem-grid">
+                <div class="problem-item">
+                    <span class="problem-difficulty difficulty-easy">EASY</span>
+                    <div class="problem-title">Implement Queue using Stacks</div>
+                    <p class="problem-approach">Two-stack approach</p>
+                </div>
+                
+                <div class="problem-item">
+                    <span class="problem-difficulty difficulty-easy">EASY</span>
+                    <div class="problem-title">Design Circular Queue</div>
+                    <p class="problem-approach">Modulo arithmetic, front/rear pointers</p>
+                </div>
+                
+                <div class="problem-item">
+                    <span class="problem-difficulty difficulty-easy">EASY</span>
+                    <div class="problem-title">Number of Recent Calls</div>
+                    <p class="problem-approach">Queue for time window</p>
+                </div>
+                
+                <div class="problem-item">
+                    <span class="problem-difficulty difficulty-medium">MEDIUM</span>
+                    <div class="problem-title">Binary Tree Level Order</div>
+                    <p class="problem-approach">BFS using queue</p>
+                </div>
+                
+                <div class="problem-item">
+                    <span class="problem-difficulty difficulty-medium">MEDIUM</span>
+                    <div class="problem-title">Rotting Oranges</div>
+                    <p class="problem-approach">Multi-source BFS</p>
+                </div>
+                
+                <div class="problem-item">
+                    <span class="problem-difficulty difficulty-medium">MEDIUM</span>
+                    <div class="problem-title">Open the Lock</div>
+                    <p class="problem-approach">BFS shortest path</p>
+                </div>
+                
+                <div class="problem-item">
+                    <span class="problem-difficulty difficulty-medium">MEDIUM</span>
+                    <div class="problem-title">Sliding Window Maximum</div>
+                    <p class="problem-approach">Monotonic deque</p>
+                </div>
+                
+                <div class="problem-item">
+                    <span class="problem-difficulty difficulty-hard">HARD</span>
+                    <div class="problem-title">Shortest Subarray with Sum ≥ K</div>
+                    <p class="problem-approach">Monotonic deque with prefix sum</p>
+                </div>
+                
+                <div class="problem-item">
+                    <span class="problem-difficulty difficulty-hard">HARD</span>
+                    <div class="problem-title">Constrained Subsequence Sum</div>
+                    <p class="problem-approach">Deque + DP</p>
+                </div>
+            </div>
+            
+            <h3 style="margin-top: 45px;">Real-World Applications:</h3>
+            
+            <div class="use-case-grid">
+                <div class="use-case">
+                    <div class="use-case-icon">🖨️</div>
+                    <div class="use-case-label">Printer Queue</div>
+                </div>
+                
+                <div class="use-case">
+                    <div class="use-case-icon">📞</div>
+                    <div class="use-case-label">Call Center</div>
+                </div>
+                
+                <div class="use-case">
+                    <div class="use-case-icon">💻</div>
+                    <div class="use-case-label">CPU Scheduling</div>
+                </div>
+                
+                <div class="use-case">
+                    <div class="use-case-icon">🌐</div>
+                    <div class="use-case-label">Web Servers</div>
+                </div>
+                
+                <div class="use-case">
+                    <div class="use-case-icon">🔍</div>
+                    <div class="use-case-label">BFS Traversal</div>
+                </div>
+                
+                <div class="use-case">
+                    <div class="use-case-icon">📦</div>
+                    <div class="use-case-label">IO Buffers</div>
+                </div>
+                
+                <div class="use-case">
+                    <div class="use-case-icon">🎮</div>
+                    <div class="use-case-label">Game Events</div>
+                </div>
+                
+                <div class="use-case">
+                    <div class="use-case-icon">🚦</div>
+                    <div class="use-case-label">Traffic Systems</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SECTION 11: STL QUEUE -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">11</div>
+                <span>STL Queue & Reference</span>
+            </div>
+            
+            <h3>Complete std::queue Reference:</h3>
+            
+            <div class="type-card">
+                <h4>Construction</h4>
+                <div class="code-snippet"><span class="code-keyword">#include</span> <span class="code-string">&lt;queue&gt;</span>
+
+<span class="code-comment">// Default (uses deque)</span>
+<span class="code-type">std::queue</span>&lt;<span class="code-keyword">int</span>&gt; q1;
+
+<span class="code-comment">// List-based queue</span>
+<span class="code-type">std::queue</span>&lt;<span class="code-keyword">int</span>, <span class="code-type">std::list</span>&lt;<span class="code-keyword">int</span>&gt;&gt; q2;
+
+<span class="code-comment">// Explicit deque-based</span>
+<span class="code-type">std::queue</span>&lt;<span class="code-keyword">int</span>, <span class="code-type">std::deque</span>&lt;<span class="code-keyword">int</span>&gt;&gt; q3;</div>
+            </div>
+            
+            <div class="type-card">
+                <h4>Operations</h4>
+                <div class="code-snippet">q.<span class="code-function">push</span>(x);      <span class="code-comment">// Enqueue - add to rear</span>
+q.<span class="code-function">pop</span>();        <span class="code-comment">// Dequeue - remove from front</span>
+q.<span class="code-function">front</span>();      <span class="code-comment">// Access front element</span>
+q.<span class="code-function">back</span>();       <span class="code-comment">// Access rear element</span>
+q.<span class="code-function">empty</span>();      <span class="code-comment">// Check if empty</span>
+q.<span class="code-function">size</span>();       <span class="code-comment">// Get number of elements</span>
+q.<span class="code-function">swap</span>(q2);     <span class="code-comment">// Swap contents with another queue</span></div>
+            </div>
+            
+            <div class="type-card">
+                <h4>std::deque (Double-Ended Queue)</h4>
+                <div class="code-snippet"><span class="code-keyword">#include</span> <span class="code-string">&lt;deque&gt;</span>
+<span class="code-type">std::deque</span>&lt;<span class="code-keyword">int</span>&gt; dq;
+
+<span class="code-comment">// Both-end operations</span>
+dq.<span class="code-function">push_front</span>(x);   <span class="code-comment">// Add to front</span>
+dq.<span class="code-function">push_back</span>(x);    <span class="code-comment">// Add to rear</span>
+dq.<span class="code-function">pop_front</span>();     <span class="code-comment">// Remove from front</span>
+dq.<span class="code-function">pop_back</span>();      <span class="code-comment">// Remove from rear</span>
+
+<span class="code-comment">// Random access</span>
+<span class="code-keyword">int</span> val = dq[<span class="code-number">2</span>];     <span class="code-comment">// Access element at index 2</span>
+dq.<span class="code-function">at</span>(<span class="code-number">3</span>);          <span class="code-comment">// Bounds-checked access</span></div>
+            </div>
+            
+            <div class="type-card">
+                <h4>std::priority_queue</h4>
+                <div class="code-snippet"><span class="code-keyword">#include</span> <span class="code-string">&lt;queue&gt;</span>
+
+<span class="code-comment">// Max heap (default) - largest element at top</span>
+<span class="code-type">std::priority_queue</span>&lt;<span class="code-keyword">int</span>&gt; maxHeap;
+
+<span class="code-comment">// Min heap - smallest element at top</span>
+<span class="code-type">std::priority_queue</span>&lt;<span class="code-keyword">int</span>, 
+                     <span class="code-type">std::vector</span>&lt;<span class="code-keyword">int</span>&gt;,
+                     <span class="code-type">std::greater</span>&lt;<span class="code-keyword">int</span>&gt;&gt; minHeap;
+
+<span class="code-comment">// Operations</span>
+pq.<span class="code-function">push</span>(x);     <span class="code-comment">// Insert element</span>
+pq.<span class="code-function">pop</span>();       <span class="code-comment">// Remove top element</span>
+pq.<span class="code-function">top</span>();       <span class="code-comment">// Access top element</span>
+pq.<span class="code-function">empty</span>();     <span class="code-comment">// Check if empty</span>
+pq.<span class="code-function">size</span>();      <span class="code-comment">// Get size</span></div>
+            </div>
+        </div>
+        
+        <!-- SECTION 12: APPLICATIONS -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">12</div>
+                <span>Queue Applications</span>
+            </div>
+            
+            <h3>CPU Scheduling (Round Robin):</h3>
+            <div class="code-snippet"><span class="code-comment">// Simple Round Robin Scheduling</span>
+<span class="code-type">queue</span>&lt;<span class="code-type">Process</span>&gt; readyQueue;
+<span class="code-keyword">int</span> timeQuantum = <span class="code-number">10</span>;  <span class="code-comment">// ms</span>
+
+<span class="code-keyword">while</span> (!readyQueue.<span class="code-function">empty</span>()) {
+    <span class="code-type">Process</span> p = readyQueue.<span class="code-function">front</span>();
+    readyQueue.<span class="code-function">pop</span>();
+    
+    <span class="code-comment">// Execute process for time quantum</span>
+    <span class="code-function">execute</span>(p, timeQuantum);
+    
+    <span class="code-comment">// If not finished, put back in queue</span>
+    <span class="code-keyword">if</span> (!p.<span class="code-function">isFinished</span>()) {
+        readyQueue.<span class="code-function">push</span>(p);
+    }
+}</div>
+            
+            <h3 style="margin-top: 35px;">Network Packet Scheduling:</h3>
+            <div class="code-snippet"><span class="code-comment">// Router packet queue</span>
+<span class="code-keyword">class</span> <span class="code-type">Router</span> {
+    <span class="code-type">queue</span>&lt;<span class="code-type">Packet</span>&gt; packetQueue;
+<span class="code-keyword">public</span>:
+    <span class="code-keyword">void</span> <span class="code-function">receivePacket</span>(<span class="code-type">Packet</span> p) {
+        packetQueue.<span class="code-function">push</span>(p);
+    }
+    
+    <span class="code-keyword">void</span> <span class="code-function">processPackets</span>() {
+        <span class="code-keyword">while</span> (!packetQueue.<span class="code-function">empty</span>()) {
+            <span class="code-type">Packet</span> p = packetQueue.<span class="code-function">front</span>();
+            packetQueue.<span class="code-function">pop</span>();
+            
+            <span class="code-comment">// Forward packet to destination</span>
+            <span class="code-function">forwardPacket</span>(p);
+        }
+    }
+};</div>
+            
+            <h3 style="margin-top: 35px;">BFS for Shortest Path:</h3>
+            <div class="code-snippet"><span class="code-comment">// Shortest path in unweighted graph</span>
+<span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt; <span class="code-function">shortestPathBFS</span>(<span class="code-type">Graph</span> g, <span class="code-keyword">int</span> start, <span class="code-keyword">int</span> target) {
+    <span class="code-type">queue</span>&lt;<span class="code-keyword">int</span>&gt; q;
+    <span class="code-type">vector</span>&lt;<span class="code-keyword">bool</span>&gt; visited(g.V, <span class="code-keyword">false</span>);
+    <span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt; parent(g.V, -<span class="code-number">1</span>);
+    
+    q.<span class="code-function">push</span>(start);
+    visited[start] = <span class="code-keyword">true</span>;
+    
+    <span class="code-keyword">while</span> (!q.<span class="code-function">empty</span>()) {
+        <span class="code-keyword">int</span> v = q.<span class="code-function">front</span>();
+        q.<span class="code-function">pop</span>();
+        
+        <span class="code-keyword">if</span> (v == target) {
+            <span class="code-comment">// Reconstruct path</span>
+            <span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt; path;
+            <span class="code-keyword">for</span> (<span class="code-keyword">int</span> at = target; at != -<span class="code-number">1</span>; at = parent[at]) {
+                path.<span class="code-function">push_back</span>(at);
+            }
+            <span class="code-function">reverse</span>(path.<span class="code-function">begin</span>(), path.<span class="code-function">end</span>());
+            <span class="code-keyword">return</span> path;
+        }
+        
+        <span class="code-keyword">for</span> (<span class="code-keyword">int</span> u : g.adj[v]) {
+            <span class="code-keyword">if</span> (!visited[u]) {
+                visited[u] = <span class="code-keyword">true</span>;
+                parent[u] = v;
+                q.<span class="code-function">push</span>(u);
+            }
+        }
+    }
+    
+    <span class="code-keyword">return</span> {};  <span class="code-comment">// No path found</span>
+}</div>
+        </div>
+        
+        <!-- SECTION 13: SUMMARY -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">13</div>
+                <span>Summary & Decision Tree</span>
+            </div>
+            
+            <div class="summary-box">
+                <h3>Key Properties Summary</h3>
+                <ul>
+                    <li>FIFO (First In First Out) principle</li>
+                    <li>O(1) enqueue, dequeue, front operations</li>
+                    <li>Two access points (front and rear)</li>
+                    <li>No random access allowed</li>
+                    <li>Circular queues efficiently reuse space</li>
+                    <li>Essential for BFS and scheduling algorithms</li>
+                    <li>Used in CPU scheduling, networking, simulations</li>
+                    <li>Can be implemented with array or linked list</li>
+                </ul>
+            </div>
+            
+            <div class="decision-tree">
+                <h3>🎯 Queue Decision Tree</h3>
+                
+                <div class="decision-item">
+                    <strong>Fixed max size known?</strong> → Circular Queue (best space efficiency)
+                </div>
+                
+                <div class="decision-item">
+                    <strong>Unknown size?</strong> → std::queue with deque container (good balance)
+                </div>
+                
+                <div class="decision-item">
+                    <strong>Need both-end operations?</strong> → std::deque (push/pop both ends)
+                </div>
+                
+                <div class="decision-item">
+                    <strong>Need priority-based processing?</strong> → std::priority_queue
+                </div>
+                
+                <div class="decision-item">
+                    <strong>BFS traversal?</strong> → Simple queue (FIFO required)
+                </div>
+                
+                <div class="decision-item">
+                    <strong>Sliding window maximum?</strong> → Monotonic deque
+                </div>
+                
+                <div class="decision-item">
+                    <strong>Thread-safe operations?</strong> → Blocking queue with mutex
+                </div>
+                
+                <div class="decision-item">
+                    <strong>Implement stack using queues?</strong> → Two queue technique
+                </div>
+            </div>
+            
+            <div class="type-card" style="margin-top: 35px;">
+                <h3>📌 Top 15 Must-Know Queue Problems</h3>
+                <ol style="list-style-position: inside; line-height: 2.3; color: var(--gray-dark);">
+                    <li><strong>Implement Queue using Stacks</strong> - Two-stack approach</li>
+                    <li><strong>Design Circular Queue</strong> - Modulo arithmetic implementation</li>
+                    <li><strong>Binary Tree Level Order Traversal</strong> - Classic BFS</li>
+                    <li><strong>Rotting Oranges</strong> - Multi-source BFS</li>
+                    <li><strong>Sliding Window Maximum</strong> - Monotonic deque O(n)</li>
+                    <li><strong>Open the Lock</strong> - BFS shortest path</li>
+                    <li><strong>Perfect Squares</strong> - BFS approach</li>
+                    <li><strong>Number of Islands</strong> - BFS/DFS matrix traversal</li>
+                    <li><strong>Binary Tree Zigzag Level Order</strong> - Level order variation</li>
+                    <li><strong>Moving Average from Data Stream</strong> - Queue + running sum</li>
+                    <li><strong>First Unique Character in Stream</strong> - Queue + frequency map</li>
+                    <li><strong>Generate Binary Numbers 1 to N</strong> - Queue pattern</li>
+                    <li><strong>Shortest Path in Binary Matrix</strong> - BFS with obstacles</li>
+                    <li><strong>Snakes and Ladders</strong> - BFS on board game</li>
+                    <li><strong>Task Scheduler</strong> - Priority queue scheduling</li>
+                </ol>
+            </div>
+            
+            <div class="tip-box" style="margin-top: 35px;">
+                <strong>💡 FINAL TIP:</strong> Queue is all about FIFO! Master BFS, sliding window with deque, and priority queues - these three patterns cover 85% of all queue problems!
+            </div>
+        </div>
+        
+        <!-- FOOTER -->
+        <div class="footer">
+            <p><strong>QUEUE - COMPLETE DSA VISUAL GUIDE (C++)</strong></p>
+            <p style="margin-top: 14px;">Master Data Structures & Algorithms • Perfect for Interviews, Exams & Revision</p>
+            <p style="margin-top: 22px; font-size: 0.95em; color: var(--green-dark);">
+                🌱 Remember: Queue is like a ticket counter line - First In, First Out! Process tasks in the order they arrive!
+            </p>
+        </div>
+    </div>
+</body>
+</html>
