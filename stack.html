@@ -1,0 +1,1596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stack - Complete DSA Visual Guide (C++)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --orange-light: #FFB84D;
+            --orange-main: #FFA600;
+            --orange-dark: #FF8C42;
+            --orange-bright: #FF6B35;
+            --burnt-orange: #D84315;
+            --deep-orange: #BF360C;
+            --golden: #FFD700;
+            --amber: #FFC107;
+            --brown: #3E2723;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, var(--deep-orange) 0%, var(--burnt-orange) 30%, var(--orange-dark) 60%, var(--orange-main) 100%);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(191, 54, 12, 0.4);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--deep-orange) 0%, var(--burnt-orange) 50%, var(--orange-bright) 100%);
+            color: white;
+            padding: 80px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 10px,
+                    rgba(255,255,255,0.05) 10px,
+                    rgba(255,255,255,0.05) 20px
+                );
+            pointer-events: none;
+        }
+        
+        .header h1 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 5em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            letter-spacing: 15px;
+            text-shadow: 4px 4px 8px rgba(0,0,0,0.5);
+            position: relative;
+        }
+        
+        .header p {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.5em;
+            letter-spacing: 5px;
+            font-weight: 600;
+            opacity: 0.95;
+        }
+        
+        .section {
+            padding: 50px 60px;
+            border-bottom: 3px solid var(--orange-light);
+        }
+        
+        .section:nth-child(even) {
+            background: linear-gradient(to right, #FFF8F0 0%, #ffffff 100%);
+        }
+        
+        .section:last-child {
+            border-bottom: none;
+        }
+        
+        .section-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2.3em;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: var(--burnt-orange);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .section-number {
+            background: linear-gradient(135deg, var(--orange-bright) 0%, var(--orange-main) 50%, var(--golden) 100%);
+            color: white;
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+            font-weight: 700;
+            box-shadow: 0 5px 20px rgba(255, 107, 53, 0.5);
+            border: 4px solid var(--burnt-orange);
+        }
+        
+        h3 {
+            color: var(--burnt-orange);
+            font-family: 'Oswald', sans-serif;
+            margin: 30px 0 20px;
+            font-size: 1.6em;
+        }
+        
+        p {
+            color: var(--brown);
+            line-height: 2;
+            margin-bottom: 18px;
+        }
+        
+        .stack-visual {
+            display: inline-flex;
+            flex-direction: column-reverse;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(191, 54, 12, 0.3);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .stack-item {
+            background: linear-gradient(to bottom, var(--orange-light) 0%, var(--orange-main) 100%);
+            border: 4px solid var(--burnt-orange);
+            border-bottom: none;
+            padding: 25px 60px;
+            text-align: center;
+            min-width: 200px;
+            position: relative;
+        }
+        
+        .stack-item:first-child {
+            border-bottom: 4px solid var(--burnt-orange);
+            border-radius: 0 0 12px 12px;
+        }
+        
+        .stack-item:last-child {
+            border-radius: 12px 12px 0 0;
+            background: linear-gradient(to bottom, var(--golden) 0%, var(--amber) 100%);
+            box-shadow: 0 -4px 15px rgba(255, 193, 7, 0.5);
+        }
+        
+        .stack-item:last-child::after {
+            content: '← TOP';
+            position: absolute;
+            right: -80px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-weight: 700;
+            color: var(--burnt-orange);
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.2em;
+        }
+        
+        .stack-value {
+            font-weight: 900;
+            color: white;
+            font-size: 1.8em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .stack-label {
+            font-size: 0.8em;
+            color: var(--deep-orange);
+            margin-top: 5px;
+            font-weight: 600;
+        }
+        
+        .code-snippet {
+            background: var(--brown);
+            color: var(--orange-light);
+            padding: 28px;
+            border-radius: 14px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            margin: 28px 0;
+            overflow-x: auto;
+            font-size: 0.95em;
+            border: 4px solid var(--burnt-orange);
+            box-shadow: 0 6px 20px rgba(62, 39, 35, 0.3);
+            position: relative;
+        }
+        
+        .code-snippet::before {
+            content: 'C++';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 0.75em;
+            color: var(--orange-main);
+            font-weight: 700;
+            font-family: 'Oswald', sans-serif;
+        }
+        
+        .code-keyword { color: #FF8C42; }
+        .code-type { color: #FFB84D; }
+        .code-string { color: #A5D6A7; }
+        .code-comment { color: #B0BEC5; font-style: italic; }
+        .code-number { color: #CE93D8; }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 28px 0;
+            box-shadow: 0 6px 25px rgba(191, 54, 12, 0.2);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+        
+        .comparison-table th {
+            background: linear-gradient(135deg, var(--burnt-orange) 0%, var(--orange-bright) 100%);
+            color: white;
+            padding: 22px;
+            text-align: left;
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+        
+        .comparison-table td {
+            padding: 20px 22px;
+            border-bottom: 2px solid var(--orange-light);
+            color: var(--brown);
+        }
+        
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background: linear-gradient(to right, #FFF8F0 0%, #ffffff 100%);
+        }
+        
+        .type-card, .technique-card {
+            background: linear-gradient(135deg, #FFF3E0 0%, #FFF8F0 100%);
+            border-left: 6px solid var(--orange-bright);
+            padding: 30px;
+            margin: 25px 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.15);
+        }
+        
+        .type-card h3, .type-card h4, .technique-card h4 {
+            color: var(--burnt-orange);
+            margin-bottom: 15px;
+            font-family: 'Oswald', sans-serif;
+        }
+        
+        .operation-grid, .problem-grid, .use-case-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        
+        .operation-card, .problem-item, .use-case {
+            background: linear-gradient(135deg, #ffffff 0%, #FFF3E0 100%);
+            border: 4px solid var(--orange-main);
+            border-radius: 16px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(255, 140, 66, 0.15);
+        }
+        
+        .operation-card:hover, .problem-item:hover, .use-case:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 30px rgba(255, 107, 53, 0.3);
+            border-color: var(--orange-bright);
+        }
+        
+        .operation-card h4 {
+            font-family: 'Oswald', sans-serif;
+            color: var(--burnt-orange);
+            margin-bottom: 18px;
+            font-size: 1.4em;
+        }
+        
+        .operation-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .operation-card li {
+            padding: 10px 0;
+            position: relative;
+            padding-left: 30px;
+            color: var(--brown);
+        }
+        
+        .operation-card li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--orange-main);
+            font-weight: 700;
+            font-size: 1.4em;
+        }
+        
+        .complexity-box {
+            background: linear-gradient(135deg, #FFF3E0 0%, #ffffff 100%);
+            border: 4px solid var(--orange-main);
+            padding: 30px 35px;
+            margin: 25px 0;
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(255, 140, 66, 0.15);
+        }
+        
+        .complexity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 2px solid var(--orange-light);
+        }
+        
+        .complexity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .complexity-label {
+            font-weight: 600;
+            color: var(--brown);
+            font-size: 1.05em;
+        }
+        
+        .complexity-value {
+            font-family: 'Oswald', monospace;
+            background: linear-gradient(135deg, var(--orange-bright) 0%, var(--orange-main) 100%);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 10px;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+        
+        .tip-box {
+            background: linear-gradient(135deg, #FFFDE7 0%, #FFF9C4 100%);
+            border-left: 6px solid var(--golden);
+            padding: 25px 30px;
+            margin: 25px 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+        }
+        
+        .tip-box strong {
+            color: #F57C00;
+            font-size: 1.2em;
+            font-family: 'Oswald', sans-serif;
+        }
+        
+        .mistake-card {
+            background: linear-gradient(135deg, #FFEBEE 0%, #FFF5F5 100%);
+            border-left: 6px solid #D32F2F;
+            padding: 30px;
+            margin: 25px 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 18px rgba(211, 47, 47, 0.2);
+        }
+        
+        .mistake-card h4 {
+            color: #C62828;
+            margin-bottom: 16px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.4em;
+        }
+        
+        .mistake-card p {
+            color: #5D4037;
+            line-height: 1.9;
+        }
+        
+        .problem-difficulty {
+            display: inline-block;
+            padding: 7px 18px;
+            border-radius: 25px;
+            font-size: 0.8em;
+            font-weight: 700;
+            margin-bottom: 14px;
+            font-family: 'Oswald', sans-serif;
+        }
+        
+        .difficulty-easy { background: #4CAF50; color: white; }
+        .difficulty-medium { background: #FF9800; color: white; }
+        .difficulty-hard { background: #F44336; color: white; }
+        
+        .problem-title {
+            font-weight: 700;
+            color: var(--burnt-orange);
+            font-size: 1.2em;
+            margin-bottom: 12px;
+            font-family: 'Oswald', sans-serif;
+        }
+        
+        .problem-approach {
+            color: var(--brown);
+            font-size: 0.95em;
+            line-height: 1.7;
+        }
+        
+        .use-case {
+            text-align: center;
+        }
+        
+        .use-case-icon {
+            font-size: 3.8em;
+            margin-bottom: 18px;
+        }
+        
+        .use-case-label {
+            font-weight: 700;
+            font-family: 'Oswald', sans-serif;
+            color: var(--burnt-orange);
+            font-size: 1.1em;
+        }
+        
+        .summary-box {
+            background: linear-gradient(135deg, var(--deep-orange) 0%, var(--burnt-orange) 50%, var(--orange-bright) 100%);
+            color: white;
+            padding: 55px;
+            border-radius: 22px;
+            margin: 35px 0;
+            box-shadow: 0 12px 35px rgba(191, 54, 12, 0.5);
+        }
+        
+        .summary-box h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2.4em;
+            margin-bottom: 30px;
+            color: white;
+        }
+        
+        .summary-box ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .summary-box li {
+            padding: 16px 0;
+            font-size: 1.15em;
+            position: relative;
+            padding-left: 45px;
+            line-height: 1.8;
+        }
+        
+        .summary-box li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            font-weight: 700;
+            font-size: 1.6em;
+            color: var(--golden);
+        }
+        
+        .decision-tree {
+            background: white;
+            padding: 35px;
+            border-radius: 18px;
+            margin: 30px 0;
+            border: 4px solid var(--orange-main);
+            box-shadow: 0 6px 22px rgba(255, 140, 66, 0.2);
+        }
+        
+        .decision-tree h3 {
+            font-family: 'Oswald', sans-serif;
+            color: var(--burnt-orange);
+            margin-bottom: 25px;
+            font-size: 2em;
+        }
+        
+        .decision-item {
+            padding: 18px;
+            margin: 14px 0;
+            border-left: 5px solid var(--orange-bright);
+            background: linear-gradient(to right, #FFF3E0 0%, #ffffff 100%);
+            border-radius: 8px;
+        }
+        
+        .decision-item strong {
+            color: var(--burnt-orange);
+            font-family: 'Oswald', sans-serif;
+        }
+        
+        .footer {
+            background: linear-gradient(to right, #FFF3E0 0%, #FFF8F0 100%);
+            padding: 45px;
+            text-align: center;
+            color: var(--brown);
+            border-top: 5px solid var(--orange-main);
+        }
+        
+        .footer strong {
+            font-family: 'Oswald', sans-serif;
+            color: var(--burnt-orange);
+            font-size: 1.15em;
+        }
+        
+        .lifo-diagram {
+            background: linear-gradient(135deg, #FFF3E0 0%, #FFF8F0 100%);
+            border: 4px solid var(--orange-main);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .lifo-arrow {
+            color: var(--orange-bright);
+            font-size: 2.5em;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>STACK</h1>
+            <p>COMPLETE DSA VISUAL GUIDE (C++)</p>
+        </div>
+        
+        <!-- SECTION 1: WHAT IS A STACK? -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">01</div>
+                <span>What is a Stack?</span>
+            </div>
+            
+            <p style="font-size: 1.15em;">A <strong>Stack</strong> is a linear data structure that follows the LIFO (Last In First Out) principle. Think of it like a stack of plates - you can only add or remove plates from the top. The last plate you place on the stack is the first one you'll remove.</p>
+            
+            <h3>Visual Representation - Stack of Elements:</h3>
+            
+            <div class="stack-visual">
+                <div class="stack-item">
+                    <div class="stack-value">10</div>
+                    <div class="stack-label">First In, Last Out</div>
+                </div>
+                <div class="stack-item">
+                    <div class="stack-value">20</div>
+                </div>
+                <div class="stack-item">
+                    <div class="stack-value">30</div>
+                </div>
+                <div class="stack-item">
+                    <div class="stack-value">40</div>
+                    <div class="stack-label">Last In, First Out</div>
+                </div>
+            </div>
+            
+            <div class="lifo-diagram">
+                <h3 style="color: var(--burnt-orange); margin-bottom: 20px;">LIFO Principle</h3>
+                <div style="font-size: 1.3em; color: var(--brown);">
+                    <div style="margin: 15px 0;">
+                        <strong>PUSH (Insert):</strong> Add to TOP
+                        <div class="lifo-arrow">↓</div>
+                    </div>
+                    <div style="margin: 15px 0;">
+                        <strong>POP (Remove):</strong> Remove from TOP
+                        <div class="lifo-arrow">↑</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="code-snippet"><span class="code-comment">// Array-based stack</span>
+<span class="code-keyword">int</span> stack[<span class="code-number">100</span>];
+<span class="code-keyword">int</span> top = -<span class="code-number">1</span>;
+
+<span class="code-comment">// C++ STL stack</span>
+<span class="code-keyword">#include</span> <span class="code-string">&lt;stack&gt;</span>
+<span class="code-type">std::stack</span>&lt;<span class="code-keyword">int</span>&gt; st;
+st.<span class="code-type">push</span>(<span class="code-number">10</span>);     <span class="code-comment">// Add to top</span>
+st.<span class="code-type">pop</span>();        <span class="code-comment">// Remove from top</span>
+<span class="code-keyword">int</span> top = st.<span class="code-type">top</span>();  <span class="code-comment">// Access top element</span></div>
+            
+            <h3>Key Characteristics:</h3>
+            <ul style="list-style-position: inside; margin-left: 20px; color: var(--brown); line-height: 2.3;">
+                <li><strong>LIFO Structure</strong> - Last In First Out order</li>
+                <li><strong>One-end access</strong> - Operations only at top</li>
+                <li><strong>O(1) operations</strong> - Push, pop, and peek all constant time</li>
+                <li><strong>No random access</strong> - Can only access top element</li>
+                <li><strong>Dynamic or fixed size</strong> - Depends on implementation</li>
+                <li><strong>Essential for recursion</strong> - Function call management</li>
+            </ul>
+        </div>
+        
+        <!-- SECTION 2: MEMORY REPRESENTATION -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">02</div>
+                <span>Memory Representation</span>
+            </div>
+            
+            <h3>Array-Based Stack Memory:</h3>
+            
+            <div style="background: linear-gradient(135deg, #FFF3E0 0%, #FFF8F0 100%); padding: 35px; border-radius: 14px; margin: 28px 0; border: 4px solid var(--orange-main);">
+                <p style="margin-bottom: 22px;"><strong>Stack with elements [10, 20, 30]:</strong></p>
+                
+                <div style="display: flex; gap: 12px; flex-wrap: wrap; margin: 25px 0;">
+                    <div style="text-align: center; flex: 1; min-width: 90px;">
+                        <div style="background: var(--orange-light); border: 3px solid var(--burnt-orange); padding: 12px; border-radius: 8px; margin-bottom: 10px;">
+                            <strong>[0]</strong>
+                        </div>
+                        <div style="background: linear-gradient(to bottom, var(--orange-light), var(--orange-main)); border: 4px solid var(--burnt-orange); padding: 20px; border-radius: 10px; font-weight: 900; color: white; font-size: 1.5em;">10</div>
+                    </div>
+                    <div style="text-align: center; flex: 1; min-width: 90px;">
+                        <div style="background: var(--orange-light); border: 3px solid var(--burnt-orange); padding: 12px; border-radius: 8px; margin-bottom: 10px;">
+                            <strong>[1]</strong>
+                        </div>
+                        <div style="background: linear-gradient(to bottom, var(--orange-light), var(--orange-main)); border: 4px solid var(--burnt-orange); padding: 20px; border-radius: 10px; font-weight: 900; color: white; font-size: 1.5em;">20</div>
+                    </div>
+                    <div style="text-align: center; flex: 1; min-width: 90px;">
+                        <div style="background: linear-gradient(to bottom, var(--golden), var(--amber)); border: 3px solid var(--burnt-orange); padding: 12px; border-radius: 8px; margin-bottom: 10px;">
+                            <strong>[2] ← TOP</strong>
+                        </div>
+                        <div style="background: linear-gradient(to bottom, var(--golden), var(--amber)); border: 4px solid var(--burnt-orange); padding: 20px; border-radius: 10px; font-weight: 900; color: white; font-size: 1.5em; box-shadow: 0 4px 15px rgba(255,193,7,0.5);">30</div>
+                    </div>
+                    <div style="text-align: center; flex: 1; min-width: 90px;">
+                        <div style="background: #E0E0E0; border: 3px solid #9E9E9E; padding: 12px; border-radius: 8px; margin-bottom: 10px;">
+                            <strong>[3]</strong>
+                        </div>
+                        <div style="background: #F5F5F5; border: 4px dashed #BDBDBD; padding: 20px; border-radius: 10px; color: #9E9E9E; font-size: 1.5em;">Empty</div>
+                    </div>
+                    <div style="text-align: center; flex: 1; min-width: 90px;">
+                        <div style="background: #E0E0E0; border: 3px solid #9E9E9E; padding: 12px; border-radius: 8px; margin-bottom: 10px;">
+                            <strong>[4]</strong>
+                        </div>
+                        <div style="background: #F5F5F5; border: 4px dashed #BDBDBD; padding: 20px; border-radius: 10px; color: #9E9E9E; font-size: 1.5em;">Empty</div>
+                    </div>
+                </div>
+                
+                <p style="margin-top: 25px; color: var(--brown); font-size: 1.05em;"><strong>Top = 2</strong> (index of last element)</p>
+            </div>
+            
+            <h3>Linked List-Based Stack Memory:</h3>
+            
+            <div style="background: linear-gradient(135deg, #FFF3E0 0%, #FFF8F0 100%); padding: 35px; border-radius: 14px; margin: 28px 0; border: 4px solid var(--orange-main);">
+                <p style="margin-bottom: 22px;"><strong>Stack as Linked List:</strong></p>
+                <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+                    <div style="background: linear-gradient(to bottom, var(--golden), var(--amber)); border: 4px solid var(--burnt-orange); padding: 20px; border-radius: 10px; text-align: center; box-shadow: 0 4px 15px rgba(255,193,7,0.4);">
+                        <div style="font-weight: 700; color: white; font-size: 1.3em;">TOP → 30</div>
+                        <div style="font-size: 0.9em; color: var(--deep-orange); margin-top: 5px;">next ●</div>
+                    </div>
+                    <div style="color: var(--orange-bright); font-size: 2em; font-weight: 700;">→</div>
+                    <div style="background: linear-gradient(to bottom, var(--orange-light), var(--orange-main)); border: 4px solid var(--burnt-orange); padding: 20px; border-radius: 10px; text-align: center;">
+                        <div style="font-weight: 700; color: white; font-size: 1.3em;">20</div>
+                        <div style="font-size: 0.9em; color: var(--deep-orange); margin-top: 5px;">next ●</div>
+                    </div>
+                    <div style="color: var(--orange-bright); font-size: 2em; font-weight: 700;">→</div>
+                    <div style="background: linear-gradient(to bottom, var(--orange-light), var(--orange-main)); border: 4px solid var(--burnt-orange); padding: 20px; border-radius: 10px; text-align: center;">
+                        <div style="font-weight: 700; color: white; font-size: 1.3em;">10</div>
+                        <div style="font-size: 0.9em; color: #CC0000; margin-top: 5px;">NULL</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="code-snippet"><span class="code-comment">// Array implementation</span>
+<span class="code-keyword">class</span> <span class="code-type">Stack</span> {
+    <span class="code-keyword">int</span> arr[<span class="code-number">100</span>];
+    <span class="code-keyword">int</span> top;
+<span class="code-keyword">public</span>:
+    <span class="code-type">Stack</span>() : top(-<span class="code-number">1</span>) {}
+    
+    <span class="code-keyword">void</span> <span class="code-type">push</span>(<span class="code-keyword">int</span> x) {
+        <span class="code-keyword">if</span> (top &gt;= <span class="code-number">99</span>) <span class="code-keyword">return</span>;  <span class="code-comment">// Overflow</span>
+        arr[++top] = x;
+    }
+    
+    <span class="code-keyword">int</span> <span class="code-type">pop</span>() {
+        <span class="code-keyword">if</span> (top &lt; <span class="code-number">0</span>) <span class="code-keyword">return</span> -<span class="code-number">1</span>;  <span class="code-comment">// Underflow</span>
+        <span class="code-keyword">return</span> arr[top--];
+    }
+};
+
+<span class="code-comment">// Linked List implementation</span>
+<span class="code-keyword">struct</span> <span class="code-type">Node</span> {
+    <span class="code-keyword">int</span> data;
+    <span class="code-type">Node</span>* next;
+};
+<span class="code-type">Node</span>* top = <span class="code-keyword">nullptr</span>;</div>
+            
+            <div class="tip-box">
+                <strong>💡 QUICK TIP:</strong> Array-based stacks are faster but have fixed size. Linked-list stacks are dynamic but use extra memory for pointers!
+            </div>
+        </div>
+        
+        <!-- SECTION 3: TYPES OF STACKS -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">03</div>
+                <span>Types of Stacks</span>
+            </div>
+            
+            <div class="type-card">
+                <h3>1. Fixed Size Stack (Array-based)</h3>
+                <p>Pre-allocated array with maximum capacity.</p>
+                <div class="code-snippet"><span class="code-keyword">int</span> stack[MAX_SIZE];
+<span class="code-keyword">int</span> top = -<span class="code-number">1</span>;</div>
+                <p style="margin-top: 15px;"><strong>Pros:</strong> Fast access, cache-friendly | <strong>Cons:</strong> Fixed capacity, stack overflow possible</p>
+            </div>
+            
+            <div class="type-card">
+                <h3>2. Dynamic Stack (Linked List)</h3>
+                <p>Linked list of nodes, grows as needed.</p>
+                <div class="code-snippet"><span class="code-keyword">struct</span> <span class="code-type">Node</span> {
+    <span class="code-keyword">int</span> data;
+    <span class="code-type">Node</span>* next;
+};
+<span class="code-type">Node</span>* top = <span class="code-keyword">nullptr</span>;</div>
+                <p style="margin-top: 15px;"><strong>Pros:</strong> No size limit (within memory) | <strong>Cons:</strong> Extra pointer memory, slower</p>
+            </div>
+            
+            <div class="type-card">
+                <h3>3. Dynamic Array Stack (Vector-based)</h3>
+                <p>Uses dynamic array that automatically resizes.</p>
+                <div class="code-snippet"><span class="code-type">std::vector</span>&lt;<span class="code-keyword">int</span>&gt; stack;</div>
+                <p style="margin-top: 15px;"><strong>Pros:</strong> Automatic resizing, STL benefits | <strong>Cons:</strong> Occasional reallocation cost</p>
+            </div>
+            
+            <div class="type-card">
+                <h3>4. std::stack (STL Adapter)</h3>
+                <p>Standard template library stack - most commonly used.</p>
+                <div class="code-snippet"><span class="code-keyword">#include</span> <span class="code-string">&lt;stack&gt;</span>
+<span class="code-type">std::stack</span>&lt;<span class="code-keyword">int</span>&gt; st;
+st.<span class="code-type">push</span>(<span class="code-number">10</span>);
+st.<span class="code-type">pop</span>();
+<span class="code-keyword">int</span> top = st.<span class="code-type">top</span>();</div>
+                <p style="margin-top: 15px;"><strong>Pros:</strong> Easy to use, well-tested | <strong>Container:</strong> Uses deque by default</p>
+            </div>
+            
+            <div class="type-card">
+                <h3>5. Min Stack / Max Stack</h3>
+                <p>Special stack that tracks minimum or maximum element in O(1).</p>
+                <div class="code-snippet"><span class="code-comment">// Tracks minimum at each level</span>
+<span class="code-type">std::stack</span>&lt;<span class="code-keyword">int</span>&gt; mainStack;
+<span class="code-type">std::stack</span>&lt;<span class="code-keyword">int</span>&gt; minStack;</div>
+                <p style="margin-top: 15px;"><strong>Use Case:</strong> Get min/max in constant time</p>
+            </div>
+            
+            <div class="type-card">
+                <h3>6. Monotonic Stack</h3>
+                <p>Elements maintained in sorted order (increasing or decreasing).</p>
+                <div class="code-snippet"><span class="code-comment">// Keep stack in increasing order</span>
+<span class="code-keyword">while</span> (!st.<span class="code-type">empty</span>() &amp;&amp; st.<span class="code-type">top</span>() &gt; current) {
+    st.<span class="code-type">pop</span>();
+}
+st.<span class="code-type">push</span>(current);</div>
+                <p style="margin-top: 15px;"><strong>Use Case:</strong> Next greater/smaller element problems</p>
+            </div>
+        </div>
+        
+        <!-- Continue in next part -->
+        
+        <!-- SECTION 4: WHY STACKS? -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">04</div>
+                <span>Why Stacks? (Comparison)</span>
+            </div>
+            
+            <h3>Stack vs Array:</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Stack</th>
+                        <th>Array</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Access</strong></td>
+                        <td>Top only - O(1)</td>
+                        <td>Any index - O(1)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Insert</strong></td>
+                        <td>Push at top - O(1)</td>
+                        <td>End O(1), Elsewhere O(n)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Delete</strong></td>
+                        <td>Pop from top - O(1)</td>
+                        <td>End O(1), Elsewhere O(n)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Order</strong></td>
+                        <td>LIFO (Last In First Out)</td>
+                        <td>Sequential access</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Use Case</strong></td>
+                        <td>Function calls, undo/redo</td>
+                        <td>General data storage</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Random Access</strong></td>
+                        <td>❌ No</td>
+                        <td>✅ Yes</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3 style="margin-top: 35px;">Stack vs Queue:</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Stack</th>
+                        <th>Queue</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Order</strong></td>
+                        <td>LIFO (Last In First Out)</td>
+                        <td>FIFO (First In First Out)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Operations</strong></td>
+                        <td>Push/Pop from top</td>
+                        <td>Enqueue rear, Dequeue front</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Access Points</strong></td>
+                        <td>One end (top)</td>
+                        <td>Two ends (front & rear)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Use Case</strong></td>
+                        <td>Function calls, backtracking</td>
+                        <td>Job scheduling, BFS</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3 style="margin-top: 35px;">When to Use Stack:</h3>
+            <div class="type-card">
+                <ul style="list-style-position: inside; line-height: 2.2;">
+                    <li>✅ Need LIFO (Last In First Out) behavior</li>
+                    <li>✅ Function call management / recursion</li>
+                    <li>✅ Undo/Redo operations in applications</li>
+                    <li>✅ Expression evaluation (infix, postfix, prefix)</li>
+                    <li>✅ Backtracking algorithms (maze, N-Queens)</li>
+                    <li>✅ Balanced parentheses checking</li>
+                    <li>✅ Browser history (back button)</li>
+                    <li>✅ Depth-First Search (DFS) traversal</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- SECTION 5: BASIC OPERATIONS -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">05</div>
+                <span>Basic Operations</span>
+            </div>
+            
+            <div class="operation-grid">
+                <div class="operation-card">
+                    <h4>📥 Push (Insert)</h4>
+                    <p style="margin-bottom: 15px;">Add element to top of stack</p>
+                    <ul>
+                        <li>Time: O(1)</li>
+                        <li>Check for overflow first</li>
+                        <li>Increment top pointer</li>
+                        <li>Add element at top</li>
+                    </ul>
+                    <div class="code-snippet" style="margin-top: 15px; font-size: 0.85em;"><span class="code-keyword">void</span> <span class="code-type">push</span>(<span class="code-keyword">int</span> x) {
+    <span class="code-keyword">if</span> (top &gt;= MAX-<span class="code-number">1</span>)
+        <span class="code-keyword">return</span>;  <span class="code-comment">// Overflow</span>
+    arr[++top] = x;
+}</div>
+                </div>
+                
+                <div class="operation-card">
+                    <h4>📤 Pop (Remove)</h4>
+                    <p style="margin-bottom: 15px;">Remove and return top element</p>
+                    <ul>
+                        <li>Time: O(1)</li>
+                        <li>Check for underflow first</li>
+                        <li>Return top element</li>
+                        <li>Decrement top pointer</li>
+                    </ul>
+                    <div class="code-snippet" style="margin-top: 15px; font-size: 0.85em;"><span class="code-keyword">int</span> <span class="code-type">pop</span>() {
+    <span class="code-keyword">if</span> (top &lt; <span class="code-number">0</span>)
+        <span class="code-keyword">return</span> -<span class="code-number">1</span>;  <span class="code-comment">// Underflow</span>
+    <span class="code-keyword">return</span> arr[top--];
+}</div>
+                </div>
+                
+                <div class="operation-card">
+                    <h4>👀 Top / Peek</h4>
+                    <p style="margin-bottom: 15px;">View top element without removing</p>
+                    <ul>
+                        <li>Time: O(1)</li>
+                        <li>Check if stack empty</li>
+                        <li>Return top element</li>
+                        <li>Don't modify stack</li>
+                    </ul>
+                    <div class="code-snippet" style="margin-top: 15px; font-size: 0.85em;"><span class="code-keyword">int</span> <span class="code-type">peek</span>() {
+    <span class="code-keyword">if</span> (top &lt; <span class="code-number">0</span>)
+        <span class="code-keyword">return</span> -<span class="code-number">1</span>;
+    <span class="code-keyword">return</span> arr[top];
+}</div>
+                </div>
+                
+                <div class="operation-card">
+                    <h4>❓ isEmpty</h4>
+                    <p style="margin-bottom: 15px;">Check if stack has no elements</p>
+                    <ul>
+                        <li>Time: O(1)</li>
+                        <li>Compare top with -1</li>
+                        <li>Return true if empty</li>
+                        <li>Essential before pop/peek</li>
+                    </ul>
+                    <div class="code-snippet" style="margin-top: 15px; font-size: 0.85em;"><span class="code-keyword">bool</span> <span class="code-type">isEmpty</span>() {
+    <span class="code-keyword">return</span> top &lt; <span class="code-number">0</span>;
+}</div>
+                </div>
+                
+                <div class="operation-card">
+                    <h4>⚠️ isFull</h4>
+                    <p style="margin-bottom: 15px;">Check if stack reached capacity</p>
+                    <ul>
+                        <li>Time: O(1)</li>
+                        <li>Only for array-based</li>
+                        <li>Compare top with MAX-1</li>
+                        <li>Prevents overflow</li>
+                    </ul>
+                    <div class="code-snippet" style="margin-top: 15px; font-size: 0.85em;"><span class="code-keyword">bool</span> <span class="code-type">isFull</span>() {
+    <span class="code-keyword">return</span> top &gt;= MAX-<span class="code-number">1</span>;
+}</div>
+                </div>
+                
+                <div class="operation-card">
+                    <h4>📏 Size</h4>
+                    <p style="margin-bottom: 15px;">Get number of elements in stack</p>
+                    <ul>
+                        <li>Time: O(1)</li>
+                        <li>Return top + 1</li>
+                        <li>0 if stack empty</li>
+                        <li>Useful for iteration</li>
+                    </ul>
+                    <div class="code-snippet" style="margin-top: 15px; font-size: 0.85em;"><span class="code-keyword">int</span> <span class="code-type">size</span>() {
+    <span class="code-keyword">return</span> top + <span class="code-number">1</span>;
+}</div>
+                </div>
+            </div>
+            
+            <div class="tip-box">
+                <strong>💡 REMEMBER:</strong> Always check isEmpty() before pop() or top() to avoid underflow errors!
+            </div>
+        </div>
+        
+        <!-- SECTION 6: COMMON MISTAKES -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">06</div>
+                <span>Common Mistakes & Pitfalls</span>
+            </div>
+            
+            <div class="mistake-card">
+                <h4>❌ Stack Overflow (Push when full)</h4>
+                <p>Most common error - pushing to a full stack causes overflow.</p>
+                <div class="code-snippet"><span class="code-comment">// ❌ WRONG - No overflow check</span>
+<span class="code-keyword">void</span> <span class="code-type">push</span>(<span class="code-keyword">int</span> x) {
+    arr[++top] = x;  <span class="code-comment">// May overflow!</span>
+}
+
+<span class="code-comment">// ✅ CORRECT - Check before push</span>
+<span class="code-keyword">void</span> <span class="code-type">push</span>(<span class="code-keyword">int</span> x) {
+    <span class="code-keyword">if</span> (<span class="code-type">isFull</span>()) {
+        <span class="code-keyword">throw</span> <span class="code-type">std::overflow_error</span>(<span class="code-string">"Stack overflow!"</span>);
+    }
+    arr[++top] = x;
+}</div>
+            </div>
+            
+            <div class="mistake-card">
+                <h4>❌ Stack Underflow (Pop when empty)</h4>
+                <p>Attempting to pop from an empty stack.</p>
+                <div class="code-snippet"><span class="code-comment">// ❌ WRONG - No underflow check</span>
+<span class="code-keyword">int</span> <span class="code-type">pop</span>() {
+    <span class="code-keyword">return</span> arr[top--];  <span class="code-comment">// May underflow!</span>
+}
+
+<span class="code-comment">// ✅ CORRECT - Check before pop</span>
+<span class="code-keyword">int</span> <span class="code-type">pop</span>() {
+    <span class="code-keyword">if</span> (<span class="code-type">isEmpty</span>()) {
+        <span class="code-keyword">throw</span> <span class="code-type">std::underflow_error</span>(<span class="code-string">"Stack underflow!"</span>);
+    }
+    <span class="code-keyword">return</span> arr[top--];
+}</div>
+            </div>
+            
+            <div class="mistake-card">
+                <h4>❌ Not Checking Empty Before top()</h4>
+                <p>Accessing top of empty stack causes crash.</p>
+                <div class="code-snippet"><span class="code-comment">// ❌ WRONG</span>
+<span class="code-keyword">int</span> val = st.<span class="code-type">top</span>();  <span class="code-comment">// Crash if empty!</span>
+
+<span class="code-comment">// ✅ CORRECT</span>
+<span class="code-keyword">if</span> (!st.<span class="code-type">empty</span>()) {
+    <span class="code-keyword">int</span> val = st.<span class="code-type">top</span>();
+}</div>
+            </div>
+            
+            <div class="mistake-card">
+                <h4>❌ Trying to Iterate Over Stack Directly</h4>
+                <p>std::stack doesn't support iteration.</p>
+                <div class="code-snippet"><span class="code-comment">// ❌ WRONG - Can't iterate</span>
+<span class="code-keyword">for</span> (<span class="code-keyword">auto</span> x : st) { }  <span class="code-comment">// ERROR!</span>
+
+<span class="code-comment">// ✅ CORRECT - Copy to temp</span>
+<span class="code-type">std::stack</span>&lt;<span class="code-keyword">int</span>&gt; temp = st;
+<span class="code-keyword">while</span> (!temp.<span class="code-type">empty</span>()) {
+    cout &lt;&lt; temp.<span class="code-type">top</span>() &lt;&lt; <span class="code-string">" "</span>;
+    temp.<span class="code-type">pop</span>();
+}</div>
+            </div>
+            
+            <div class="mistake-card">
+                <h4>❌ Forgetting to Pop After Top</h4>
+                <p>Reading top but not removing can cause memory issues.</p>
+                <div class="code-snippet"><span class="code-comment">// ❌ WRONG - Memory leak with pointers</span>
+st.<span class="code-type">push</span>(<span class="code-keyword">new int</span>(<span class="code-number">5</span>));
+<span class="code-keyword">int</span>* val = st.<span class="code-type">top</span>();
+<span class="code-comment">// Never popped - memory leaked!</span>
+
+<span class="code-comment">// ✅ CORRECT</span>
+<span class="code-keyword">int</span>* val = st.<span class="code-type">top</span>();
+st.<span class="code-type">pop</span>();
+<span class="code-keyword">delete</span> val;  <span class="code-comment">// Clean up</span></div>
+            </div>
+            
+            <div class="mistake-card">
+                <h4>❌ Off-by-One with Top Index</h4>
+                <p>Incorrect top initialization or updates.</p>
+                <div class="code-snippet"><span class="code-comment">// ❌ WRONG - Top starts at 0</span>
+<span class="code-keyword">int</span> top = <span class="code-number">0</span>;  <span class="code-comment">// First push will skip index 0!</span>
+
+<span class="code-comment">// ✅ CORRECT - Top starts at -1</span>
+<span class="code-keyword">int</span> top = -<span class="code-number">1</span>;  <span class="code-comment">// Empty stack</span></div>
+            </div>
+        </div>
+        
+        <!-- SECTION 7: TIME & SPACE COMPLEXITY -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">07</div>
+                <span>Time & Space Complexity</span>
+            </div>
+            
+            <div class="complexity-box">
+                <h3 style="font-family: 'Oswald', sans-serif; color: var(--burnt-orange); margin-bottom: 25px; font-size: 1.7em;">Stack Operations Complexity:</h3>
+                
+                <div class="complexity-item">
+                    <span class="complexity-label">Push</span>
+                    <span class="complexity-value">O(1)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">Pop</span>
+                    <span class="complexity-value">O(1)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">Top / Peek</span>
+                    <span class="complexity-value">O(1)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">isEmpty</span>
+                    <span class="complexity-value">O(1)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">isFull (array only)</span>
+                    <span class="complexity-value">O(1)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">Size</span>
+                    <span class="complexity-value">O(1)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">Search</span>
+                    <span class="complexity-value">O(n)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">Space Complexity</span>
+                    <span class="complexity-value">O(n)</span>
+                </div>
+            </div>
+            
+            <h3 style="margin-top: 40px;">Implementation Comparison:</h3>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Array</th>
+                        <th>Linked List</th>
+                        <th>Vector</th>
+                        <th>std::stack</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Push</strong></td>
+                        <td>O(1)</td>
+                        <td>O(1)</td>
+                        <td>O(1) amortized</td>
+                        <td>O(1)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Pop</strong></td>
+                        <td>O(1)</td>
+                        <td>O(1)</td>
+                        <td>O(1)</td>
+                        <td>O(1)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Memory</strong></td>
+                        <td>Fixed size</td>
+                        <td>Dynamic</td>
+                        <td>Dynamic</td>
+                        <td>Depends on container</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cache</strong></td>
+                        <td>Excellent</td>
+                        <td>Poor</td>
+                        <td>Excellent</td>
+                        <td>Depends on container</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Overhead</strong></td>
+                        <td>None</td>
+                        <td>Pointer/node</td>
+                        <td>Reallocation</td>
+                        <td>Depends on container</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="tip-box">
+                <strong>💡 PERFORMANCE TIP:</strong> For maximum performance, use array-based stack if max size is known. Otherwise, std::stack with vector container is best!
+            </div>
+        </div>
+        
+        <!-- Continue in next part -->
+        
+        <!-- SECTION 8: INTERMEDIATE OPERATIONS -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">08</div>
+                <span>Intermediate Operations</span>
+            </div>
+            
+            <div class="technique-card">
+                <h4>🔄 Reverse a Stack</h4>
+                <p>Reverse all elements using recursion.</p>
+                <div class="code-snippet"><span class="code-keyword">void</span> <span class="code-type">insertAtBottom</span>(<span class="code-type">stack</span>&lt;<span class="code-keyword">int</span>&gt;&amp; st, <span class="code-keyword">int</span> x) {
+    <span class="code-keyword">if</span> (st.<span class="code-type">empty</span>()) {
+        st.<span class="code-type">push</span>(x);
+        <span class="code-keyword">return</span>;
+    }
+    <span class="code-keyword">int</span> temp = st.<span class="code-type">top</span>();
+    st.<span class="code-type">pop</span>();
+    <span class="code-type">insertAtBottom</span>(st, x);
+    st.<span class="code-type">push</span>(temp);
+}
+
+<span class="code-keyword">void</span> <span class="code-type">reverse</span>(<span class="code-type">stack</span>&lt;<span class="code-keyword">int</span>&gt;&amp; st) {
+    <span class="code-keyword">if</span> (st.<span class="code-type">empty</span>()) <span class="code-keyword">return</span>;
+    <span class="code-keyword">int</span> temp = st.<span class="code-type">top</span>();
+    st.<span class="code-type">pop</span>();
+    <span class="code-type">reverse</span>(st);
+    <span class="code-type">insertAtBottom</span>(st, temp);
+}  <span class="code-comment">// O(n²) time</span></div>
+            </div>
+            
+            <div class="technique-card">
+                <h4>📊 Sort a Stack</h4>
+                <p>Sort stack elements using recursion.</p>
+                <div class="code-snippet"><span class="code-keyword">void</span> <span class="code-type">sortedInsert</span>(<span class="code-type">stack</span>&lt;<span class="code-keyword">int</span>&gt;&amp; st, <span class="code-keyword">int</span> x) {
+    <span class="code-keyword">if</span> (st.<span class="code-type">empty</span>() || x &gt; st.<span class="code-type">top</span>()) {
+        st.<span class="code-type">push</span>(x);
+        <span class="code-keyword">return</span>;
+    }
+    <span class="code-keyword">int</span> temp = st.<span class="code-type">top</span>();
+    st.<span class="code-type">pop</span>();
+    <span class="code-type">sortedInsert</span>(st, x);
+    st.<span class="code-type">push</span>(temp);
+}
+
+<span class="code-keyword">void</span> <span class="code-type">sortStack</span>(<span class="code-type">stack</span>&lt;<span class="code-keyword">int</span>&gt;&amp; st) {
+    <span class="code-keyword">if</span> (st.<span class="code-type">empty</span>()) <span class="code-keyword">return</span>;
+    <span class="code-keyword">int</span> temp = st.<span class="code-type">top</span>();
+    st.<span class="code-type">pop</span>();
+    <span class="code-type">sortStack</span>(st);
+    <span class="code-type">sortedInsert</span>(st, temp);
+}  <span class="code-comment">// O(n²) time</span></div>
+            </div>
+            
+            <div class="technique-card">
+                <h4>🎯 Get Middle Element</h4>
+                <p>Find middle element using recursion.</p>
+                <div class="code-snippet"><span class="code-keyword">int</span> <span class="code-type">getMiddle</span>(<span class="code-type">stack</span>&lt;<span class="code-keyword">int</span>&gt;&amp; st, <span class="code-keyword">int</span> curr) {
+    <span class="code-keyword">if</span> (curr == st.<span class="code-type">size</span>() / <span class="code-number">2</span>) {
+        <span class="code-keyword">return</span> st.<span class="code-type">top</span>();
+    }
+    <span class="code-keyword">int</span> temp = st.<span class="code-type">top</span>();
+    st.<span class="code-type">pop</span>();
+    <span class="code-keyword">int</span> mid = <span class="code-type">getMiddle</span>(st, curr + <span class="code-number">1</span>);
+    st.<span class="code-type">push</span>(temp);
+    <span class="code-keyword">return</span> mid;
+}</div>
+            </div>
+            
+            <div class="technique-card">
+                <h4>❌ Delete Middle Element</h4>
+                <p>Remove middle element recursively.</p>
+                <div class="code-snippet"><span class="code-keyword">void</span> <span class="code-type">deleteMiddle</span>(<span class="code-type">stack</span>&lt;<span class="code-keyword">int</span>&gt;&amp; st, <span class="code-keyword">int</span> curr, <span class="code-keyword">int</span> mid) {
+    <span class="code-keyword">if</span> (curr == mid) {
+        st.<span class="code-type">pop</span>();
+        <span class="code-keyword">return</span>;
+    }
+    <span class="code-keyword">int</span> temp = st.<span class="code-type">top</span>();
+    st.<span class="code-type">pop</span>();
+    <span class="code-type">deleteMiddle</span>(st, curr + <span class="code-number">1</span>, mid);
+    st.<span class="code-type">push</span>(temp);
+}</div>
+            </div>
+        </div>
+        
+        <!-- SECTION 9: COMMON TECHNIQUES -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">09</div>
+                <span>Common Techniques & Patterns</span>
+            </div>
+            
+            <div class="technique-card">
+                <h4>🔁 Monotonic Stack</h4>
+                <p><strong>When:</strong> Next Greater/Smaller Element, Histogram problems</p>
+                <p style="margin: 15px 0;"><strong>Pattern:</strong> Maintain stack in increasing/decreasing order</p>
+                <div class="code-snippet"><span class="code-comment">// Next Greater Element</span>
+<span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt; <span class="code-type">nextGreater</span>(<span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt;&amp; arr) {
+    <span class="code-type">stack</span>&lt;<span class="code-keyword">int</span>&gt; st;
+    <span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt; result(arr.<span class="code-type">size</span>(), -<span class="code-number">1</span>);
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = arr.<span class="code-type">size</span>() - <span class="code-number">1</span>; i &gt;= <span class="code-number">0</span>; i--) {
+        <span class="code-keyword">while</span> (!st.<span class="code-type">empty</span>() &amp;&amp; st.<span class="code-type">top</span>() &lt;= arr[i]) {
+            st.<span class="code-type">pop</span>();
+        }
+        <span class="code-keyword">if</span> (!st.<span class="code-type">empty</span>()) result[i] = st.<span class="code-type">top</span>();
+        st.<span class="code-type">push</span>(arr[i]);
+    }
+    <span class="code-keyword">return</span> result;
+}</div>
+            </div>
+            
+            <div class="technique-card">
+                <h4>📚 Two Stack Technique</h4>
+                <p><strong>When:</strong> Min/Max Stack, Implement Queue using Stacks</p>
+                <div class="code-snippet"><span class="code-comment">// Min Stack - O(1) getMin()</span>
+<span class="code-keyword">class</span> <span class="code-type">MinStack</span> {
+    <span class="code-type">stack</span>&lt;<span class="code-keyword">int</span>&gt; mainStack;
+    <span class="code-type">stack</span>&lt;<span class="code-keyword">int</span>&gt; minStack;
+<span class="code-keyword">public</span>:
+    <span class="code-keyword">void</span> <span class="code-type">push</span>(<span class="code-keyword">int</span> x) {
+        mainStack.<span class="code-type">push</span>(x);
+        <span class="code-keyword">if</span> (minStack.<span class="code-type">empty</span>() || x &lt;= minStack.<span class="code-type">top</span>()) {
+            minStack.<span class="code-type">push</span>(x);
+        }
+    }
+    
+    <span class="code-keyword">void</span> <span class="code-type">pop</span>() {
+        <span class="code-keyword">if</span> (mainStack.<span class="code-type">top</span>() == minStack.<span class="code-type">top</span>()) {
+            minStack.<span class="code-type">pop</span>();
+        }
+        mainStack.<span class="code-type">pop</span>();
+    }
+    
+    <span class="code-keyword">int</span> <span class="code-type">getMin</span>() {
+        <span class="code-keyword">return</span> minStack.<span class="code-type">top</span>();
+    }
+};</div>
+            </div>
+            
+            <div class="technique-card">
+                <h4>🧮 Expression Evaluation</h4>
+                <p><strong>When:</strong> Infix/Postfix evaluation, Calculator problems</p>
+                <div class="code-snippet"><span class="code-comment">// Evaluate Postfix Expression</span>
+<span class="code-keyword">int</span> <span class="code-type">evaluatePostfix</span>(<span class="code-type">string</span> exp) {
+    <span class="code-type">stack</span>&lt;<span class="code-keyword">int</span>&gt; st;
+    <span class="code-keyword">for</span> (<span class="code-keyword">char</span> c : exp) {
+        <span class="code-keyword">if</span> (<span class="code-type">isdigit</span>(c)) {
+            st.<span class="code-type">push</span>(c - <span class="code-string">'0'</span>);
+        } <span class="code-keyword">else</span> {
+            <span class="code-keyword">int</span> b = st.<span class="code-type">top</span>(); st.<span class="code-type">pop</span>();
+            <span class="code-keyword">int</span> a = st.<span class="code-type">top</span>(); st.<span class="code-type">pop</span>();
+            <span class="code-keyword">if</span> (c == <span class="code-string">'+'</span>) st.<span class="code-type">push</span>(a + b);
+            <span class="code-keyword">else if</span> (c == <span class="code-string">'-'</span>) st.<span class="code-type">push</span>(a - b);
+            <span class="code-keyword">else if</span> (c == <span class="code-string">'*'</span>) st.<span class="code-type">push</span>(a * b);
+            <span class="code-keyword">else if</span> (c == <span class="code-string">'/'</span>) st.<span class="code-type">push</span>(a / b);
+        }
+    }
+    <span class="code-keyword">return</span> st.<span class="code-type">top</span>();
+}</div>
+            </div>
+            
+            <div class="technique-card">
+                <h4>🔙 Backtracking with Stack</h4>
+                <p><strong>When:</strong> DFS, maze solving, state exploration</p>
+                <div class="code-snippet"><span class="code-comment">// DFS using explicit stack</span>
+<span class="code-keyword">void</span> <span class="code-type">DFS</span>(<span class="code-type">Graph</span> g, <span class="code-keyword">int</span> start) {
+    <span class="code-type">stack</span>&lt;<span class="code-keyword">int</span>&gt; st;
+    <span class="code-type">vector</span>&lt;<span class="code-keyword">bool</span>&gt; visited(g.V, <span class="code-keyword">false</span>);
+    st.<span class="code-type">push</span>(start);
+    
+    <span class="code-keyword">while</span> (!st.<span class="code-type">empty</span>()) {
+        <span class="code-keyword">int</span> v = st.<span class="code-type">top</span>();
+        st.<span class="code-type">pop</span>();
+        
+        <span class="code-keyword">if</span> (!visited[v]) {
+            visited[v] = <span class="code-keyword">true</span>;
+            <span class="code-comment">// Process vertex</span>
+            
+            <span class="code-keyword">for</span> (<span class="code-keyword">int</span> u : g.adj[v]) {
+                <span class="code-keyword">if</span> (!visited[u]) st.<span class="code-type">push</span>(u);
+            }
+        }
+    }
+}</div>
+            </div>
+            
+            <div class="tip-box">
+                <strong>💡 PATTERN TIP:</strong> Monotonic Stack + Two Stack + Expression Evaluation = 90% of stack interview problems!
+            </div>
+        </div>
+        
+        <!-- SECTION 10-13 combined due to space -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">10</div>
+                <span>Advanced Problems & Applications</span>
+            </div>
+            
+            <h3>Top Stack Problems by Difficulty:</h3>
+            
+            <div class="problem-grid">
+                <div class="problem-item">
+                    <span class="problem-difficulty difficulty-easy">EASY</span>
+                    <div class="problem-title">Valid Parentheses</div>
+                    <p class="problem-approach">Stack + HashMap for matching pairs</p>
+                </div>
+                
+                <div class="problem-item">
+                    <span class="problem-difficulty difficulty-easy">EASY</span>
+                    <div class="problem-title">Min Stack</div>
+                    <p class="problem-approach">Two-stack or stack of pairs</p>
+                </div>
+                
+                <div class="problem-item">
+                    <span class="problem-difficulty difficulty-medium">MEDIUM</span>
+                    <div class="problem-title">Next Greater Element</div>
+                    <p class="problem-approach">Monotonic stack</p>
+                </div>
+                
+                <div class="problem-item">
+                    <span class="problem-difficulty difficulty-medium">MEDIUM</span>
+                    <div class="problem-title">Daily Temperatures</div>
+                    <p class="problem-approach">Monotonic stack with indices</p>
+                </div>
+                
+                <div class="problem-item">
+                    <span class="problem-difficulty difficulty-medium">MEDIUM</span>
+                    <div class="problem-title">Decode String</div>
+                    <p class="problem-approach">Stack for nested patterns</p>
+                </div>
+                
+                <div class="problem-item">
+                    <span class="problem-difficulty difficulty-medium">MEDIUM">MEDIUM</span>
+                    <div class="problem-title">Asteroid Collision</div>
+                    <p class="problem-approach">Stack simulation</p>
+                </div>
+                
+                <div class="problem-item">
+                    <span class="problem-difficulty difficulty-hard">HARD</span>
+                    <div class="problem-title">Largest Rectangle Histogram</div>
+                    <p class="problem-approach">Monotonic stack O(n)</p>
+                </div>
+                
+                <div class="problem-item">
+                    <span class="problem-difficulty difficulty-hard">HARD</span>
+                    <div class="problem-title">Basic Calculator II</div>
+                    <p class="problem-approach">Operator precedence stack</p>
+                </div>
+            </div>
+            
+            <h3 style="margin-top: 45px;">Real-World Applications:</h3>
+            
+            <div class="use-case-grid">
+                <div class="use-case">
+                    <div class="use-case-icon">🔧</div>
+                    <div class="use-case-label">Compiler Design</div>
+                </div>
+                
+                <div class="use-case">
+                    <div class="use-case-icon">📞</div>
+                    <div class="use-case-label">Function Calls</div>
+                </div>
+                
+                <div class="use-case">
+                    <div class="use-case-icon">↩️</div>
+                    <div class="use-case-label">Undo/Redo</div>
+                </div>
+                
+                <div class="use-case">
+                    <div class="use-case-icon">🌐</div>
+                    <div class="use-case-label">Browser History</div>
+                </div>
+                
+                <div class="use-case">
+                    <div class="use-case-icon">🧮</div>
+                    <div class="use-case-label">Calculator</div>
+                </div>
+                
+                <div class="use-case">
+                    <div class="use-case-icon">🔍</div>
+                    <div class="use-case-label">DFS Traversal</div>
+                </div>
+                
+                <div class="use-case">
+                    <div class="use-case-icon">📝</div>
+                    <div class="use-case-label">Text Editors</div>
+                </div>
+                
+                <div class="use-case">
+                    <div class="use-case-icon">🏗️</div>
+                    <div class="use-case-label">Memory Mgmt</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SECTION 11-12: STL & Summary Combined -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">11</div>
+                <span>STL Stack & Reference</span>
+            </div>
+            
+            <h3>Complete std::stack Reference:</h3>
+            
+            <div class="type-card">
+                <h4>Construction</h4>
+                <div class="code-snippet"><span class="code-keyword">#include</span> <span class="code-string">&lt;stack&gt;</span>
+
+<span class="code-type">std::stack</span>&lt;<span class="code-keyword">int</span>&gt; st;                          <span class="code-comment">// Default (deque)</span>
+<span class="code-type">std::stack</span>&lt;<span class="code-keyword">int</span>, <span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt;&gt; st2;        <span class="code-comment">// Vector-based</span>
+<span class="code-type">std::stack</span>&lt;<span class="code-keyword">int</span>, <span class="code-type">list</span>&lt;<span class="code-keyword">int</span>&gt;&gt; st3;          <span class="code-comment">// List-based</span></div>
+            </div>
+            
+            <div class="type-card">
+                <h4>Operations</h4>
+                <div class="code-snippet">st.<span class="code-type">push</span>(x);      <span class="code-comment">// Add to top</span>
+st.<span class="code-type">pop</span>();        <span class="code-comment">// Remove from top</span>
+st.<span class="code-type">top</span>();        <span class="code-comment">// Access top (reference)</span>
+st.<span class="code-type">empty</span>();      <span class="code-comment">// Check if empty</span>
+st.<span class="code-type">size</span>();       <span class="code-comment">// Get size</span>
+st.<span class="code-type">swap</span>(st2);    <span class="code-comment">// Swap contents</span></div>
+            </div>
+        </div>
+        
+        <!-- SECTION 13: SUMMARY -->
+        <div class="section">
+            <div class="section-title">
+                <div class="section-number">13</div>
+                <span>Summary & Decision Tree</span>
+            </div>
+            
+            <div class="summary-box">
+                <h3>Key Properties Summary</h3>
+                <ul>
+                    <li>LIFO (Last In First Out) principle</li>
+                    <li>O(1) push, pop, top operations</li>
+                    <li>Only top element accessible</li>
+                    <li>No random access allowed</li>
+                    <li>Can be array or linked list based</li>
+                    <li>Essential for recursion & backtracking</li>
+                    <li>Perfect for expression evaluation</li>
+                    <li>Used in compilers, browsers, editors</li>
+                </ul>
+            </div>
+            
+            <div class="decision-tree">
+                <h3>🎯 Stack Decision Tree</h3>
+                
+                <div class="decision-item">
+                    <strong>Fixed max size known?</strong> → Array-based stack (best performance)
+                </div>
+                
+                <div class="decision-item">
+                    <strong>Unknown size?</strong> → std::stack&lt;T, vector&lt;T&gt;&gt; (good balance)
+                </div>
+                
+                <div class="decision-item">
+                    <strong>No reallocation?</strong> → std::stack (default deque)
+                </div>
+                
+                <div class="decision-item">
+                    <strong>Need min/max tracking?</strong> → Min/Max Stack (two-stack approach)
+                </div>
+                
+                <div class="decision-item">
+                    <strong>Next greater/smaller?</strong> → Monotonic Stack
+                </div>
+                
+                <div class="decision-item">
+                    <strong>Expression evaluation?</strong> → Operator stack + Operand stack
+                </div>
+                
+                <div class="decision-item">
+                    <strong>DFS/Backtracking?</strong> → Explicit stack for iteration
+                </div>
+            </div>
+            
+            <div class="type-card" style="margin-top: 35px;">
+                <h3>📌 Top 15 Must-Know Stack Problems</h3>
+                <ol style="list-style-position: inside; line-height: 2.3; color: var(--brown);">
+                    <li><strong>Valid Parentheses</strong> - Hash + Stack matching</li>
+                    <li><strong>Min Stack</strong> - Two-stack technique</li>
+                    <li><strong>Implement Queue using Stacks</strong> - Two-stack conversion</li>
+                    <li><strong>Next Greater Element</strong> - Monotonic stack</li>
+                    <li><strong>Daily Temperatures</strong> - Monotonic stack with indices</li>
+                    <li><strong>Evaluate Reverse Polish Notation</strong> - Postfix evaluation</li>
+                    <li><strong>Decode String</strong> - Nested pattern stack</li>
+                    <li><strong>Remove Adjacent Duplicates</strong> - Stack simulation</li>
+                    <li><strong>Asteroid Collision</strong> - Direction-based stack</li>
+                    <li><strong>Largest Rectangle in Histogram</strong> - Monotonic stack O(n)</li>
+                    <li><strong>Maximal Rectangle</strong> - Histogram extension</li>
+                    <li><strong>Basic Calculator</strong> - Operator precedence</li>
+                    <li><strong>Trapping Rain Water</strong> - Stack approach</li>
+                    <li><strong>Exclusive Time of Functions</strong> - Call stack simulation</li>
+                    <li><strong>Longest Valid Parentheses</strong> - Stack + DP</li>
+                </ol>
+            </div>
+            
+            <div class="tip-box" style="margin-top: 35px;">
+                <strong>💡 FINAL TIP:</strong> Stack is all about LIFO! Master monotonic stack, two-stack technique, and expression evaluation - these three cover 85% of all stack problems!
+            </div>
+        </div>
+        
+        <!-- FOOTER -->
+        <div class="footer">
+            <p><strong>STACK - COMPLETE DSA VISUAL GUIDE (C++)</strong></p>
+            <p style="margin-top: 14px;">Master Data Structures & Algorithms • Perfect for Interviews, Exams & Revision</p>
+            <p style="margin-top: 22px; font-size: 0.95em; color: var(--burnt-orange);">
+                🔥 Remember: Stack is like a stack of plates - Last In, First Out! Build your knowledge from bottom to top!
+            </p>
+        </div>
+    </div>
+</body>
+</html>
