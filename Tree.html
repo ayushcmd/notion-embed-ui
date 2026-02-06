@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tree - Complete DSA Visual Guide (C++)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bark: #3E2723; --wood: #5D4037; --autumn: #FF6F00; --amber: #FFB300; --leaf: #388E3C;
+        }
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: linear-gradient(135deg, var(--bark) 0%, var(--wood) 100%);
+            padding: 40px 20px; line-height: 1.6;
+        }
+        .container { max-width: 1200px; margin: 0 auto; background: #FFF8E1; border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(62,39,35,0.6); overflow: hidden; }
+        .header { background: linear-gradient(135deg, var(--bark), var(--wood));
+            color: #FFF8E1; padding: 80px 40px; text-align: center; }
+        .header h1 { font-family: 'Merriweather', serif; font-size: 5em; font-weight: 900;
+            letter-spacing: 12px; text-shadow: 4px 4px 8px rgba(0,0,0,0.7); }
+        .header p { font-family: 'Merriweather', serif; font-size: 1.4em; letter-spacing: 5px; margin-top: 15px; }
+        .section { padding: 50px 60px; border-bottom: 3px solid var(--wood); }
+        .section:nth-child(even) { background: #FFFBF0; }
+        .section-title { font-family: 'Merriweather', serif; font-size: 2.2em; margin-bottom: 25px;
+            color: var(--wood); display: flex; align-items: center; gap: 20px; }
+        .section-number { background: linear-gradient(135deg, var(--wood), var(--autumn));
+            color: white; width: 65px; height: 65px; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center; font-size: 1.3em; font-weight: 900;
+            box-shadow: 0 5px 20px rgba(255,111,0,0.4); }
+        h3 { color: var(--wood); font-family: 'Merriweather', serif; margin: 25px 0 15px; font-size: 1.5em; }
+        p { color: var(--bark); line-height: 1.9; margin-bottom: 15px; }
+        .code-snippet { background: var(--bark); color: #FFECB3; padding: 25px; border-radius: 12px;
+            font-family: monospace; margin: 25px 0; overflow-x: auto; font-size: 0.9em;
+            border: 3px solid var(--wood); }
+        .code-keyword { color: #FFB74D; }
+        .code-type { color: #FFD54F; }
+        .code-comment { color: #90A4AE; font-style: italic; }
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 25px 0;
+            box-shadow: 0 6px 25px rgba(62,39,35,0.2); border-radius: 12px; overflow: hidden; }
+        .comparison-table th { background: linear-gradient(135deg, var(--wood), var(--autumn));
+            color: white; padding: 20px; text-align: left; font-family: 'Merriweather', serif; }
+        .comparison-table td { padding: 18px 20px; border-bottom: 2px solid #D7CCC8; }
+        .comparison-table tr:nth-child(even) { background: #FFFBF0; }
+        .type-card { background: linear-gradient(135deg, #FFF3E0, #FFFBF0); border-left: 6px solid var(--autumn);
+            padding: 28px; margin: 22px 0; border-radius: 10px; }
+        .type-card h3, .type-card h4 { color: var(--wood); margin-bottom: 12px; font-family: 'Merriweather', serif; }
+        .operation-grid, .problem-grid, .use-case-grid { display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin: 30px 0; }
+        .operation-card, .problem-item, .use-case { background: linear-gradient(135deg, #fff, #FFF3E0);
+            border: 3px solid var(--amber); border-radius: 16px; padding: 28px; transition: all 0.3s; }
+        .operation-card:hover, .problem-item:hover { transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(255,111,0,0.3); }
+        .operation-card h4 { font-family: 'Merriweather', serif; color: var(--wood); margin-bottom: 15px; font-size: 1.3em; }
+        .complexity-box { background: #FFF3E0; border: 3px solid var(--amber); padding: 30px;
+            margin: 25px 0; border-radius: 14px; }
+        .complexity-item { display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 2px solid #D7CCC8; }
+        .complexity-item:last-child { border-bottom: none; }
+        .complexity-value { font-family: 'Merriweather', monospace; background: linear-gradient(135deg, var(--wood), var(--autumn));
+            color: white; padding: 10px 24px; border-radius: 10px; font-weight: 700; }
+        .tip-box { background: linear-gradient(135deg, #FFFDE7, #FFF9C4); border-left: 6px solid #F9A825;
+            padding: 25px; margin: 25px 0; border-radius: 10px; }
+        .tip-box strong { color: #F57F17; font-size: 1.2em; }
+        .mistake-card { background: linear-gradient(135deg, #FFEBEE, #FFF5F5); border-left: 6px solid #D32F2F;
+            padding: 28px; margin: 25px 0; border-radius: 10px; }
+        .mistake-card h4 { color: #C62828; margin-bottom: 15px; font-family: 'Merriweather', serif; font-size: 1.3em; }
+        .problem-difficulty { display: inline-block; padding: 7px 18px; border-radius: 25px;
+            font-size: 0.8em; font-weight: 700; margin-bottom: 12px; }
+        .difficulty-easy { background: #4CAF50; color: white; }
+        .difficulty-medium { background: #FF9800; color: white; }
+        .difficulty-hard { background: #F44336; color: white; }
+        .problem-title { font-weight: 700; color: var(--wood); font-size: 1.15em; margin-bottom: 10px; font-family: 'Merriweather', serif; }
+        .use-case { text-align: center; }
+        .use-case-icon { font-size: 3.5em; margin-bottom: 15px; }
+        .use-case-label { font-weight: 700; font-family: 'Merriweather', serif; color: var(--wood); }
+        .summary-box { background: linear-gradient(135deg, var(--bark), var(--wood)); color: #FFF8E1;
+            padding: 55px; border-radius: 22px; margin: 35px 0; }
+        .summary-box h3 { font-family: 'Merriweather', serif; font-size: 2.3em; margin-bottom: 28px; color: #FFF8E1; }
+        .summary-box ul { list-style: none; padding: 0; }
+        .summary-box li { padding: 16px 0; font-size: 1.12em; position: relative; padding-left: 45px; }
+        .summary-box li:before { content: "🌳"; position: absolute; left: 0; font-size: 1.4em; }
+        .decision-tree { background: white; padding: 35px; border-radius: 18px; margin: 30px 0;
+            border: 4px solid var(--amber); }
+        .decision-tree h3 { font-family: 'Merriweather', serif; color: var(--wood); margin-bottom: 25px; font-size: 1.9em; }
+        .decision-item { padding: 18px; margin: 14px 0; border-left: 5px solid var(--autumn);
+            background: #FFF3E0; border-radius: 8px; }
+        .decision-item strong { color: var(--wood); font-family: 'Merriweather', serif; }
+        .footer { background: #FFF3E0; padding: 45px; text-align: center; color: var(--bark);
+            border-top: 5px solid var(--amber); }
+        .footer strong { font-family: 'Merriweather', serif; color: var(--wood); font-size: 1.1em; }
+    </style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>TREE</h1>
+<p>COMPLETE DSA VISUAL GUIDE (C++)</p>
+</div>
+
+<!-- SECTION 1 -->
+<div class="section">
+<div class="section-title"><div class="section-number">01</div><span>What is a Tree?</span></div>
+<p style="font-size:1.15em;">A <strong>Tree</strong> is a hierarchical non-linear data structure with nodes connected by edges, representing parent-child relationships. It's fundamental for hierarchies like file systems and organizational charts.</p>
+<h3>Binary Tree Structure:</h3>
+<div style="text-align:center;font-family:Merriweather;font-size:1.2em;margin:30px 0;line-height:1.8;">
+<div>10 (Root)</div>
+<div>/ \</div>
+<div style="display:flex;justify-content:space-around;"><span>5</span><span>15</span></div>
+<div style="display:flex;justify-content:space-around;"><span>/ \</span><span>\</span></div>
+<div style="display:flex;justify-content:space-around;gap:30px;"><span>3</span><span>7</span><span></span><span>20</span></div>
+</div>
+<div class="code-snippet"><span class="code-keyword">struct</span> <span class="code-type">Node</span> {
+    <span class="code-keyword">int</span> data;
+    <span class="code-type">Node</span> *left, *right;
+};
+
+<span class="code-type">Node</span>* createNode(<span class="code-keyword">int</span> data) {
+    <span class="code-type">Node</span>* node = <span class="code-keyword">new</span> <span class="code-type">Node</span>();
+    node->data = data;
+    node->left = node->right = <span class="code-keyword">nullptr</span>;
+    <span class="code-keyword">return</span> node;
+}</div>
+<h3>Terminology:</h3>
+<ul style="list-style-position:inside;margin-left:20px;line-height:2.2;">
+<li><strong>Root:</strong> Top node (10)</li>
+<li><strong>Leaf:</strong> Node with no children (3,7,20)</li>
+<li><strong>Height:</strong> Longest path from node to leaf</li>
+<li><strong>Depth:</strong> Path from root to node</li>
+</ul>
+</div>
+
+<!-- SECTION 2 -->
+<div class="section">
+<div class="section-title"><div class="section-number">02</div><span>Types of Trees</span></div>
+<div class="type-card"><h4>Binary Tree</h4><p>At most 2 children per node</p></div>
+<div class="type-card"><h4>Binary Search Tree (BST)</h4><p>Left < Root < Right property. In-order gives sorted output.</p></div>
+<div class="type-card"><h4>AVL Tree</h4><p>Self-balancing BST: |height(left) - height(right)| ≤ 1</p></div>
+<div class="type-card"><h4>Red-Black Tree</h4><p>Self-balancing with color properties. Used in std::map, std::set</p></div>
+<div class="type-card"><h4>Complete Binary Tree</h4><p>All levels filled except last (left to right). Heap implementation.</p></div>
+<div class="type-card"><h4>N-ary Tree</h4><p>Each node can have N children</p></div>
+<div class="type-card"><h4>Trie (Prefix Tree)</h4><p>String storage. Use: Autocomplete, spell check</p></div>
+</div>
+
+<!-- SECTION 3 -->
+<div class="section">
+<div class="section-title"><div class="section-number">03</div><span>Tree Traversals</span></div>
+<div class="operation-grid">
+<div class="operation-card"><h4>Inorder (L-Root-R)</h4>
+<div class="code-snippet" style="font-size:0.85em;"><span class="code-keyword">void</span> inorder(<span class="code-type">Node</span>* root) {
+    <span class="code-keyword">if</span> (!root) <span class="code-keyword">return</span>;
+    inorder(root->left);
+    cout << root->data;
+    inorder(root->right);
+}</div>
+<p>BST: Gives sorted order</p></div>
+
+<div class="operation-card"><h4>Preorder (Root-L-R)</h4>
+<div class="code-snippet" style="font-size:0.85em;"><span class="code-keyword">void</span> preorder(<span class="code-type">Node</span>* root) {
+    <span class="code-keyword">if</span> (!root) <span class="code-keyword">return</span>;
+    cout << root->data;
+    preorder(root->left);
+    preorder(root->right);
+}</div>
+<p>Use: Copy tree, serialize</p></div>
+
+<div class="operation-card"><h4>Postorder (L-R-Root)</h4>
+<div class="code-snippet" style="font-size:0.85em;"><span class="code-keyword">void</span> postorder(<span class="code-type">Node</span>* root) {
+    <span class="code-keyword">if</span> (!root) <span class="code-keyword">return</span>;
+    postorder(root->left);
+    postorder(root->right);
+    cout << root->data;
+}</div>
+<p>Use: Delete tree, eval</p></div>
+
+<div class="operation-card"><h4>Level Order (BFS)</h4>
+<div class="code-snippet" style="font-size:0.85em;">queue<<span class="code-type">Node</span>*> q;
+q.push(root);
+<span class="code-keyword">while</span> (!q.empty()) {
+    <span class="code-type">Node</span>* n = q.front();
+    q.pop();
+    cout << n->data;
+    <span class="code-keyword">if</span> (n->left) q.push(n->left);
+    <span class="code-keyword">if</span> (n->right) q.push(n->right);
+}</div></div>
+</div>
+</div>
+
+<!-- SECTION 4 -->
+<div class="section">
+<div class="section-title"><div class="section-number">04</div><span>Basic Operations</span></div>
+<div class="operation-grid">
+<div class="operation-card"><h4>Insert (BST)</h4><p>Time: O(log n) avg, O(n) worst</p></div>
+<div class="operation-card"><h4>Search (BST)</h4><p>Time: O(log n) avg, O(n) worst</p></div>
+<div class="operation-card"><h4>Delete (BST)</h4><p>3 cases: Leaf, 1 child, 2 children</p></div>
+<div class="operation-card"><h4>Height</h4><p>Time: O(n), Space: O(h)</p></div>
+<div class="operation-card"><h4>Size</h4><p>Count all nodes: O(n)</p></div>
+<div class="operation-card"><h4>Min/Max</h4><p>BST: Leftmost/Rightmost O(h)</p></div>
+</div>
+</div>
+
+<!-- SECTION 5 -->
+<div class="section">
+<div class="section-title"><div class="section-number">05</div><span>Common Mistakes</span></div>
+<div class="mistake-card"><h4>❌ Not Handling NULL</h4>
+<div class="code-snippet"><span class="code-comment">// WRONG</span>
+<span class="code-keyword">return</span> 1 + max(height(root->left), ...);
+
+<span class="code-comment">// CORRECT</span>
+<span class="code-keyword">if</span> (!root) <span class="code-keyword">return</span> -1;</div></div>
+
+<div class="mistake-card"><h4>❌ Memory Leaks</h4>
+<div class="code-snippet"><span class="code-comment">// Use postorder for deletion</span>
+<span class="code-keyword">void</span> deleteTree(<span class="code-type">Node</span>* root) {
+    <span class="code-keyword">if</span> (!root) <span class="code-keyword">return</span>;
+    deleteTree(root->left);
+    deleteTree(root->right);
+    <span class="code-keyword">delete</span> root;
+}</div></div>
+
+<div class="mistake-card"><h4>❌ Not Returning Updated Root</h4>
+<div class="code-snippet"><span class="code-comment">// CORRECT - Return modified root</span>
+<span class="code-type">Node</span>* insert(<span class="code-type">Node</span>* root, <span class="code-keyword">int</span> data) {
+    <span class="code-keyword">if</span> (!root) <span class="code-keyword">return</span> createNode(data);
+    <span class="code-comment">// ... modifications</span>
+    <span class="code-keyword">return</span> root;
+}</div></div>
+</div>
+
+<!-- SECTION 6 -->
+<div class="section">
+<div class="section-title"><div class="section-number">06</div><span>Time & Space Complexity</span></div>
+<div class="complexity-box">
+<div class="complexity-item"><span>Search (BST)</span><span class="complexity-value">O(log n) avg</span></div>
+<div class="complexity-item"><span>Insert (BST)</span><span class="complexity-value">O(log n) avg</span></div>
+<div class="complexity-item"><span>Delete (BST)</span><span class="complexity-value">O(log n) avg</span></div>
+<div class="complexity-item"><span>Traversal</span><span class="complexity-value">O(n)</span></div>
+<div class="complexity-item"><span>Height</span><span class="complexity-value">O(n)</span></div>
+<div class="complexity-item"><span>Space (Recursion)</span><span class="complexity-value">O(h)</span></div>
+</div>
+
+<table class="comparison-table">
+<tr><th>Tree Type</th><th>Search</th><th>Insert</th><th>Balance</th></tr>
+<tr><td>BST</td><td>O(log n) avg</td><td>O(log n) avg</td><td>Not guaranteed</td></tr>
+<tr><td>AVL</td><td>O(log n)</td><td>O(log n)</td><td>Strictly balanced</td></tr>
+<tr><td>Red-Black</td><td>O(log n)</td><td>O(log n)</td><td>Loosely balanced</td></tr>
+</table>
+</div>
+
+<!-- SECTION 7-13 COMBINED -->
+<div class="section">
+<div class="section-title"><div class="section-number">07</div><span>Intermediate Operations & Problems</span></div>
+<h3>Key Operations:</h3>
+<ul style="list-style-position:inside;margin-left:20px;line-height:2.2;">
+<li><strong>Check Balanced:</strong> Recursively verify height difference ≤ 1</li>
+<li><strong>Lowest Common Ancestor:</strong> Find LCA of two nodes</li>
+<li><strong>Diameter:</strong> Longest path between any two nodes</li>
+<li><strong>Mirror/Invert:</strong> Swap left and right subtrees</li>
+<li><strong>Serialize/Deserialize:</strong> Convert to/from string</li>
+</ul>
+
+<h3 style="margin-top:35px;">Top Problems:</h3>
+<div class="problem-grid">
+<div class="problem-item"><span class="problem-difficulty difficulty-easy">EASY</span>
+<div class="problem-title">Maximum Depth</div><p>Recursive height calculation</p></div>
+
+<div class="problem-item"><span class="problem-difficulty difficulty-easy">EASY</span>
+<div class="problem-title">Invert Binary Tree</div><p>Swap left/right recursively</p></div>
+
+<div class="problem-item"><span class="problem-difficulty difficulty-easy">EASY</span>
+<div class="problem-title">Symmetric Tree</div><p>Mirror check</p></div>
+
+<div class="problem-item"><span class="problem-difficulty difficulty-medium">MEDIUM</span>
+<div class="problem-title">Level Order Traversal</div><p>BFS with queue</p></div>
+
+<div class="problem-item"><span class="problem-difficulty difficulty-medium">MEDIUM</span>
+<div class="problem-title">Validate BST</div><p>Check BST property with ranges</p></div>
+
+<div class="problem-item"><span class="problem-difficulty difficulty-medium">MEDIUM</span>
+<div class="problem-title">Lowest Common Ancestor</div><p>Recursive search</p></div>
+
+<div class="problem-item"><span class="problem-difficulty difficulty-hard">HARD</span>
+<div class="problem-title">Maximum Path Sum</div><p>Recursion with global max</p></div>
+
+<div class="problem-item"><span class="problem-difficulty difficulty-hard">HARD</span>
+<div class="problem-title">Serialize/Deserialize</div><p>Preorder with markers</p></div>
+</div>
+
+<h3 style="margin-top:35px;">Applications:</h3>
+<div class="use-case-grid">
+<div class="use-case"><div class="use-case-icon">🗂️</div><div class="use-case-label">File Systems</div></div>
+<div class="use-case"><div class="use-case-icon">🌐</div><div class="use-case-label">DOM (HTML)</div></div>
+<div class="use-case"><div class="use-case-icon">🔍</div><div class="use-case-label">Database Indexing</div></div>
+<div class="use-case"><div class="use-case-icon">💻</div><div class="use-case-label">Compilers (AST)</div></div>
+<div class="use-case"><div class="use-case-icon">🎮</div><div class="use-case-label">Game AI</div></div>
+<div class="use-case"><div class="use-case-icon">🔤</div><div class="use-case-label">Autocomplete (Trie)</div></div>
+</div>
+</div>
+
+<!-- SUMMARY -->
+<div class="section">
+<div class="section-title"><div class="section-number">13</div><span>Summary & Decision Tree</span></div>
+<div class="summary-box">
+<h3>Key Properties</h3>
+<ul>
+<li>Hierarchical non-linear structure</li>
+<li>One root, multiple leaves</li>
+<li>No cycles (acyclic graph)</li>
+<li>Unique path from root to any node</li>
+<li>Recursive structure (subtrees)</li>
+<li>O(log n) operations in balanced trees</li>
+<li>O(n) operations in worst case (skewed)</li>
+</ul>
+</div>
+
+<div class="decision-tree">
+<h3>🎯 When to Use What?</h3>
+<div class="decision-item"><strong>Need sorted data + fast search?</strong> → Binary Search Tree</div>
+<div class="decision-item"><strong>Need guaranteed O(log n)?</strong> → AVL or Red-Black Tree</div>
+<div class="decision-item"><strong>String prefix matching?</strong> → Trie</div>
+<div class="decision-item"><strong>Range queries?</strong> → Segment Tree</div>
+<div class="decision-item"><strong>Level-by-level processing?</strong> → Level Order Traversal</div>
+<div class="decision-item"><strong>Expression evaluation?</strong> → Expression Tree</div>
+</div>
+
+<div class="type-card" style="margin-top:35px;">
+<h3>📌 Top 15 Must-Know Problems</h3>
+<ol style="list-style-position:inside;line-height:2.2;">
+<li><strong>Invert Binary Tree</strong> - Swap recursively</li>
+<li><strong>Maximum Depth</strong> - Height calculation</li>
+<li><strong>Validate BST</strong> - Range checking</li>
+<li><strong>Level Order Traversal</strong> - BFS</li>
+<li><strong>Lowest Common Ancestor</strong> - Recursive search</li>
+<li><strong>Diameter of Binary Tree</strong> - Path calculation</li>
+<li><strong>Balanced Binary Tree</strong> - Height difference</li>
+<li><strong>Binary Tree Paths</strong> - Root to leaf</li>
+<li><strong>Kth Smallest in BST</strong> - Inorder traversal</li>
+<li><strong>Construct from Inorder+Preorder</strong> - Recursion</li>
+<li><strong>Binary Tree Right Side View</strong> - Level order</li>
+<li><strong>Path Sum</strong> - DFS with target</li>
+<li><strong>Serialize/Deserialize</strong> - String conversion</li>
+<li><strong>Maximum Path Sum</strong> - Global max tracking</li>
+<li><strong>Vertical Order Traversal</strong> - Map + BFS</li>
+</ol>
+</div>
+
+<div class="tip-box" style="margin-top:35px;">
+<strong>💡 FINAL TIP:</strong> Master recursive patterns! Most tree problems follow: base case (null check) → process left → process right → combine results. Practice traversals and BST operations first!
+</div>
+</div>
+
+<div class="footer">
+<p><strong>TREE - COMPLETE DSA VISUAL GUIDE (C++)</strong></p>
+<p style="margin-top:14px;">Master Data Structures & Algorithms • Perfect for Interviews, Exams & Revision</p>
+<p style="margin-top:22px;font-size:0.95em;color:var(--wood);">
+🌳 Remember: Trees grow from roots to leaves, just like your DSA knowledge!
+</p>
+</div>
+</div>
+</body>
+</html>
