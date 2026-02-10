@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heap - Complete DSA Visual Guide (C++)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --violet: #4A148C; --purple: #8E24AA; --purple-light: #BA68C8; 
+            --lavender: #CE93D8; --pink: #D81B60;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--violet) 0%, var(--purple) 100%);
+            padding: 40px 20px; line-height: 1.6;
+        }
+        .container { max-width: 1200px; margin: 0 auto; background: #FAF5FF; border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(74,20,140,0.6); overflow: hidden; }
+        .header { background: linear-gradient(135deg, var(--violet), var(--purple));
+            color: #FAF5FF; padding: 80px 40px; text-align: center; }
+        .header h1 { font-family: 'Poppins', sans-serif; font-size: 5.5em; font-weight: 900;
+            letter-spacing: 15px; text-shadow: 4px 4px 10px rgba(0,0,0,0.7); }
+        .header p { font-family: 'Poppins', sans-serif; font-size: 1.5em; letter-spacing: 6px; margin-top: 15px; }
+        .section { padding: 50px 60px; border-bottom: 3px solid var(--lavender); }
+        .section:nth-child(even) { background: #F3E5F5; }
+        .section-title { font-family: 'Poppins', sans-serif; font-size: 2.3em; margin-bottom: 28px;
+            color: var(--violet); display: flex; align-items: center; gap: 20px; }
+        .section-number { background: linear-gradient(135deg, var(--purple), var(--pink));
+            color: white; width: 68px; height: 68px; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center; font-size: 1.3em; font-weight: 900;
+            box-shadow: 0 6px 25px rgba(142,36,170,0.5); }
+        h3 { color: var(--violet); font-family: 'Poppins', sans-serif; margin: 28px 0 18px; font-size: 1.6em; }
+        p { color: var(--violet); line-height: 1.9; margin-bottom: 16px; }
+        .code-snippet { background: var(--violet); color: var(--lavender); padding: 26px; border-radius: 12px;
+            font-family: monospace; margin: 26px 0; overflow-x: auto; font-size: 0.9em; border: 3px solid var(--purple); }
+        .code-keyword { color: var(--purple-light); }
+        .code-type { color: var(--lavender); }
+        .code-comment { color: #90A4AE; font-style: italic; }
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 26px 0;
+            box-shadow: 0 6px 25px rgba(74,20,140,0.2); border-radius: 12px; overflow: hidden; }
+        .comparison-table th { background: linear-gradient(135deg, var(--violet), var(--purple));
+            color: white; padding: 20px; text-align: left; font-family: 'Poppins', sans-serif; }
+        .comparison-table td { padding: 18px 20px; border-bottom: 2px solid var(--lavender); }
+        .comparison-table tr:nth-child(even) { background: #F3E5F5; }
+        .type-card { background: linear-gradient(135deg, #F3E5F5, #FAF5FF); border-left: 6px solid var(--purple-light);
+            padding: 28px; margin: 24px 0; border-radius: 10px; }
+        .type-card h3, .type-card h4 { color: var(--violet); margin-bottom: 12px; font-family: 'Poppins', sans-serif; }
+        .operation-grid, .problem-grid, .use-case-grid { display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 26px; margin: 30px 0; }
+        .operation-card, .problem-item, .use-case { background: linear-gradient(135deg, #fff, #F3E5F5);
+            border: 3px solid var(--purple-light); border-radius: 16px; padding: 28px; transition: all 0.3s; }
+        .operation-card:hover, .problem-item:hover { transform: translateY(-10px);
+            box-shadow: 0 12px 30px rgba(142,36,170,0.3); }
+        .operation-card h4 { font-family: 'Poppins', sans-serif; color: var(--violet); margin-bottom: 16px; font-size: 1.35em; }
+        .complexity-box { background: #F3E5F5; border: 3px solid var(--purple-light); padding: 30px;
+            margin: 26px 0; border-radius: 14px; }
+        .complexity-item { display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 2px solid var(--lavender); }
+        .complexity-item:last-child { border-bottom: none; }
+        .complexity-value { font-family: 'Poppins', monospace; background: linear-gradient(135deg, var(--violet), var(--purple));
+            color: white; padding: 10px 24px; border-radius: 10px; font-weight: 700; }
+        .tip-box { background: linear-gradient(135deg, #FFFDE7, #FFF9C4); border-left: 6px solid #F9A825;
+            padding: 25px; margin: 25px 0; border-radius: 10px; }
+        .tip-box strong { color: #F57F17; font-size: 1.2em; }
+        .mistake-card { background: linear-gradient(135deg, #FFEBEE, #FFF5F5); border-left: 6px solid #D32F2F;
+            padding: 28px; margin: 25px 0; border-radius: 10px; }
+        .mistake-card h4 { color: #C62828; margin-bottom: 15px; font-family: 'Poppins', sans-serif; font-size: 1.35em; }
+        .problem-difficulty { display: inline-block; padding: 7px 18px; border-radius: 25px;
+            font-size: 0.8em; font-weight: 700; margin-bottom: 12px; }
+        .difficulty-easy { background: #4CAF50; color: white; }
+        .difficulty-medium { background: #FF9800; color: white; }
+        .difficulty-hard { background: #F44336; color: white; }
+        .problem-title { font-weight: 700; color: var(--violet); font-size: 1.15em; margin-bottom: 10px; font-family: 'Poppins', sans-serif; }
+        .use-case { text-align: center; }
+        .use-case-icon { font-size: 3.5em; margin-bottom: 15px; }
+        .use-case-label { font-weight: 700; font-family: 'Poppins', sans-serif; color: var(--violet); }
+        .summary-box { background: linear-gradient(135deg, var(--violet), var(--purple)); color: #FAF5FF;
+            padding: 55px; border-radius: 22px; margin: 35px 0; }
+        .summary-box h3 { font-family: 'Poppins', sans-serif; font-size: 2.3em; margin-bottom: 28px; color: #FAF5FF; }
+        .summary-box ul { list-style: none; padding: 0; }
+        .summary-box li { padding: 16px 0; font-size: 1.12em; position: relative; padding-left: 45px; }
+        .summary-box li:before { content: "▲"; position: absolute; left: 0; font-size: 1.4em; color: var(--lavender); }
+        .decision-tree { background: white; padding: 35px; border-radius: 18px; margin: 30px 0;
+            border: 4px solid var(--purple-light); }
+        .decision-tree h3 { font-family: 'Poppins', sans-serif; color: var(--violet); margin-bottom: 25px; font-size: 1.9em; }
+        .decision-item { padding: 18px; margin: 14px 0; border-left: 5px solid var(--purple-light);
+            background: #F3E5F5; border-radius: 8px; }
+        .decision-item strong { color: var(--violet); font-family: 'Poppins', sans-serif; }
+        .footer { background: #F3E5F5; padding: 45px; text-align: center; color: var(--violet);
+            border-top: 5px solid var(--purple-light); }
+        .footer strong { font-family: 'Poppins', sans-serif; color: var(--violet); font-size: 1.1em; }
+    </style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>HEAP</h1>
+<p>COMPLETE DSA VISUAL GUIDE (C++)</p>
+</div>
+
+<!-- SECTION 1 -->
+<div class="section">
+<div class="section-title"><div class="section-number">01</div><span>What is a Heap?</span></div>
+<p style="font-size:1.15em;">A <strong>Heap</strong> is a complete binary tree satisfying the heap property: in a max heap, each parent ≥ children; in a min heap, each parent ≤ children. Essential for priority queues and efficient sorting.</p>
+<h3>Max Heap vs Min Heap:</h3>
+<div style="display:flex;justify-content:space-around;text-align:center;font-family:Poppins;margin:30px 0;">
+<div><h4 style="color:var(--violet);">Max Heap</h4><div style="line-height:1.8;font-size:1.1em;">90<br>/  \<br>80  70<br>/ \ / \<br>50 60 40 30</div>
+<p style="margin-top:15px;"><strong>Parent ≥ Children</strong></p></div>
+<div><h4 style="color:var(--violet);">Min Heap</h4><div style="line-height:1.8;font-size:1.1em;">10<br>/  \<br>20  30<br>/ \ / \<br>40 50 60 70</div>
+<p style="margin-top:15px;"><strong>Parent ≤ Children</strong></p></div>
+</div>
+<div class="code-snippet"><span class="code-comment">// Array representation & formulas</span>
+<span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt; heap;
+<span class="code-keyword">int</span> parent(<span class="code-keyword">int</span> i) { <span class="code-keyword">return</span> (i-<span class="code-number">1</span>)/<span class="code-number">2</span>; }
+<span class="code-keyword">int</span> leftChild(<span class="code-keyword">int</span> i) { <span class="code-keyword">return</span> <span class="code-number">2</span>*i + <span class="code-number">1</span>; }
+<span class="code-keyword">int</span> rightChild(<span class="code-keyword">int</span> i) { <span class="code-keyword">return</span> <span class="code-number">2</span>*i + <span class="code-number">2</span>; }
+
+<span class="code-comment">// STL priority queue</span>
+<span class="code-type">priority_queue</span>&lt;<span class="code-keyword">int</span>&gt; maxHeap;
+<span class="code-type">priority_queue</span>&lt;<span class="code-keyword">int</span>, vector&lt;<span class="code-keyword">int</span>&gt;, greater&lt;&gt;&gt; minHeap;</div>
+<p><strong>Array:</strong> [90, 80, 70, 50, 60, 40, 30]</p>
+</div>
+
+<!-- SECTION 2 -->
+<div class="section">
+<div class="section-title"><div class="section-number">02</div><span>Types & Properties</span></div>
+<div class="type-card"><h4>Binary Heap (Max/Min)</h4><p>Most common. Each node ≤ 2 children. O(log n) operations.</p></div>
+<div class="type-card"><h4>D-ary Heap</h4><p>Each node has D children. Trade-off: smaller height, more comparisons per level.</p></div>
+<div class="type-card"><h4>Fibonacci Heap</h4><p>Advanced: O(1) amortized insert/decrease-key. Used in graph algorithms.</p></div>
+<h3>Complete Binary Tree:</h3>
+<ul style="list-style-position:inside;margin-left:20px;line-height:2.2;">
+<li>All levels filled except possibly last (left to right)</li>
+<li>Height = ⌊log₂(n)⌋</li>
+<li>Perfect for array representation</li>
+</ul>
+</div>
+
+<!-- SECTION 3 -->
+<div class="section">
+<div class="section-title"><div class="section-number">03</div><span>Why Heaps? (Comparison)</span></div>
+<table class="comparison-table">
+<tr><th>Operation</th><th>Heap</th><th>Unsorted Array</th><th>BST</th></tr>
+<tr><td>Find Max/Min</td><td>O(1)</td><td>O(n)</td><td>O(log n)</td></tr>
+<tr><td>Insert</td><td>O(log n)</td><td>O(1)</td><td>O(log n)</td></tr>
+<tr><td>Delete Max/Min</td><td>O(log n)</td><td>O(n)</td><td>O(log n)</td></tr>
+<tr><td>Build</td><td>O(n)</td><td>O(n)</td><td>O(n log n)</td></tr>
+<tr><td>Search Arbitrary</td><td>O(n)</td><td>O(n)</td><td>O(log n)</td></tr>
+</table>
+<h3>When to Use Heap:</h3>
+<ul style="list-style-position:inside;margin-left:20px;line-height:2.2;">
+<li>✅ Need quick max/min access</li>
+<li>✅ Priority queue implementation</li>
+<li>✅ K largest/smallest elements</li>
+<li>✅ Heap sort, Dijkstra, Prim</li>
+<li>❌ NOT for: arbitrary element search</li>
+</ul>
+</div>
+
+<!-- SECTION 4 -->
+<div class="section">
+<div class="section-title"><div class="section-number">04</div><span>Basic Operations</span></div>
+<div class="operation-grid">
+<div class="operation-card"><h4>Insert (Push)</h4><p>Add to end, heapify up</p><p><strong>Time:</strong> O(log n)</p></div>
+<div class="operation-card"><h4>Extract Max/Min</h4><p>Replace root with last, heapify down</p><p><strong>Time:</strong> O(log n)</p></div>
+<div class="operation-card"><h4>Peek (Top)</h4><p>Return root element</p><p><strong>Time:</strong> O(1)</p></div>
+<div class="operation-card"><h4>Heapify Down</h4><p>Fix heap property downward</p><p><strong>Time:</strong> O(log n)</p></div>
+<div class="operation-card"><h4>Heapify Up</h4><p>Fix heap property upward</p><p><strong>Time:</strong> O(log n)</p></div>
+<div class="operation-card"><h4>Build Heap</h4><p>Convert array to heap</p><p><strong>Time:</strong> O(n) - not O(n log n)!</p></div>
+</div>
+<div class="code-snippet"><span class="code-comment">// Heapify Down (Max Heap)</span>
+<span class="code-keyword">void</span> heapifyDown(<span class="code-keyword">int</span> i) {
+    <span class="code-keyword">int</span> largest = i;
+    <span class="code-keyword">int</span> left = <span class="code-number">2</span>*i + <span class="code-number">1</span>, right = <span class="code-number">2</span>*i + <span class="code-number">2</span>;
+    <span class="code-keyword">if</span> (left &lt; size &amp;&amp; heap[left] &gt; heap[largest]) largest = left;
+    <span class="code-keyword">if</span> (right &lt; size &amp;&amp; heap[right] &gt; heap[largest]) largest = right;
+    <span class="code-keyword">if</span> (largest != i) {
+        swap(heap[i], heap[largest]);
+        heapifyDown(largest);
+    }
+}
+
+<span class="code-comment">// Build Heap - O(n)</span>
+<span class="code-keyword">void</span> buildHeap() {
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = size/<span class="code-number">2</span> - <span class="code-number">1</span>; i &gt;= <span class="code-number">0</span>; i--)
+        heapifyDown(i);
+}</div>
+</div>
+
+<!-- SECTION 5 -->
+<div class="section">
+<div class="section-title"><div class="section-number">05</div><span>Common Mistakes</span></div>
+<div class="mistake-card"><h4>❌ Wrong Index Formulas</h4>
+<div class="code-snippet"><span class="code-comment">// WRONG (1-indexed)</span>
+parent(i) = i/<span class="code-number">2</span>
+
+<span class="code-comment">// CORRECT (0-indexed)</span>
+parent(i) = (i-<span class="code-number">1</span>)/<span class="code-number">2</span></div></div>
+
+<div class="mistake-card"><h4>❌ Not Checking Bounds</h4>
+<div class="code-snippet"><span class="code-comment">// WRONG</span>
+<span class="code-keyword">if</span> (heap[left] &gt; heap[largest])
+
+<span class="code-comment">// CORRECT</span>
+<span class="code-keyword">if</span> (left &lt; size &amp;&amp; heap[left] &gt; heap[largest])</div></div>
+
+<div class="mistake-card"><h4>❌ Forgetting to Heapify After Insert</h4>
+<div class="code-snippet">heap.push_back(val);
+heapifyUp(size - <span class="code-number">1</span>);  <span class="code-comment">// Don't forget!</span></div></div>
+
+<div class="mistake-card"><h4>❌ Wrong Build Heap Start</h4>
+<div class="code-snippet"><span class="code-comment">// CORRECT - Start from last non-leaf</span>
+<span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = size/<span class="code-number">2</span> - <span class="code-number">1</span>; i &gt;= <span class="code-number">0</span>; i--)</div></div>
+</div>
+
+<!-- SECTION 6 -->
+<div class="section">
+<div class="section-title"><div class="section-number">06</div><span>Time & Space Complexity</span></div>
+<div class="complexity-box">
+<div class="complexity-item"><span>Peek (top)</span><span class="complexity-value">O(1)</span></div>
+<div class="complexity-item"><span>Insert</span><span class="complexity-value">O(log n)</span></div>
+<div class="complexity-item"><span>Extract Max/Min</span><span class="complexity-value">O(log n)</span></div>
+<div class="complexity-item"><span>Heapify</span><span class="complexity-value">O(log n)</span></div>
+<div class="complexity-item"><span>Build Heap</span><span class="complexity-value">O(n)</span></div>
+<div class="complexity-item"><span>Heap Sort</span><span class="complexity-value">O(n log n)</span></div>
+<div class="complexity-item"><span>Search</span><span class="complexity-value">O(n)</span></div>
+<div class="complexity-item"><span>Space</span><span class="complexity-value">O(n)</span></div>
+</div>
+<div class="tip-box">
+<strong>💡 BUILD HEAP:</strong> Why O(n) not O(n log n)? Bottom-up: leaves (n/2) need 0 swaps, level h-1 needs 1 swap each, etc. Total = O(n)!
+</div>
+</div>
+
+<!-- SECTION 7-12 COMBINED -->
+<div class="section">
+<div class="section-title"><div class="section-number">07</div><span>Techniques & Problems</span></div>
+<h3>Common Patterns:</h3>
+<ul style="list-style-position:inside;margin-left:20px;line-height:2.2;">
+<li><strong>Two Heap (Median):</strong> Max heap (lower half) + Min heap (upper half)</li>
+<li><strong>K-way Merge:</strong> Min heap with (value, array_idx, elem_idx)</li>
+<li><strong>Top K:</strong> Min heap size K for K largest, Max heap for K smallest</li>
+<li><strong>Heap + HashMap:</strong> Frequency tracking with priority ordering</li>
+</ul>
+
+<h3 style="margin-top:35px;">Key Operations:</h3>
+<div class="code-snippet"><span class="code-comment">// K Largest Elements - O(n log k)</span>
+<span class="code-type">priority_queue</span>&lt;<span class="code-keyword">int</span>, vector&lt;<span class="code-keyword">int</span>&gt;, greater&lt;&gt;&gt; minHeap;
+<span class="code-keyword">for</span> (<span class="code-keyword">int</span> num : arr) {
+    minHeap.push(num);
+    <span class="code-keyword">if</span> (minHeap.size() &gt; k) minHeap.pop();
+}
+
+<span class="code-comment">// Median Finder (Two Heaps)</span>
+<span class="code-type">priority_queue</span>&lt;<span class="code-keyword">int</span>&gt; maxHeap;  <span class="code-comment">// Lower half</span>
+<span class="code-type">priority_queue</span>&lt;<span class="code-keyword">int</span>, vector&lt;<span class="code-keyword">int</span>&gt;, greater&lt;&gt;&gt; minHeap;  <span class="code-comment">// Upper</span></div>
+
+<h3 style="margin-top:35px;">Top Problems:</h3>
+<div class="problem-grid">
+<div class="problem-item"><span class="problem-difficulty difficulty-easy">EASY</span>
+<div class="problem-title">Kth Largest Element</div><p>Use min heap size K</p></div>
+
+<div class="problem-item"><span class="problem-difficulty difficulty-easy">EASY</span>
+<div class="problem-title">Last Stone Weight</div><p>Max heap simulation</p></div>
+
+<div class="problem-item"><span class="problem-difficulty difficulty-medium">MEDIUM</span>
+<div class="problem-title">Top K Frequent</div><p>Heap + HashMap</p></div>
+
+<div class="problem-item"><span class="problem-difficulty difficulty-medium">MEDIUM</span>
+<div class="problem-title">K Closest Points</div><p>Max heap with distance</p></div>
+
+<div class="problem-item"><span class="problem-difficulty difficulty-medium">MEDIUM</span>
+<div class="problem-title">Find Median Stream</div><p>Two heaps pattern</p></div>
+
+<div class="problem-item"><span class="problem-difficulty difficulty-medium">MEDIUM</span>
+<div class="problem-title">Merge K Sorted</div><p>Min heap K-way merge</p></div>
+
+<div class="problem-item"><span class="problem-difficulty difficulty-hard">HARD</span>
+<div class="problem-title">Sliding Window Median</div><p>Two heaps + lazy deletion</p></div>
+
+<div class="problem-item"><span class="problem-difficulty difficulty-hard">HARD</span>
+<div class="problem-title">IPO Problem</div><p>Two heaps for max capital</p></div>
+</div>
+
+<h3 style="margin-top:35px;">Applications:</h3>
+<div class="use-case-grid">
+<div class="use-case"><div class="use-case-icon">⚡</div><div class="use-case-label">Priority Queues</div></div>
+<div class="use-case"><div class="use-case-icon">🗺️</div><div class="use-case-label">Dijkstra/Prim</div></div>
+<div class="use-case"><div class="use-case-icon">📊</div><div class="use-case-label">Heap Sort</div></div>
+<div class="use-case"><div class="use-case-icon">📈</div><div class="use-case-label">Median Tracking</div></div>
+<div class="use-case"><div class="use-case-icon">⏰</div><div class="use-case-label">Event Scheduling</div></div>
+<div class="use-case"><div class="use-case-icon">🔝</div><div class="use-case-label">Top K Analytics</div></div>
+</div>
+
+<h3 style="margin-top:35px;">STL Priority Queue:</h3>
+<div class="code-snippet"><span class="code-comment">// Max heap (default)</span>
+<span class="code-type">priority_queue</span>&lt;<span class="code-keyword">int</span>&gt; pq;
+
+<span class="code-comment">// Min heap</span>
+<span class="code-type">priority_queue</span>&lt;<span class="code-keyword">int</span>, vector&lt;<span class="code-keyword">int</span>&gt;, greater&lt;<span class="code-keyword">int</span>&gt;&gt; minPQ;
+
+<span class="code-comment">// Custom comparator</span>
+<span class="code-keyword">auto</span> cmp = [](<span class="code-keyword">int</span> a, <span class="code-keyword">int</span> b) { <span class="code-keyword">return</span> a &gt; b; };
+<span class="code-type">priority_queue</span>&lt;<span class="code-keyword">int</span>, vector&lt;<span class="code-keyword">int</span>&gt;, <span class="code-keyword">decltype</span>(cmp)&gt; pq(cmp);
+
+pq.push(x);   <span class="code-comment">// O(log n)</span>
+pq.pop();     <span class="code-comment">// O(log n)</span>
+pq.top();     <span class="code-comment">// O(1)</span>
+pq.empty();   <span class="code-comment">// O(1)</span>
+pq.size();    <span class="code-comment">// O(1)</span></div>
+</div>
+
+<!-- SUMMARY -->
+<div class="section">
+<div class="section-title"><div class="section-number">13</div><span>Summary & Decision Tree</span></div>
+<div class="summary-box">
+<h3>Key Properties</h3>
+<ul>
+<li>Complete binary tree structure</li>
+<li>Heap property: max (parent ≥ children) or min (parent ≤ children)</li>
+<li>O(1) access to max/min element at root</li>
+<li>O(log n) insert and delete operations</li>
+<li>O(n) build heap (not n log n!)</li>
+<li>Array-based: space efficient, no pointers</li>
+<li>NOT for searching arbitrary elements (O(n))</li>
+</ul>
+</div>
+
+<div class="decision-tree">
+<h3>🎯 When to Use What?</h3>
+<div class="decision-item"><strong>Need maximum element?</strong> → Max Heap</div>
+<div class="decision-item"><strong>Need minimum element?</strong> → Min Heap</div>
+<div class="decision-item"><strong>Need K largest?</strong> → Min Heap of size K</div>
+<div class="decision-item"><strong>Need K smallest?</strong> → Max Heap of size K</div>
+<div class="decision-item"><strong>Need median in stream?</strong> → Two Heaps (Max + Min)</div>
+<div class="decision-item"><strong>Merge K sorted arrays?</strong> → Min Heap with K pointers</div>
+<div class="decision-item"><strong>Graph shortest path?</strong> → Min Heap (Dijkstra)</div>
+<div class="decision-item"><strong>Task scheduling with priority?</strong> → Priority Queue</div>
+</div>
+
+<div class="type-card" style="margin-top:35px;">
+<h3>📌 Top 15 Must-Know Problems</h3>
+<ol style="list-style-position:inside;line-height:2.2;">
+<li><strong>Kth Largest Element in Array</strong> - Min heap size K</li>
+<li><strong>Top K Frequent Elements</strong> - Heap + HashMap</li>
+<li><strong>Merge K Sorted Lists</strong> - Min heap K-way</li>
+<li><strong>Find Median from Data Stream</strong> - Two heaps</li>
+<li><strong>K Closest Points to Origin</strong> - Max heap with distance</li>
+<li><strong>Kth Smallest in Sorted Matrix</strong> - Min heap</li>
+<li><strong>Task Scheduler</strong> - Priority + greedy</li>
+<li><strong>Reorganize String</strong> - Max heap frequency</li>
+<li><strong>Last Stone Weight</strong> - Max heap simulation</li>
+<li><strong>Minimum Cost to Connect Sticks</strong> - Min heap</li>
+<li><strong>Merge K Sorted Arrays</strong> - K-way merge</li>
+<li><strong>Kth Largest in Stream</strong> - Min heap</li>
+<li><strong>Ugly Number II</strong> - Min heap with multiples</li>
+<li><strong>Sliding Window Median</strong> - Two heaps + lazy delete</li>
+<li><strong>IPO (Maximize Capital)</strong> - Two heaps strategy</li>
+</ol>
+</div>
+
+<div class="tip-box" style="margin-top:35px;">
+<strong>💡 FINAL TIP:</strong> Master two-heap pattern for median, K-heap for K-way merge, and size-K heap for top-K problems. These three patterns solve 80% of heap problems!
+</div>
+</div>
+
+<div class="footer">
+<p><strong>HEAP - COMPLETE DSA VISUAL GUIDE (C++)</strong></p>
+<p style="margin-top:14px;">Master Data Structures & Algorithms • Perfect for Interviews, Exams & Revision</p>
+<p style="margin-top:22px;font-size:0.95em;color:var(--purple);">
+▲ Remember: Heap is a pyramid of priorities - master the top!
+</p>
+</div>
+</div>
+</body>
+</html>
