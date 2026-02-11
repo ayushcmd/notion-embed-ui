@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graph - Complete DSA Visual Guide (C++)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --navy-deep: #0D47A1;
+            --navy-dark: #1565C0;
+            --blue-main: #1976D2;
+            --blue-bright: #2196F3;
+            --cyan-electric: #00B0FF;
+            --cyan-bright: #00E5FF;
+            --sky-blue: #64B5F6;
+            --light-blue: #90CAF9;
+            --indigo: #3F51B5;
+        }
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy-dark) 30%, var(--blue-main) 60%, var(--blue-bright) 100%);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #F0F8FF;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(13, 71, 161, 0.6);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy-dark) 50%, var(--blue-main) 100%);
+            color: #F0F8FF;
+            padding: 80px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+        }
+        .header h1 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 5.5em;
+            font-weight: 700;
+            letter-spacing: 18px;
+            text-shadow: 4px 4px 10px rgba(0,0,0,0.7);
+            position: relative;
+        }
+        .header p {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.5em;
+            letter-spacing: 6px;
+            font-weight: 600;
+            margin-top: 15px;
+        }
+        .section {
+            padding: 50px 60px;
+            border-bottom: 3px solid var(--light-blue);
+        }
+        .section:nth-child(even) {
+            background: linear-gradient(to right, #E3F2FD 0%, #F0F8FF 100%);
+        }
+        .section:last-child { border-bottom: none; }
+        .section-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 2.4em;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: var(--navy-deep);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .section-number {
+            background: linear-gradient(135deg, var(--blue-main) 0%, var(--cyan-electric) 100%);
+            color: white;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4em;
+            font-weight: 700;
+            box-shadow: 0 6px 25px rgba(33, 150, 243, 0.5);
+            border: 4px solid var(--navy-dark);
+        }
+        h3 {
+            color: var(--navy-deep);
+            font-family: 'Rajdhani', sans-serif;
+            margin: 35px 0 20px;
+            font-size: 1.7em;
+        }
+        p {
+            color: var(--navy-deep);
+            line-height: 2;
+            margin-bottom: 18px;
+        }
+        .graph-visual {
+            background: linear-gradient(135deg, #E3F2FD 0%, #F0F8FF 100%);
+            border: 4px solid var(--blue-bright);
+            border-radius: 16px;
+            padding: 40px;
+            margin: 30px 0;
+            text-align: center;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        .node {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--blue-bright) 0%, var(--cyan-electric) 100%);
+            color: white;
+            font-weight: 700;
+            font-size: 1.4em;
+            border: 4px solid var(--navy-dark);
+            box-shadow: 0 5px 18px rgba(33, 150, 243, 0.4);
+            margin: 10px;
+        }
+        .code-snippet {
+            background: var(--navy-deep);
+            color: var(--light-blue);
+            padding: 30px;
+            border-radius: 14px;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            margin: 30px 0;
+            overflow-x: auto;
+            font-size: 0.95em;
+            border: 4px solid var(--navy-dark);
+            box-shadow: 0 6px 25px rgba(13, 71, 161, 0.4);
+            position: relative;
+        }
+        .code-snippet::before {
+            content: 'C++';
+            position: absolute;
+            top: 12px;
+            right: 18px;
+            font-size: 0.75em;
+            color: var(--cyan-bright);
+            font-weight: 700;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        .code-keyword { color: #64B5F6; }
+        .code-type { color: #90CAF9; }
+        .code-string { color: #A5D6A7; }
+        .code-comment { color: #B0BEC5; font-style: italic; }
+        .code-number { color: #FFB74D; }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            box-shadow: 0 8px 30px rgba(13, 71, 161, 0.25);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+        .comparison-table th {
+            background: linear-gradient(135deg, var(--navy-dark) 0%, var(--blue-bright) 100%);
+            color: white;
+            padding: 24px;
+            text-align: left;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+        .comparison-table td {
+            padding: 22px 24px;
+            border-bottom: 2px solid var(--light-blue);
+            color: var(--navy-deep);
+        }
+        .comparison-table tr:last-child td { border-bottom: none; }
+        .comparison-table tr:nth-child(even) {
+            background: linear-gradient(to right, #E3F2FD 0%, #F0F8FF 100%);
+        }
+        .type-card, .technique-card {
+            background: linear-gradient(135deg, #E3F2FD 0%, #F0F8FF 100%);
+            border-left: 6px solid var(--blue-bright);
+            padding: 32px;
+            margin: 28px 0;
+            border-radius: 12px;
+            box-shadow: 0 5px 18px rgba(33, 150, 243, 0.2);
+        }
+        .type-card h3, .type-card h4, .technique-card h4 {
+            color: var(--navy-deep);
+            margin-bottom: 16px;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        .operation-grid, .problem-grid, .use-case-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 28px;
+            margin: 35px 0;
+        }
+        .operation-card, .problem-item, .use-case {
+            background: linear-gradient(135deg, #ffffff 0%, #E3F2FD 100%);
+            border: 4px solid var(--sky-blue);
+            border-radius: 18px;
+            padding: 32px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(100, 181, 246, 0.2);
+        }
+        .operation-card:hover, .problem-item:hover, .use-case:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 15px 35px rgba(33, 150, 243, 0.35);
+            border-color: var(--blue-bright);
+        }
+        .operation-card h4 {
+            font-family: 'Rajdhani', sans-serif;
+            color: var(--navy-deep);
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        .complexity-box {
+            background: linear-gradient(135deg, #E3F2FD 0%, #ffffff 100%);
+            border: 4px solid var(--sky-blue);
+            padding: 32px 40px;
+            margin: 28px 0;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(100, 181, 246, 0.2);
+        }
+        .complexity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 0;
+            border-bottom: 2px solid var(--light-blue);
+        }
+        .complexity-item:last-child { border-bottom: none; }
+        .complexity-value {
+            font-family: 'Rajdhani', monospace;
+            background: linear-gradient(135deg, var(--navy-dark) 0%, var(--blue-bright) 100%);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.4);
+        }
+        .tip-box {
+            background: linear-gradient(135deg, #FFFDE7 0%, #FFF9C4 100%);
+            border-left: 6px solid #F9A825;
+            padding: 28px 32px;
+            margin: 28px 0;
+            border-radius: 12px;
+            box-shadow: 0 5px 18px rgba(249, 168, 37, 0.25);
+        }
+        .tip-box strong {
+            color: #F57F17;
+            font-size: 1.25em;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        .mistake-card {
+            background: linear-gradient(135deg, #FFEBEE 0%, #FFF5F5 100%);
+            border-left: 6px solid #D32F2F;
+            padding: 32px;
+            margin: 28px 0;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(211, 47, 47, 0.25);
+        }
+        .mistake-card h4 {
+            color: #C62828;
+            margin-bottom: 18px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.45em;
+        }
+        .problem-difficulty {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 28px;
+            font-size: 0.82em;
+            font-weight: 700;
+            margin-bottom: 16px;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        .difficulty-easy { background: #4CAF50; color: white; }
+        .difficulty-medium { background: #FF9800; color: white; }
+        .difficulty-hard { background: #F44336; color: white; }
+        .problem-title {
+            font-weight: 700;
+            color: var(--navy-deep);
+            font-size: 1.25em;
+            margin-bottom: 14px;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        .use-case {
+            text-align: center;
+        }
+        .use-case-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        .use-case-label {
+            font-weight: 700;
+            font-family: 'Rajdhani', sans-serif;
+            color: var(--navy-deep);
+            font-size: 1.15em;
+        }
+        .summary-box {
+            background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy-dark) 50%, var(--blue-main) 100%);
+            color: #F0F8FF;
+            padding: 60px;
+            border-radius: 24px;
+            margin: 40px 0;
+            box-shadow: 0 15px 40px rgba(13, 71, 161, 0.6);
+        }
+        .summary-box h3 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 2.5em;
+            margin-bottom: 32px;
+            color: #F0F8FF;
+        }
+        .summary-box ul {
+            list-style: none;
+            padding: 0;
+        }
+        .summary-box li {
+            padding: 18px 0;
+            font-size: 1.18em;
+            position: relative;
+            padding-left: 48px;
+            line-height: 1.9;
+        }
+        .summary-box li:before {
+            content: "◆";
+            position: absolute;
+            left: 0;
+            font-size: 1.5em;
+            color: var(--cyan-bright);
+        }
+        .decision-tree {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin: 35px 0;
+            border: 4px solid var(--sky-blue);
+            box-shadow: 0 8px 28px rgba(100, 181, 246, 0.25);
+        }
+        .decision-tree h3 {
+            font-family: 'Rajdhani', sans-serif;
+            color: var(--navy-deep);
+            margin-bottom: 28px;
+            font-size: 2.1em;
+        }
+        .decision-item {
+            padding: 20px;
+            margin: 16px 0;
+            border-left: 6px solid var(--blue-bright);
+            background: linear-gradient(to right, #E3F2FD 0%, #ffffff 100%);
+            border-radius: 10px;
+        }
+        .decision-item strong {
+            color: var(--navy-deep);
+            font-family: 'Rajdhani', sans-serif;
+        }
+        .footer {
+            background: linear-gradient(to right, #E3F2FD 0%, #F0F8FF 100%);
+            padding: 50px;
+            text-align: center;
+            color: var(--navy-deep);
+            border-top: 6px solid var(--sky-blue);
+        }
+        .footer strong {
+            font-family: 'Rajdhani', sans-serif;
+            color: var(--navy-deep);
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>GRAPH</h1>
+<p>COMPLETE DSA VISUAL GUIDE (C++)</p>
+</div>
+
+<!-- SECTION 1: WHAT IS A GRAPH? -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">01</div>
+<span>What is a Graph?</span>
+</div>
+
+<p style="font-size:1.18em;">A <strong>Graph</strong> is a non-linear data structure consisting of vertices (nodes) connected by edges. It represents relationships, networks, and connections. Mathematically: G = (V, E) where V is the set of vertices and E is the set of edges.</p>
+
+<h3>Graph Types - Visual Examples:</h3>
+
+<div style="display:flex;justify-content:space-around;flex-wrap:wrap;margin:30px 0;">
+<div style="flex:1;min-width:300px;text-align:center;margin:20px;">
+<h4 style="color:var(--navy-deep);font-family:Rajdhani;margin-bottom:20px;">Undirected Graph</h4>
+<div class="graph-visual" style="padding:30px;">
+<div style="font-size:1.3em;line-height:2;">
+A — B<br>
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+C — D
+</div>
+<p style="margin-top:20px;color:var(--navy-deep);"><strong>Bidirectional edges</strong></p>
+</div>
+</div>
+
+<div style="flex:1;min-width:300px;text-align:center;margin:20px;">
+<h4 style="color:var(--navy-deep);font-family:Rajdhani;margin-bottom:20px;">Directed Graph</h4>
+<div class="graph-visual" style="padding:30px;">
+<div style="font-size:1.3em;line-height:2;">
+A → B<br>
+↓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+C ← D
+</div>
+<p style="margin-top:20px;color:var(--navy-deep);"><strong>One-way edges</strong></p>
+</div>
+</div>
+
+<div style="flex:1;min-width:300px;text-align:center;margin:20px;">
+<h4 style="color:var(--navy-deep);font-family:Rajdhani;margin-bottom:20px;">Weighted Graph</h4>
+<div class="graph-visual" style="padding:30px;">
+<div style="font-size:1.3em;line-height:2;">
+A -5- B<br>
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7<br>
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+C -2- D
+</div>
+<p style="margin-top:20px;color:var(--navy-deep);"><strong>Edges with weights</strong></p>
+</div>
+</div>
+</div>
+
+<div class="code-snippet"><span class="code-comment">// Graph representations</span>
+
+<span class="code-comment">// Adjacency List (most common)</span>
+<span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt; adjList[V];
+
+<span class="code-comment">// Weighted graph</span>
+<span class="code-type">vector</span>&lt;<span class="code-type">pair</span>&lt;<span class="code-keyword">int</span>, <span class="code-keyword">int</span>&gt;&gt; adjList[V];  <span class="code-comment">// {neighbor, weight}</span>
+
+<span class="code-comment">// Adjacency Matrix</span>
+<span class="code-type">vector</span>&lt;<span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt;&gt; adjMatrix(V, <span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt;(V, <span class="code-number">0</span>));
+
+<span class="code-comment">// Edge List</span>
+<span class="code-keyword">struct</span> <span class="code-type">Edge</span> {
+    <span class="code-keyword">int</span> src, dest, weight;
+};
+<span class="code-type">vector</span>&lt;<span class="code-type">Edge</span>&gt; edges;</div>
+
+<h3>Key Terminology:</h3>
+<ul style="list-style-position:inside;margin-left:20px;color:var(--navy-deep);line-height:2.4;">
+<li><strong>Vertex (Node):</strong> Point in the graph</li>
+<li><strong>Edge:</strong> Connection between two vertices</li>
+<li><strong>Adjacent:</strong> Vertices connected by an edge</li>
+<li><strong>Degree:</strong> Number of edges at a vertex</li>
+<li><strong>Path:</strong> Sequence of vertices connected by edges</li>
+<li><strong>Cycle:</strong> Path that starts and ends at same vertex</li>
+<li><strong>Connected:</strong> Path exists between all vertex pairs</li>
+<li><strong>Weighted:</strong> Edges have associated values</li>
+</ul>
+</div>
+
+<!-- SECTION 2: GRAPH REPRESENTATIONS -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">02</div>
+<span>Graph Representations</span>
+</div>
+
+<div class="type-card">
+<h3>1. Adjacency List</h3>
+<p>Array of vectors - each vertex has a list of neighbors.</p>
+<div class="code-snippet"><span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt; adjList[V];
+
+<span class="code-comment">// Add edge (undirected)</span>
+adjList[u].push_back(v);
+adjList[v].push_back(u);
+
+<span class="code-comment">// Weighted graph</span>
+<span class="code-type">vector</span>&lt;<span class="code-type">pair</span>&lt;<span class="code-keyword">int</span>,<span class="code-keyword">int</span>&gt;&gt; adjList[V];
+adjList[u].push_back({v, weight});</div>
+<p style="margin-top:15px;"><strong>Pros:</strong> O(V+E) space, fast iteration | <strong>Cons:</strong> O(V) edge check</p>
+</div>
+
+<div class="type-card">
+<h3>2. Adjacency Matrix</h3>
+<p>2D array - adjMatrix[i][j] = 1 if edge exists.</p>
+<div class="code-snippet"><span class="code-type">vector</span>&lt;<span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt;&gt; adjMatrix(V, <span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt;(V, <span class="code-number">0</span>));
+
+<span class="code-comment">// Add edge</span>
+adjMatrix[u][v] = <span class="code-number">1</span>;
+adjMatrix[v][u] = <span class="code-number">1</span>;  <span class="code-comment">// Undirected</span>
+
+<span class="code-comment">// Weighted</span>
+adjMatrix[u][v] = weight;</div>
+<p style="margin-top:15px;"><strong>Pros:</strong> O(1) edge check | <strong>Cons:</strong> O(V²) space</p>
+</div>
+
+<div class="type-card">
+<h3>3. Edge List</h3>
+<p>List of all edges - simple but limited.</p>
+<div class="code-snippet"><span class="code-keyword">struct</span> <span class="code-type">Edge</span> {
+    <span class="code-keyword">int</span> src, dest, weight;
+};
+<span class="code-type">vector</span>&lt;<span class="code-type">Edge</span>&gt; edges;</div>
+<p style="margin-top:15px;"><strong>Use:</strong> Kruskal's MST, simple storage</p>
+</div>
+
+<h3>Comparison Table:</h3>
+<table class="comparison-table">
+<tr><th>Operation</th><th>Adj List</th><th>Adj Matrix</th><th>Edge List</th></tr>
+<tr><td>Space</td><td>O(V + E)</td><td>O(V²)</td><td>O(E)</td></tr>
+<tr><td>Add Edge</td><td>O(1)</td><td>O(1)</td><td>O(1)</td></tr>
+<tr><td>Check Edge</td><td>O(V)</td><td>O(1)</td><td>O(E)</td></tr>
+<tr><td>Get Neighbors</td><td>O(degree)</td><td>O(V)</td><td>O(E)</td></tr>
+<tr><td>Best For</td><td>Sparse graphs</td><td>Dense graphs</td><td>Edge operations</td></tr>
+</table>
+</div>
+
+<!-- SECTION 3: GRAPH TRAVERSALS -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">03</div>
+<span>Graph Traversals</span>
+</div>
+
+<div class="operation-grid">
+<div class="operation-card">
+<h4>🌊 BFS (Breadth-First Search)</h4>
+<div class="code-snippet" style="font-size:0.88em;"><span class="code-keyword">void</span> BFS(<span class="code-keyword">int</span> start) {
+    <span class="code-type">vector</span>&lt;<span class="code-keyword">bool</span>&gt; visited(V, <span class="code-keyword">false</span>);
+    <span class="code-type">queue</span>&lt;<span class="code-keyword">int</span>&gt; q;
+    
+    visited[start] = <span class="code-keyword">true</span>;
+    q.push(start);
+    
+    <span class="code-keyword">while</span> (!q.empty()) {
+        <span class="code-keyword">int</span> u = q.front();
+        q.pop();
+        cout &lt;&lt; u &lt;&lt; <span class="code-string">" "</span>;
+        
+        <span class="code-keyword">for</span> (<span class="code-keyword">int</span> v : adjList[u]) {
+            <span class="code-keyword">if</span> (!visited[v]) {
+                visited[v] = <span class="code-keyword">true</span>;
+                q.push(v);
+            }
+        }
+    }
+}</div>
+<p><strong>Uses Queue • Level-by-level</strong></p>
+<p>Time: O(V+E) • Space: O(V)</p>
+</div>
+
+<div class="operation-card">
+<h4>🌲 DFS (Depth-First Search)</h4>
+<div class="code-snippet" style="font-size:0.88em;"><span class="code-keyword">void</span> DFS(<span class="code-keyword">int</span> u, <span class="code-type">vector</span>&lt;<span class="code-keyword">bool</span>&gt;&amp; visited) {
+    visited[u] = <span class="code-keyword">true</span>;
+    cout &lt;&lt; u &lt;&lt; <span class="code-string">" "</span>;
+    
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> v : adjList[u]) {
+        <span class="code-keyword">if</span> (!visited[v]) {
+            DFS(v, visited);
+        }
+    }
+}
+
+<span class="code-comment">// Start DFS</span>
+<span class="code-type">vector</span>&lt;<span class="code-keyword">bool</span>&gt; visited(V, <span class="code-keyword">false</span>);
+DFS(<span class="code-number">0</span>, visited);</div>
+<p><strong>Uses Recursion/Stack • Depth-first</strong></p>
+<p>Time: O(V+E) • Space: O(V)</p>
+</div>
+</div>
+
+<table class="comparison-table">
+<tr><th>Feature</th><th>BFS</th><th>DFS</th></tr>
+<tr><td>Data Structure</td><td>Queue</td><td>Stack/Recursion</td></tr>
+<tr><td>Shortest Path</td><td>✅ Yes (unweighted)</td><td>❌ No</td></tr>
+<tr><td>Cycle Detection</td><td>✅ Can</td><td>✅ Better</td></tr>
+<tr><td>Topological Sort</td><td>✅ Yes (Kahn's)</td><td>✅ Yes</td></tr>
+<tr><td>Memory</td><td>More (wide graphs)</td><td>Less (deep graphs)</td></tr>
+</table>
+</div>
+
+<!-- Continuing with remaining sections in condensed format -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">04</div>
+<span>Shortest Path Algorithms</span>
+</div>
+
+<div class="type-card">
+<h4>Dijkstra's Algorithm (Non-negative weights)</h4>
+<div class="code-snippet" style="font-size:0.85em;"><span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt; dijkstra(<span class="code-keyword">int</span> src, <span class="code-keyword">int</span> V) {
+    <span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt; dist(V, INT_MAX);
+    <span class="code-type">priority_queue</span>&lt;<span class="code-type">pair</span>&lt;<span class="code-keyword">int</span>,<span class="code-keyword">int</span>&gt;, <span class="code-type">vector</span>&lt;<span class="code-type">pair</span>&lt;<span class="code-keyword">int</span>,<span class="code-keyword">int</span>&gt;&gt;, <span class="code-type">greater</span>&lt;&gt;&gt; pq;
+    
+    dist[src] = <span class="code-number">0</span>;
+    pq.push({<span class="code-number">0</span>, src});
+    
+    <span class="code-keyword">while</span> (!pq.empty()) {
+        <span class="code-keyword">auto</span> [d, u] = pq.top();
+        pq.pop();
+        
+        <span class="code-keyword">if</span> (d &gt; dist[u]) <span class="code-keyword">continue</span>;
+        
+        <span class="code-keyword">for</span> (<span class="code-keyword">auto</span> [v, w] : adjList[u]) {
+            <span class="code-keyword">if</span> (dist[u] + w &lt; dist[v]) {
+                dist[v] = dist[u] + w;
+                pq.push({dist[v], v});
+            }
+        }
+    }
+    <span class="code-keyword">return</span> dist;
+}</div>
+<p><strong>Time:</strong> O((V+E) log V) • <strong>Use:</strong> GPS, network routing</p>
+</div>
+
+<div class="type-card">
+<h4>Bellman-Ford (Handles negative weights)</h4>
+<p>Relaxes all edges V-1 times. Can detect negative cycles.</p>
+<p><strong>Time:</strong> O(VE) • <strong>Use:</strong> Negative edge graphs</p>
+</div>
+
+<div class="type-card">
+<h4>Floyd-Warshall (All-pairs shortest path)</h4>
+<p>Dynamic programming for all pairs. Time: O(V³)</p>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">
+<div class="section-number">05</div>
+<span>Minimum Spanning Tree</span>
+</div>
+
+<div class="operation-grid">
+<div class="operation-card">
+<h4>Kruskal's Algorithm</h4>
+<p>Sort edges, add if no cycle (Union-Find)</p>
+<p><strong>Time:</strong> O(E log E)</p>
+<p><strong>Best for:</strong> Sparse graphs</p>
+</div>
+
+<div class="operation-card">
+<h4>Prim's Algorithm</h4>
+<p>Grow tree from vertex (Min-Heap)</p>
+<p><strong>Time:</strong> O(E log V)</p>
+<p><strong>Best for:</strong> Dense graphs</p>
+</div>
+</div>
+
+<div class="tip-box">
+<strong>💡 MST TIP:</strong> Both find minimum spanning tree. Kruskal better for sparse, Prim for dense graphs!
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">
+<div class="section-number">06</div>
+<span>Topological Sort & Cycle Detection</span>
+</div>
+
+<div class="type-card">
+<h4>Topological Sort (DAG only)</h4>
+<div class="code-snippet" style="font-size:0.85em;"><span class="code-comment">// DFS-based</span>
+<span class="code-keyword">void</span> topologicalSortUtil(<span class="code-keyword">int</span> u, <span class="code-type">vector</span>&lt;<span class="code-keyword">bool</span>&gt;&amp; visited, <span class="code-type">stack</span>&lt;<span class="code-keyword">int</span>&gt;&amp; s) {
+    visited[u] = <span class="code-keyword">true</span>;
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> v : adjList[u]) {
+        <span class="code-keyword">if</span> (!visited[v]) topologicalSortUtil(v, visited, s);
+    }
+    s.push(u);  <span class="code-comment">// Push after visiting descendants</span>
+}</div>
+<p><strong>Use:</strong> Task scheduling, course prerequisites, build systems</p>
+</div>
+
+<div class="type-card">
+<h4>Cycle Detection</h4>
+<p><strong>Undirected:</strong> DFS with parent tracking or Union-Find</p>
+<p><strong>Directed:</strong> DFS with color states (white/gray/black)</p>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">
+<div class="section-number">07</div>
+<span>Common Mistakes</span>
+</div>
+
+<div class="mistake-card">
+<h4>❌ Not Handling Disconnected Graphs</h4>
+<div class="code-snippet"><span class="code-comment">// WRONG - only visits from vertex 0</span>
+DFS(<span class="code-number">0</span>, visited);
+
+<span class="code-comment">// CORRECT - visit all components</span>
+<span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = <span class="code-number">0</span>; i &lt; V; i++) {
+    <span class="code-keyword">if</span> (!visited[i]) DFS(i, visited);
+}</div>
+</div>
+
+<div class="mistake-card">
+<h4>❌ Wrong Parent Check in Cycle Detection</h4>
+<div class="code-snippet"><span class="code-comment">// CORRECT for undirected graph</span>
+<span class="code-keyword">if</span> (visited[v] &amp;&amp; v != parent) <span class="code-keyword">return</span> <span class="code-keyword">true</span>;</div>
+</div>
+
+<div class="mistake-card">
+<h4>❌ Dijkstra with Negative Weights</h4>
+<p>Use Bellman-Ford instead!</p>
+</div>
+
+<div class="mistake-card">
+<h4>❌ Wrong Adjacency List for Undirected</h4>
+<div class="code-snippet"><span class="code-comment">// CORRECT - both directions</span>
+adjList[u].push_back(v);
+adjList[v].push_back(u);</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">
+<div class="section-number">08</div>
+<span>Time & Space Complexity</span>
+</div>
+
+<div class="complexity-box">
+<div class="complexity-item"><span>BFS/DFS</span><span class="complexity-value">O(V + E)</span></div>
+<div class="complexity-item"><span>Dijkstra</span><span class="complexity-value">O((V+E) log V)</span></div>
+<div class="complexity-item"><span>Bellman-Ford</span><span class="complexity-value">O(V × E)</span></div>
+<div class="complexity-item"><span>Floyd-Warshall</span><span class="complexity-value">O(V³)</span></div>
+<div class="complexity-item"><span>Kruskal MST</span><span class="complexity-value">O(E log E)</span></div>
+<div class="complexity-item"><span>Prim MST</span><span class="complexity-value">O(E log V)</span></div>
+<div class="complexity-item"><span>Topological Sort</span><span class="complexity-value">O(V + E)</span></div>
+<div class="complexity-item"><span>Space (Adj List)</span><span class="complexity-value">O(V + E)</span></div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">
+<div class="section-number">09</div>
+<span>Advanced Problems & Applications</span>
+</div>
+
+<h3>Top Graph Problems:</h3>
+<div class="problem-grid">
+<div class="problem-item"><span class="problem-difficulty difficulty-easy">EASY</span>
+<div class="problem-title">Number of Islands</div><p>DFS/BFS grid traversal</p></div>
+
+<div class="problem-item"><span class="problem-difficulty difficulty-easy">EASY</span>
+<div class="problem-title">Clone Graph</div><p>DFS with hashmap</p></div>
+
+<div class="problem-item"><span class="problem-difficulty difficulty-medium">MEDIUM</span>
+<div class="problem-title">Course Schedule</div><p>Cycle detection in DAG</p></div>
+
+<div class="problem-item"><span class="problem-difficulty difficulty-medium">MEDIUM</span>
+<div class="problem-title">Network Delay Time</div><p>Dijkstra's algorithm</p></div>
+
+<div class="problem-item"><span class="problem-difficulty difficulty-medium">MEDIUM</span>
+<div class="problem-title">Pacific Atlantic</div><p>Multi-source DFS/BFS</p></div>
+
+<div class="problem-item"><span class="problem-difficulty difficulty-hard">HARD</span>
+<div class="problem-title">Word Ladder</div><p>BFS shortest path</p></div>
+
+<div class="problem-item"><span class="problem-difficulty difficulty-hard">HARD</span>
+<div class="problem-title">Alien Dictionary</div><p>Topological sort</p></div>
+
+<div class="problem-item"><span class="problem-difficulty difficulty-hard">HARD</span>
+<div class="problem-title">Critical Connections</div><p>Tarjan's bridges</p></div>
+</div>
+
+<h3 style="margin-top:40px;">Real-World Applications:</h3>
+<div class="use-case-grid">
+<div class="use-case"><div class="use-case-icon">🌐</div><div class="use-case-label">Social Networks</div></div>
+<div class="use-case"><div class="use-case-icon">🗺️</div><div class="use-case-label">Maps/GPS</div></div>
+<div class="use-case"><div class="use-case-icon">💻</div><div class="use-case-label">Computer Networks</div></div>
+<div class="use-case"><div class="use-case-icon">🔍</div><div class="use-case-label">Web Crawling</div></div>
+<div class="use-case"><div class="use-case-icon">📦</div><div class="use-case-label">Dependencies</div></div>
+<div class="use-case"><div class="use-case-icon">🎯</div><div class="use-case-label">Recommendations</div></div>
+<div class="use-case"><div class="use-case-icon">⚡</div><div class="use-case-label">Circuit Design</div></div>
+<div class="use-case"><div class="use-case-icon">🎮</div><div class="use-case-label">Game AI</div></div>
+</div>
+</div>
+
+<!-- SUMMARY -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">13</div>
+<span>Summary & Decision Tree</span>
+</div>
+
+<div class="summary-box">
+<h3>Key Properties</h3>
+<ul>
+<li>Non-linear structure with vertices and edges</li>
+<li>Many representations: adjacency list (sparse), matrix (dense)</li>
+<li>Two core traversals: BFS (queue, shortest path) and DFS (stack, cycles)</li>
+<li>Rich algorithms: Dijkstra, Bellman-Ford, MST, topological sort</li>
+<li>Essential for networks, paths, relationships, dependencies</li>
+<li>Most complex DS - requires multiple algorithms mastery</li>
+</ul>
+</div>
+
+<div class="decision-tree">
+<h3>🎯 Graph Algorithm Decision Tree</h3>
+<div class="decision-item"><strong>Shortest path (unweighted)?</strong> → BFS</div>
+<div class="decision-item"><strong>Shortest path (weighted, non-negative)?</strong> → Dijkstra</div>
+<div class="decision-item"><strong>Shortest path (negative edges)?</strong> → Bellman-Ford</div>
+<div class="decision-item"><strong>All-pairs shortest path?</strong> → Floyd-Warshall</div>
+<div class="decision-item"><strong>Minimum spanning tree?</strong> → Kruskal or Prim</div>
+<div class="decision-item"><strong>Task dependencies?</strong> → Topological Sort</div>
+<div class="decision-item"><strong>Detect cycles?</strong> → DFS (directed), Union-Find (undirected)</div>
+<div class="decision-item"><strong>Connected components?</strong> → DFS or Union-Find</div>
+<div class="decision-item"><strong>Grid traversal?</strong> → DFS or BFS</div>
+</div>
+
+<div class="type-card" style="margin-top:35px;">
+<h3>📌 Top 15 Must-Know Graph Problems</h3>
+<ol style="list-style-position:inside;line-height:2.2;">
+<li><strong>Number of Islands</strong> - DFS/BFS grid</li>
+<li><strong>Course Schedule</strong> - Cycle detection</li>
+<li><strong>Clone Graph</strong> - DFS/BFS with map</li>
+<li><strong>Pacific Atlantic Water Flow</strong> - Multi-DFS</li>
+<li><strong>Network Delay Time</strong> - Dijkstra</li>
+<li><strong>Cheapest Flights K Stops</strong> - Modified Dijkstra</li>
+<li><strong>Word Ladder</strong> - BFS shortest path</li>
+<li><strong>Graph Valid Tree</strong> - Cycle + connected</li>
+<li><strong>Accounts Merge</strong> - Union-Find</li>
+<li><strong>Redundant Connection</strong> - Union-Find</li>
+<li><strong>Minimum Height Trees</strong> - BFS from leaves</li>
+<li><strong>All Paths Source to Target</strong> - DFS backtrack</li>
+<li><strong>Critical Connections</strong> - Tarjan's bridges</li>
+<li><strong>Reconstruct Itinerary</strong> - DFS Eulerian</li>
+<li><strong>Alien Dictionary</strong> - Topological sort</li>
+</ol>
+</div>
+
+<div class="tip-box" style="margin-top:35px;">
+<strong>💡 FINAL TIP:</strong> Master BFS and DFS first - they're the foundation! Then learn Dijkstra, topological sort, and Union-Find. These 5 techniques solve 90% of graph problems!
+</div>
+</div>
+
+<div class="footer">
+<p><strong>GRAPH - COMPLETE DSA VISUAL GUIDE (C++)</strong></p>
+<p style="margin-top:14px;">Master Data Structures & Algorithms • Perfect for Interviews, Exams & Revision</p>
+<p style="margin-top:22px;font-size:0.95em;color:var(--blue-main);">
+◆ Remember: Graphs connect the world - from social networks to GPS navigation!
+</p>
+</div>
+</div>
+</body>
+</html>
