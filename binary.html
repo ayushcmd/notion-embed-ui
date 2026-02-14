@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary - Complete DSA Visual Guide (C++)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --black: #000000;
+            --charcoal: #212121;
+            --dark-gray: #424242;
+            --gray: #616161;
+            --matrix-green: #00FF41;
+            --bright-green: #39FF14;
+            --neon-green: #76FF03;
+            --cyber-cyan: #00FFFF;
+            --electric-blue: #00E5FF;
+        }
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            background: linear-gradient(135deg, var(--black) 0%, var(--charcoal) 50%, var(--dark-gray) 100%);
+            padding: 40px 20px;
+            line-height: 1.6;
+            color: var(--matrix-green);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #0a0a0a;
+            border-radius: 20px;
+            box-shadow: 0 0 60px rgba(0, 255, 65, 0.3), 0 20px 60px rgba(0, 0, 0, 0.9);
+            overflow: hidden;
+            border: 2px solid var(--matrix-green);
+        }
+        .header {
+            background: linear-gradient(135deg, var(--black) 0%, var(--charcoal) 100%);
+            color: var(--matrix-green);
+            padding: 80px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 3px solid var(--matrix-green);
+        }
+        .header::before {
+            content: '01001001010101001010010101010010101001010101001010010101010010101001010101001010010101010010101001010101001010010101010010101001010101001010';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            font-size: 0.6em;
+            line-height: 1.8;
+            opacity: 0.1;
+            word-wrap: break-word;
+            pointer-events: none;
+        }
+        .header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 6em;
+            font-weight: 900;
+            letter-spacing: 20px;
+            text-shadow: 0 0 20px var(--matrix-green), 0 0 40px var(--matrix-green);
+            position: relative;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        @keyframes glow {
+            from { text-shadow: 0 0 20px var(--matrix-green), 0 0 40px var(--matrix-green); }
+            to { text-shadow: 0 0 30px var(--bright-green), 0 0 60px var(--bright-green); }
+        }
+        .header p {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.4em;
+            letter-spacing: 8px;
+            font-weight: 700;
+            margin-top: 15px;
+            color: var(--bright-green);
+        }
+        .section {
+            padding: 50px 60px;
+            border-bottom: 2px solid var(--dark-gray);
+        }
+        .section:nth-child(even) {
+            background: linear-gradient(to right, #0f0f0f 0%, #0a0a0a 100%);
+        }
+        .section:last-child { border-bottom: none; }
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.4em;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: var(--matrix-green);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            text-shadow: 0 0 10px var(--matrix-green);
+        }
+        .section-number {
+            background: linear-gradient(135deg, var(--charcoal) 0%, var(--dark-gray) 100%);
+            color: var(--matrix-green);
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4em;
+            font-weight: 900;
+            box-shadow: 0 0 20px var(--matrix-green);
+            border: 3px solid var(--matrix-green);
+        }
+        h3 {
+            color: var(--bright-green);
+            font-family: 'Orbitron', sans-serif;
+            margin: 35px 0 20px;
+            font-size: 1.7em;
+            text-shadow: 0 0 5px var(--bright-green);
+        }
+        p {
+            color: #B0B0B0;
+            line-height: 2;
+            margin-bottom: 18px;
+        }
+        .binary-visual {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+            border: 3px solid var(--matrix-green);
+            border-radius: 16px;
+            padding: 40px;
+            margin: 30px 0;
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.2);
+        }
+        .bit {
+            display: inline-block;
+            background: var(--charcoal);
+            color: var(--matrix-green);
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            margin: 5px;
+            border: 2px solid var(--matrix-green);
+            border-radius: 8px;
+            font-size: 1.5em;
+            font-weight: 700;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+        }
+        .bit.set {
+            background: var(--matrix-green);
+            color: var(--black);
+            box-shadow: 0 0 20px var(--matrix-green);
+        }
+        .code-snippet {
+            background: var(--black);
+            color: var(--matrix-green);
+            padding: 30px;
+            border-radius: 14px;
+            font-family: 'Share Tech Mono', monospace;
+            margin: 30px 0;
+            overflow-x: auto;
+            font-size: 0.95em;
+            border: 2px solid var(--matrix-green);
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+            position: relative;
+        }
+        .code-snippet::before {
+            content: 'C++';
+            position: absolute;
+            top: 12px;
+            right: 18px;
+            font-size: 0.75em;
+            color: var(--bright-green);
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .code-keyword { color: #00E5FF; }
+        .code-type { color: var(--bright-green); }
+        .code-string { color: #FFD700; }
+        .code-comment { color: var(--gray); font-style: italic; }
+        .code-number { color: #FF69B4; }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.2);
+            border-radius: 14px;
+            overflow: hidden;
+            border: 2px solid var(--matrix-green);
+        }
+        .comparison-table th {
+            background: linear-gradient(135deg, var(--charcoal) 0%, var(--dark-gray) 100%);
+            color: var(--matrix-green);
+            padding: 24px;
+            text-align: left;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1.1em;
+            border-bottom: 2px solid var(--matrix-green);
+        }
+        .comparison-table td {
+            padding: 22px 24px;
+            border-bottom: 1px solid var(--dark-gray);
+            color: #B0B0B0;
+        }
+        .comparison-table tr:last-child td { border-bottom: none; }
+        .comparison-table tr:nth-child(even) {
+            background: linear-gradient(to right, #0f0f0f 0%, #0a0a0a 100%);
+        }
+        .type-card, .technique-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+            border-left: 6px solid var(--bright-green);
+            padding: 32px;
+            margin: 28px 0;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.15);
+        }
+        .type-card h3, .type-card h4, .technique-card h4 {
+            color: var(--bright-green);
+            margin-bottom: 16px;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .operation-grid, .problem-grid, .use-case-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 28px;
+            margin: 35px 0;
+        }
+        .operation-card, .problem-item, .use-case {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+            border: 2px solid var(--matrix-green);
+            border-radius: 18px;
+            padding: 32px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
+        }
+        .operation-card:hover, .problem-item:hover, .use-case:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 0 40px rgba(0, 255, 65, 0.4);
+            border-color: var(--bright-green);
+        }
+        .operation-card h4 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--matrix-green);
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        .complexity-box {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+            border: 2px solid var(--matrix-green);
+            padding: 32px 40px;
+            margin: 28px 0;
+            border-radius: 18px;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+        }
+        .complexity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 0;
+            border-bottom: 1px solid var(--dark-gray);
+        }
+        .complexity-item:last-child { border-bottom: none; }
+        .complexity-value {
+            font-family: 'Orbitron', monospace;
+            background: linear-gradient(135deg, var(--charcoal) 0%, var(--dark-gray) 100%);
+            color: var(--matrix-green);
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-weight: 700;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+            border: 1px solid var(--matrix-green);
+        }
+        .tip-box {
+            background: linear-gradient(135deg, #1a3a1a 0%, #0f2a0f 100%);
+            border-left: 6px solid var(--neon-green);
+            padding: 28px 32px;
+            margin: 28px 0;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(118, 255, 3, 0.2);
+        }
+        .tip-box strong {
+            color: var(--neon-green);
+            font-size: 1.25em;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .mistake-card {
+            background: linear-gradient(135deg, #2a1a1a 0%, #1a0f0f 100%);
+            border-left: 6px solid #FF3333;
+            padding: 32px;
+            margin: 28px 0;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(255, 51, 51, 0.2);
+        }
+        .mistake-card h4 {
+            color: #FF6666;
+            margin-bottom: 18px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.45em;
+        }
+        .problem-difficulty {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 28px;
+            font-size: 0.82em;
+            font-weight: 700;
+            margin-bottom: 16px;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .difficulty-easy { background: #4CAF50; color: var(--black); }
+        .difficulty-medium { background: #FF9800; color: var(--black); }
+        .difficulty-hard { background: #F44336; color: white; }
+        .problem-title {
+            font-weight: 700;
+            color: var(--matrix-green);
+            font-size: 1.25em;
+            margin-bottom: 14px;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .use-case {
+            text-align: center;
+        }
+        .use-case-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        .use-case-label {
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+            color: var(--matrix-green);
+            font-size: 1.15em;
+        }
+        .summary-box {
+            background: linear-gradient(135deg, var(--black) 0%, var(--charcoal) 100%);
+            color: var(--matrix-green);
+            padding: 60px;
+            border-radius: 24px;
+            margin: 40px 0;
+            box-shadow: 0 0 40px rgba(0, 255, 65, 0.3);
+            border: 3px solid var(--matrix-green);
+        }
+        .summary-box h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5em;
+            margin-bottom: 32px;
+            color: var(--bright-green);
+        }
+        .summary-box ul {
+            list-style: none;
+            padding: 0;
+        }
+        .summary-box li {
+            padding: 18px 0;
+            font-size: 1.18em;
+            position: relative;
+            padding-left: 48px;
+            line-height: 1.9;
+        }
+        .summary-box li:before {
+            content: "01";
+            position: absolute;
+            left: 0;
+            font-size: 1.3em;
+            color: var(--bright-green);
+            font-family: 'Orbitron', sans-serif;
+        }
+        .decision-tree {
+            background: #0a0a0a;
+            padding: 40px;
+            border-radius: 20px;
+            margin: 35px 0;
+            border: 2px solid var(--matrix-green);
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.2);
+        }
+        .decision-tree h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--bright-green);
+            margin-bottom: 28px;
+            font-size: 2.1em;
+        }
+        .decision-item {
+            padding: 20px;
+            margin: 16px 0;
+            border-left: 6px solid var(--matrix-green);
+            background: linear-gradient(to right, #1a1a1a 0%, #0f0f0f 100%);
+            border-radius: 10px;
+        }
+        .decision-item strong {
+            color: var(--matrix-green);
+            font-family: 'Orbitron', sans-serif;
+        }
+        .footer {
+            background: linear-gradient(to right, #0f0f0f 0%, #0a0a0a 100%);
+            padding: 50px;
+            text-align: center;
+            color: var(--matrix-green);
+            border-top: 3px solid var(--matrix-green);
+        }
+        .footer strong {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--bright-green);
+            font-size: 1.2em;
+        }
+        .truth-table {
+            background: #0a0a0a;
+            border: 2px solid var(--matrix-green);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .truth-table td {
+            padding: 12px 20px;
+            text-align: center;
+            border: 1px solid var(--dark-gray);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>BINARY</h1>
+<p>COMPLETE DSA VISUAL GUIDE (C++)</p>
+</div>
+
+<!-- SECTION 1: WHAT IS BINARY? -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">01</div>
+<span>What is Binary?</span>
+</div>
+
+<p style="font-size:1.18em;color:#E0E0E0;">A <strong style="color:var(--matrix-green);">Binary Number System</strong> is a base-2 positional numeral system using only two digits: 0 and 1. It's the foundation of all digital computing, where 0 represents OFF and 1 represents ON (electrical states).</p>
+
+<h3>Binary Representation:</h3>
+
+<div class="binary-visual">
+<h4 style="color:var(--bright-green);margin-bottom:20px;">Binary: 1 0 1 1 0 1 = Decimal: 45</h4>
+<div style="margin:30px 0;">
+<div class="bit set">1</div>
+<div class="bit">0</div>
+<div class="bit set">1</div>
+<div class="bit set">1</div>
+<div class="bit">0</div>
+<div class="bit set">1</div>
+</div>
+<div style="margin-top:25px;color:#B0B0B0;line-height:2.2;">
+<p><strong style="color:var(--matrix-green);">Position:</strong> 5 4 3 2 1 0</p>
+<p><strong style="color:var(--matrix-green);">Value:</strong> 32 + 0 + 8 + 4 + 0 + 1 = 45</p>
+<p><strong style="color:var(--matrix-green);">Formula:</strong> 1×2⁵ + 0×2⁴ + 1×2³ + 1×2² + 0×2¹ + 1×2⁰</p>
+</div>
+</div>
+
+<div class="code-snippet"><span class="code-comment">// Binary in C++</span>
+
+<span class="code-comment">// Binary literals (C++14)</span>
+<span class="code-keyword">int</span> a = <span class="code-number">0b1010</span>;      <span class="code-comment">// Binary: 1010 = Decimal: 10</span>
+<span class="code-keyword">int</span> b = <span class="code-number">0b11111111</span>;  <span class="code-comment">// Binary: 11111111 = Decimal: 255</span>
+
+<span class="code-comment">// Print binary representation</span>
+<span class="code-keyword">void</span> <span class="code-type">printBinary</span>(<span class="code-keyword">int</span> n) {
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = <span class="code-number">31</span>; i &gt;= <span class="code-number">0</span>; i--) {
+        cout &lt;&lt; ((n &gt;&gt; i) &amp; <span class="code-number">1</span>);
+    }
+}
+
+<span class="code-comment">// Decimal to Binary</span>
+<span class="code-type">string</span> <span class="code-type">decToBin</span>(<span class="code-keyword">int</span> n) {
+    <span class="code-type">string</span> result = <span class="code-string">""</span>;
+    <span class="code-keyword">while</span> (n &gt; <span class="code-number">0</span>) {
+        result = (n % <span class="code-number">2</span> == <span class="code-number">0</span> ? <span class="code-string">"0"</span> : <span class="code-string">"1"</span>) + result;
+        n /= <span class="code-number">2</span>;
+    }
+    <span class="code-keyword">return</span> result;
+}
+
+<span class="code-comment">// Binary to Decimal</span>
+<span class="code-keyword">int</span> <span class="code-type">binToDec</span>(<span class="code-type">string</span> s) {
+    <span class="code-keyword">int</span> result = <span class="code-number">0</span>;
+    <span class="code-keyword">for</span> (<span class="code-keyword">char</span> c : s) {
+        result = result * <span class="code-number">2</span> + (c - <span class="code-string">'0'</span>);
+    }
+    <span class="code-keyword">return</span> result;
+}</div>
+
+<h3>Key Terminology:</h3>
+<ul style="list-style-position:inside;margin-left:20px;color:#B0B0B0;line-height:2.4;">
+<li><strong style="color:var(--matrix-green);">Bit:</strong> Binary digit (0 or 1) - smallest unit</li>
+<li><strong style="color:var(--matrix-green);">Byte:</strong> 8 bits (256 values: 0-255)</li>
+<li><strong style="color:var(--matrix-green);">Nibble:</strong> 4 bits (16 values: 0-15)</li>
+<li><strong style="color:var(--matrix-green);">Word:</strong> 32-bit or 64-bit (platform-dependent)</li>
+<li><strong style="color:var(--matrix-green);">MSB:</strong> Most Significant Bit (leftmost)</li>
+<li><strong style="color:var(--matrix-green);">LSB:</strong> Least Significant Bit (rightmost)</li>
+<li><strong style="color:var(--matrix-green);">Set bit:</strong> Bit with value 1</li>
+<li><strong style="color:var(--matrix-green);">Clear bit:</strong> Bit with value 0</li>
+</ul>
+</div>
+
+<!-- SECTION 2: BITWISE OPERATORS -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">02</div>
+<span>Bitwise Operators</span>
+</div>
+
+<div class="operation-grid">
+<div class="operation-card">
+<h4>& AND Operator</h4>
+<div class="truth-table">
+<table style="width:100%;color:var(--matrix-green);">
+<tr style="background:var(--charcoal);"><td>A</td><td>B</td><td>A & B</td></tr>
+<tr><td>0</td><td>0</td><td>0</td></tr>
+<tr><td>0</td><td>1</td><td>0</td></tr>
+<tr><td>1</td><td>0</td><td>0</td></tr>
+<tr><td>1</td><td>1</td><td style="color:var(--bright-green);">1</td></tr>
+</table>
+</div>
+<div class="code-snippet" style="font-size:0.85em;margin-top:15px;"><span class="code-keyword">int</span> r = a &amp; b;
+<span class="code-comment">// 1010 & 1100 = 1000</span></div>
+<p style="color:#B0B0B0;margin-top:10px;">Use: Check bits, clear bits, masks</p>
+</div>
+
+<div class="operation-card">
+<h4>| OR Operator</h4>
+<div class="truth-table">
+<table style="width:100%;color:var(--matrix-green);">
+<tr style="background:var(--charcoal);"><td>A</td><td>B</td><td>A | B</td></tr>
+<tr><td>0</td><td>0</td><td>0</td></tr>
+<tr><td>0</td><td>1</td><td style="color:var(--bright-green);">1</td></tr>
+<tr><td>1</td><td>0</td><td style="color:var(--bright-green);">1</td></tr>
+<tr><td>1</td><td>1</td><td style="color:var(--bright-green);">1</td></tr>
+</table>
+</div>
+<div class="code-snippet" style="font-size:0.85em;margin-top:15px;"><span class="code-keyword">int</span> r = a | b;
+<span class="code-comment">// 1010 | 1100 = 1110</span></div>
+<p style="color:#B0B0B0;margin-top:10px;">Use: Set bits, combine flags</p>
+</div>
+
+<div class="operation-card">
+<h4>^ XOR Operator</h4>
+<div class="truth-table">
+<table style="width:100%;color:var(--matrix-green);">
+<tr style="background:var(--charcoal);"><td>A</td><td>B</td><td>A ^ B</td></tr>
+<tr><td>0</td><td>0</td><td>0</td></tr>
+<tr><td>0</td><td>1</td><td style="color:var(--bright-green);">1</td></tr>
+<tr><td>1</td><td>0</td><td style="color:var(--bright-green);">1</td></tr>
+<tr><td>1</td><td>1</td><td>0</td></tr>
+</table>
+</div>
+<div class="code-snippet" style="font-size:0.85em;margin-top:15px;"><span class="code-keyword">int</span> r = a ^ b;
+<span class="code-comment">// 1010 ^ 1100 = 0110</span></div>
+<p style="color:#B0B0B0;margin-top:10px;">Use: Toggle, swap, find unique</p>
+</div>
+
+<div class="operation-card">
+<h4>~ NOT Operator</h4>
+<p style="color:#B0B0B0;margin-bottom:15px;">Inverts all bits (1's complement)</p>
+<div class="code-snippet" style="font-size:0.85em;"><span class="code-keyword">int</span> r = ~a;
+<span class="code-comment">// ~1010 = 0101</span></div>
+<p style="color:#B0B0B0;margin-top:10px;">Use: Invert bits, create masks</p>
+</div>
+
+<div class="operation-card">
+<h4>&lt;&lt; Left Shift</h4>
+<p style="color:#B0B0B0;margin-bottom:15px;">Shift left, fill with 0s</p>
+<div class="code-snippet" style="font-size:0.85em;"><span class="code-keyword">int</span> r = n &lt;&lt; k;
+<span class="code-comment">// 1010 << 2 = 101000</span>
+<span class="code-comment">// Multiply by 2^k</span></div>
+<p style="color:#B0B0B0;margin-top:10px;">Use: Fast multiplication</p>
+</div>
+
+<div class="operation-card">
+<h4>&gt;&gt; Right Shift</h4>
+<p style="color:#B0B0B0;margin-bottom:15px;">Shift right, fill with sign bit</p>
+<div class="code-snippet" style="font-size:0.85em;"><span class="code-keyword">int</span> r = n &gt;&gt; k;
+<span class="code-comment">// 1010 >> 2 = 0010</span>
+<span class="code-comment">// Divide by 2^k</span></div>
+<p style="color:#B0B0B0;margin-top:10px;">Use: Fast division</p>
+</div>
+</div>
+
+<table class="comparison-table">
+<tr><th>Operator</th><th>Symbol</th><th>Example</th><th>Use Case</th></tr>
+<tr><td>AND</td><td>&</td><td>a & b</td><td>Check/clear bits, masks</td></tr>
+<tr><td>OR</td><td>|</td><td>a | b</td><td>Set bits, combine flags</td></tr>
+<tr><td>XOR</td><td>^</td><td>a ^ b</td><td>Toggle, swap, unique</td></tr>
+<tr><td>NOT</td><td>~</td><td>~a</td><td>Invert, complement</td></tr>
+<tr><td>Left Shift</td><td>&lt;&lt;</td><td>n &lt;&lt; k</td><td>Multiply by 2^k</td></tr>
+<tr><td>Right Shift</td><td>&gt;&gt;</td><td>n &gt;&gt; k</td><td>Divide by 2^k</td></tr>
+</table>
+</div>
+
+<!-- SECTION 3: BIT MANIPULATION TECHNIQUES -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">03</div>
+<span>Bit Manipulation Techniques</span>
+</div>
+
+<div class="technique-card">
+<h4>1. Check if i-th bit is set</h4>
+<div class="code-snippet"><span class="code-keyword">bool</span> <span class="code-type">isSet</span>(<span class="code-keyword">int</span> n, <span class="code-keyword">int</span> i) {
+    <span class="code-keyword">return</span> (n &amp; (<span class="code-number">1</span> &lt;&lt; i)) != <span class="code-number">0</span>;
+}</div>
+</div>
+
+<div class="technique-card">
+<h4>2. Set i-th bit</h4>
+<div class="code-snippet"><span class="code-keyword">int</span> <span class="code-type">setBit</span>(<span class="code-keyword">int</span> n, <span class="code-keyword">int</span> i) {
+    <span class="code-keyword">return</span> n | (<span class="code-number">1</span> &lt;&lt; i);
+}</div>
+</div>
+
+<div class="technique-card">
+<h4>3. Clear i-th bit</h4>
+<div class="code-snippet"><span class="code-keyword">int</span> <span class="code-type">clearBit</span>(<span class="code-keyword">int</span> n, <span class="code-keyword">int</span> i) {
+    <span class="code-keyword">return</span> n &amp; ~(<span class="code-number">1</span> &lt;&lt; i);
+}</div>
+</div>
+
+<div class="technique-card">
+<h4>4. Toggle i-th bit</h4>
+<div class="code-snippet"><span class="code-keyword">int</span> <span class="code-type">toggleBit</span>(<span class="code-keyword">int</span> n, <span class="code-keyword">int</span> i) {
+    <span class="code-keyword">return</span> n ^ (<span class="code-number">1</span> &lt;&lt; i);
+}</div>
+</div>
+
+<div class="technique-card">
+<h4>5. Count set bits (Brian Kernighan's Algorithm)</h4>
+<div class="code-snippet"><span class="code-keyword">int</span> <span class="code-type">countSetBits</span>(<span class="code-keyword">int</span> n) {
+    <span class="code-keyword">int</span> count = <span class="code-number">0</span>;
+    <span class="code-keyword">while</span> (n) {
+        n &amp;= (n - <span class="code-number">1</span>);  <span class="code-comment">// Removes rightmost set bit</span>
+        count++;
+    }
+    <span class="code-keyword">return</span> count;
+}
+
+<span class="code-comment">// Built-in function</span>
+<span class="code-keyword">int</span> count = __builtin_popcount(n);</div>
+</div>
+
+<div class="technique-card">
+<h4>6. Check if power of 2</h4>
+<div class="code-snippet"><span class="code-keyword">bool</span> <span class="code-type">isPowerOf2</span>(<span class="code-keyword">int</span> n) {
+    <span class="code-keyword">return</span> n &gt; <span class="code-number">0</span> &amp;&amp; (n &amp; (n - <span class="code-number">1</span>)) == <span class="code-number">0</span>;
+}</div>
+<p style="color:#B0B0B0;margin-top:12px;">Power of 2 has only one set bit: 1000, 0100, 0010, 0001</p>
+</div>
+
+<div class="technique-card">
+<h4>7. Get rightmost set bit</h4>
+<div class="code-snippet"><span class="code-keyword">int</span> <span class="code-type">rightmostSetBit</span>(<span class="code-keyword">int</span> n) {
+    <span class="code-keyword">return</span> n &amp; -n;
+}
+<span class="code-comment">// Example: 1010 & (-1010) = 0010</span></div>
+</div>
+
+<div class="technique-card">
+<h4>8. Swap without temp variable</h4>
+<div class="code-snippet"><span class="code-keyword">void</span> <span class="code-type">swap</span>(<span class="code-keyword">int</span>&amp; a, <span class="code-keyword">int</span>&amp; b) {
+    a ^= b;
+    b ^= a;
+    a ^= b;
+}
+<span class="code-comment">// XOR swap - clever but not always faster</span></div>
+</div>
+
+<div class="tip-box">
+<strong>💡 XOR PROPERTIES:</strong> a ^ a = 0, a ^ 0 = a, a ^ b ^ a = b. These make XOR perfect for finding unique elements and swapping!
+</div>
+</div>
+
+<!-- Continuing with remaining sections in condensed format -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">04</div>
+<span>Common Binary Patterns</span>
+</div>
+
+<div class="type-card">
+<h4>Pattern 1: Single Number (XOR all)</h4>
+<div class="code-snippet"><span class="code-comment">// Find element appearing once (others twice)</span>
+<span class="code-keyword">int</span> <span class="code-type">singleNumber</span>(<span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt;&amp; nums) {
+    <span class="code-keyword">int</span> result = <span class="code-number">0</span>;
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> num : nums) result ^= num;
+    <span class="code-keyword">return</span> result;  <span class="code-comment">// XOR cancels duplicates</span>
+}</div>
+</div>
+
+<div class="type-card">
+<h4>Pattern 2: Missing Number</h4>
+<div class="code-snippet"><span class="code-keyword">int</span> <span class="code-type">missingNumber</span>(<span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt;&amp; nums, <span class="code-keyword">int</span> n) {
+    <span class="code-keyword">int</span> xorAll = <span class="code-number">0</span>, xorArr = <span class="code-number">0</span>;
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = <span class="code-number">0</span>; i &lt;= n; i++) xorAll ^= i;
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> num : nums) xorArr ^= num;
+    <span class="code-keyword">return</span> xorAll ^ xorArr;
+}</div>
+</div>
+
+<div class="type-card">
+<h4>Pattern 3: Subsets Generation</h4>
+<div class="code-snippet"><span class="code-type">vector</span>&lt;<span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt;&gt; <span class="code-type">subsets</span>(<span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt;&amp; nums) {
+    <span class="code-keyword">int</span> n = nums.size();
+    <span class="code-type">vector</span>&lt;<span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt;&gt; result;
+    
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> mask = <span class="code-number">0</span>; mask &lt; (<span class="code-number">1</span> &lt;&lt; n); mask++) {
+        <span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt; subset;
+        <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = <span class="code-number">0</span>; i &lt; n; i++) {
+            <span class="code-keyword">if</span> (mask &amp; (<span class="code-number">1</span> &lt;&lt; i)) subset.push_back(nums[i]);
+        }
+        result.push_back(subset);
+    }
+    <span class="code-keyword">return</span> result;
+}</div>
+</div>
+
+<div class="type-card">
+<h4>Pattern 4: Reverse Bits</h4>
+<div class="code-snippet"><span class="code-keyword">uint32_t</span> <span class="code-type">reverseBits</span>(<span class="code-keyword">uint32_t</span> n) {
+    <span class="code-keyword">uint32_t</span> result = <span class="code-number">0</span>;
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = <span class="code-number">0</span>; i &lt; <span class="code-number">32</span>; i++) {
+        result &lt;&lt;= <span class="code-number">1</span>;
+        result |= (n &amp; <span class="code-number">1</span>);
+        n &gt;&gt;= <span class="code-number">1</span>;
+    }
+    <span class="code-keyword">return</span> result;
+}</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">
+<div class="section-number">05</div>
+<span>Common Mistakes</span>
+</div>
+
+<div class="mistake-card">
+<h4>❌ Operator Precedence</h4>
+<div class="code-snippet"><span class="code-comment">// WRONG - & has lower precedence than ==</span>
+<span class="code-keyword">if</span> (n &amp; <span class="code-number">1</span> == <span class="code-number">0</span>)  <span class="code-comment">// Parsed as: n & (1 == 0)</span>
+
+<span class="code-comment">// CORRECT</span>
+<span class="code-keyword">if</span> ((n &amp; <span class="code-number">1</span>) == <span class="code-number">0</span>)  <span class="code-comment">// Check if even</span></div>
+</div>
+
+<div class="mistake-card">
+<h4>❌ Signed Right Shift</h4>
+<div class="code-snippet"><span class="code-comment">// WRONG - Arithmetic shift for negative</span>
+<span class="code-keyword">int</span> n = -<span class="code-number">1</span>;
+n &gt;&gt; <span class="code-number">1</span>;  <span class="code-comment">// Still -1 (fills with sign bit)</span>
+
+<span class="code-comment">// CORRECT - Use unsigned</span>
+<span class="code-keyword">unsigned int</span> n = -<span class="code-number">1</span>;
+n &gt;&gt; <span class="code-number">1</span>;  <span class="code-comment">// Logical shift</span></div>
+</div>
+
+<div class="mistake-card">
+<h4>❌ Overflow in Left Shift</h4>
+<div class="code-snippet"><span class="code-comment">// WRONG - Overflow</span>
+<span class="code-keyword">int</span> n = <span class="code-number">1</span> &lt;&lt; <span class="code-number">31</span>;  <span class="code-comment">// Undefined for signed int</span>
+
+<span class="code-comment">// CORRECT</span>
+<span class="code-keyword">unsigned int</span> n = <span class="code-number">1U</span> &lt;&lt; <span class="code-number">31</span>;
+<span class="code-keyword">long long</span> n = <span class="code-number">1LL</span> &lt;&lt; <span class="code-number">40</span>;</div>
+</div>
+
+<div class="mistake-card">
+<h4>❌ 0-indexed Bit Positions</h4>
+<div class="code-snippet"><span class="code-comment">// Remember: Bit 0 = rightmost, Bit 31 = leftmost</span>
+<span class="code-keyword">int</span> bit3 = n &amp; (<span class="code-number">1</span> &lt;&lt; <span class="code-number">3</span>);  <span class="code-comment">// 4th bit from right</span></div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">
+<div class="section-number">06</div>
+<span>Time & Space Complexity</span>
+</div>
+
+<div class="complexity-box">
+<div class="complexity-item"><span style="color:#B0B0B0;">AND, OR, XOR, NOT</span><span class="complexity-value">O(1)</span></div>
+<div class="complexity-item"><span style="color:#B0B0B0;">Left/Right Shift</span><span class="complexity-value">O(1)</span></div>
+<div class="complexity-item"><span style="color:#B0B0B0;">Check/Set/Clear bit</span><span class="complexity-value">O(1)</span></div>
+<div class="complexity-item"><span style="color:#B0B0B0;">Count bits (loop)</span><span class="complexity-value">O(log n)</span></div>
+<div class="complexity-item"><span style="color:#B0B0B0;">Count bits (Kernighan)</span><span class="complexity-value">O(k)</span></div>
+<div class="complexity-item"><span style="color:#B0B0B0;">Count bits (builtin)</span><span class="complexity-value">O(1)</span></div>
+<div class="complexity-item"><span style="color:#B0B0B0;">Reverse bits</span><span class="complexity-value">O(log n)</span></div>
+<div class="complexity-item"><span style="color:#B0B0B0;">Subset generation</span><span class="complexity-value">O(2ⁿ)</span></div>
+</div>
+
+<div class="tip-box">
+<strong>⚡ SPEED TIP:</strong> Bitwise operations are among the fastest CPU instructions. Use them for optimization when appropriate!
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">
+<div class="section-number">07</div>
+<span>Problems & Applications</span>
+</div>
+
+<h3>Top Binary Problems:</h3>
+<div class="problem-grid">
+<div class="problem-item"><span class="problem-difficulty difficulty-easy">EASY</span>
+<div class="problem-title">Number of 1 Bits</div><p style="color:#B0B0B0;">Brian Kernighan's algorithm</p></div>
+
+<div class="problem-item"><span class="problem-difficulty difficulty-easy">EASY</span>
+<div class="problem-title">Power of Two</div><p style="color:#B0B0B0;">n & (n-1) == 0</p></div>
+
+<div class="problem-item"><span class="problem-difficulty difficulty-easy">EASY</span>
+<div class="problem-title">Single Number</div><p style="color:#B0B0B0;">XOR all elements</p></div>
+
+<div class="problem-item"><span class="problem-difficulty difficulty-easy">EASY</span>
+<div class="problem-title">Missing Number</div><p style="color:#B0B0B0;">XOR technique</p></div>
+
+<div class="problem-item"><span class="problem-difficulty difficulty-medium">MEDIUM</span>
+<div class="problem-title">Counting Bits</div><p style="color:#B0B0B0;">DP with bit manipulation</p></div>
+
+<div class="problem-item"><span class="problem-difficulty difficulty-medium">MEDIUM</span>
+<div class="problem-title">Single Number III</div><p style="color:#B0B0B0;">Two unique numbers</p></div>
+
+<div class="problem-item"><span class="problem-difficulty difficulty-medium">MEDIUM</span>
+<div class="problem-title">Bitwise AND Range</div><p style="color:#B0B0B0;">Common prefix</p></div>
+
+<div class="problem-item"><span class="problem-difficulty difficulty-hard">HARD</span>
+<div class="problem-title">Maximum XOR</div><p style="color:#B0B0B0;">Trie or greedy bit-by-bit</p></div>
+</div>
+
+<h3 style="margin-top:40px;">Real-World Applications:</h3>
+<div class="use-case-grid">
+<div class="use-case"><div class="use-case-icon">💻</div><div class="use-case-label">Permissions</div></div>
+<div class="use-case"><div class="use-case-icon">🌐</div><div class="use-case-label">Networking</div></div>
+<div class="use-case"><div class="use-case-icon">🔐</div><div class="use-case-label">Cryptography</div></div>
+<div class="use-case"><div class="use-case-icon">🎨</div><div class="use-case-label">Graphics</div></div>
+<div class="use-case"><div class="use-case-icon">📦</div><div class="use-case-label">Compression</div></div>
+<div class="use-case"><div class="use-case-icon">⚙️</div><div class="use-case-label">Embedded</div></div>
+<div class="use-case"><div class="use-case-icon">🎮</div><div class="use-case-label">Gaming</div></div>
+<div class="use-case"><div class="use-case-icon">⚡</div><div class="use-case-label">Optimization</div></div>
+</div>
+</div>
+
+<!-- SUMMARY -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">13</div>
+<span>Summary & Decision Tree</span>
+</div>
+
+<div class="summary-box">
+<h3>Key Properties</h3>
+<ul>
+<li>Foundation of all digital computing (base-2)</li>
+<li>Only two digits: 0 (OFF) and 1 (ON)</li>
+<li>O(1) bitwise operations - extremely fast</li>
+<li>Six core operators: &, |, ^, ~, <<, >></li>
+<li>Powerful for optimization and low-level programming</li>
+<li>Essential for flags, masks, state compression</li>
+<li>XOR properties enable clever algorithms</li>
+</ul>
+</div>
+
+<div class="decision-tree">
+<h3>🎯 Binary Decision Tree</h3>
+<div class="decision-item"><strong>Find unique element?</strong> → XOR all elements</div>
+<div class="decision-item"><strong>Check power of 2?</strong> → n & (n-1) == 0</div>
+<div class="decision-item"><strong>Count 1s?</strong> → Brian Kernighan's or __builtin_popcount</div>
+<div class="decision-item"><strong>Set/Clear/Toggle bit?</strong> → Use bit masks</div>
+<div class="decision-item"><strong>Generate subsets?</strong> → Iterate 0 to 2^n-1</div>
+<div class="decision-item"><strong>Swap without temp?</strong> → XOR swap (a^=b, b^=a, a^=b)</div>
+<div class="decision-item"><strong>Fast multiply/divide by 2^k?</strong> → Use << or >></div>
+<div class="decision-item"><strong>Permissions/Flags?</strong> → Bitmask with |, &, ^</div>
+</div>
+
+<div class="type-card" style="margin-top:35px;">
+<h3>📌 Top 15 Binary Problems</h3>
+<ol style="list-style-position:inside;line-height:2.2;color:#B0B0B0;">
+<li><strong style="color:var(--matrix-green);">Number of 1 Bits</strong> - Hamming weight</li>
+<li><strong style="color:var(--matrix-green);">Power of Two</strong> - Single bit check</li>
+<li><strong style="color:var(--matrix-green);">Reverse Bits</strong> - Mirror binary</li>
+<li><strong style="color:var(--matrix-green);">Single Number</strong> - XOR duplicates</li>
+<li><strong style="color:var(--matrix-green);">Missing Number</strong> - XOR range</li>
+<li><strong style="color:var(--matrix-green);">Counting Bits</strong> - DP approach</li>
+<li><strong style="color:var(--matrix-green);">Single Number II</strong> - Bit counting</li>
+<li><strong style="color:var(--matrix-green);">Single Number III</strong> - Two unique</li>
+<li><strong style="color:var(--matrix-green);">Bitwise AND Range</strong> - Common prefix</li>
+<li><strong style="color:var(--matrix-green);">Maximum XOR</strong> - Greedy/Trie</li>
+<li><strong style="color:var(--matrix-green);">Gray Code</strong> - Binary conversion</li>
+<li><strong style="color:var(--matrix-green);">Subsets</strong> - Bitmask iteration</li>
+<li><strong style="color:var(--matrix-green);">Sum Without Plus</strong> - Bit arithmetic</li>
+<li><strong style="color:var(--matrix-green);">Divide Without Division</strong> - Bit shifts</li>
+<li><strong style="color:var(--matrix-green);">UTF-8 Validation</strong> - Bit patterns</li>
+</ol>
+</div>
+
+<div class="tip-box" style="margin-top:35px;">
+<strong>💡 FINAL TIP:</strong> Master XOR properties, bit masking, and Kernighan's algorithm. These three techniques solve 80% of binary manipulation problems!
+</div>
+</div>
+
+<div class="footer">
+<p><strong>BINARY - COMPLETE DSA VISUAL GUIDE (C++)</strong></p>
+<p style="margin-top:14px;color:#B0B0B0;">Master Data Structures & Algorithms • Perfect for Interviews, Exams & Revision</p>
+<p style="margin-top:22px;font-size:0.95em;color:var(--bright-green);">
+01 Remember: Everything in computing is binary - master the bits, master the code! 10
+</p>
+</div>
+</div>
+</body>
+</html>
