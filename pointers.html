@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pointers - Complete DSA Visual Guide (C++)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@500;700;900&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --blood-red: #7B0000;
+            --dark-red: #8B0000;
+            --crimson: #B71C1C;
+            --red-main: #C62828;
+            --red-bright: #D32F2F;
+            --scarlet: #E53935;
+            --neon-red: #FF1744;
+            --gold: #FFD700;
+            --gold-dark: #FFC107;
+            --gold-bright: #FFAB00;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, var(--blood-red) 0%, var(--dark-red) 30%, var(--crimson) 60%, var(--red-main) 100%);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #1A0A0A;
+            border-radius: 20px;
+            box-shadow: 0 0 60px rgba(183, 28, 28, 0.5), 0 20px 60px rgba(0, 0, 0, 0.9);
+            overflow: hidden;
+            border: 3px solid var(--scarlet);
+        }
+        .header {
+            background: linear-gradient(135deg, var(--blood-red) 0%, var(--crimson) 50%, var(--red-main) 100%);
+            color: #FFF8E1;
+            padding: 80px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 4px solid var(--gold);
+        }
+        .header::before {
+            content: '→ → → → → → → → → → → → → → → → → → → → → → → → → → → → → → → →';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            font-size: 2em;
+            line-height: 2;
+            opacity: 0.08;
+            word-wrap: break-word;
+            pointer-events: none;
+        }
+        .header h1 {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 6em;
+            font-weight: 900;
+            letter-spacing: 18px;
+            text-shadow: 0 0 30px var(--neon-red), 0 0 60px var(--scarlet), 4px 4px 12px rgba(0,0,0,0.8);
+            position: relative;
+            animation: glow 2.5s ease-in-out infinite alternate;
+        }
+        @keyframes glow {
+            from { text-shadow: 0 0 30px var(--neon-red), 0 0 60px var(--scarlet), 4px 4px 12px rgba(0,0,0,0.8); }
+            to { text-shadow: 0 0 50px var(--neon-red), 0 0 90px var(--neon-red), 4px 4px 12px rgba(0,0,0,0.8); }
+        }
+        .header p {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 1.5em;
+            letter-spacing: 8px;
+            font-weight: 700;
+            margin-top: 15px;
+            color: var(--gold);
+            text-shadow: 0 0 10px var(--gold-dark);
+        }
+        .section {
+            padding: 50px 60px;
+            border-bottom: 2px solid var(--red-main);
+        }
+        .section:nth-child(even) {
+            background: linear-gradient(to right, #1F0A0A 0%, #1A0A0A 100%);
+        }
+        .section:last-child { border-bottom: none; }
+        .section-title {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 2.4em;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            text-shadow: 0 0 15px var(--gold-dark);
+        }
+        .section-number {
+            background: linear-gradient(135deg, var(--crimson) 0%, var(--red-bright) 100%);
+            color: var(--gold);
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4em;
+            font-weight: 900;
+            box-shadow: 0 0 25px var(--neon-red);
+            border: 3px solid var(--gold);
+        }
+        h3 {
+            color: var(--gold);
+            font-family: 'Exo 2', sans-serif;
+            margin: 35px 0 20px;
+            font-size: 1.7em;
+            text-shadow: 0 0 8px var(--gold-dark);
+        }
+        p {
+            color: #D4C4B0;
+            line-height: 2;
+            margin-bottom: 18px;
+        }
+        .pointer-visual {
+            background: linear-gradient(135deg, #2A1515 0%, #1F0F0F 100%);
+            border: 3px solid var(--scarlet);
+            border-radius: 16px;
+            padding: 40px;
+            margin: 30px 0;
+            text-align: center;
+            font-family: 'Exo 2', sans-serif;
+            box-shadow: 0 0 30px rgba(229, 57, 53, 0.3);
+        }
+        .memory-box {
+            display: inline-block;
+            background: var(--dark-red);
+            border: 2px solid var(--scarlet);
+            border-radius: 10px;
+            padding: 20px 30px;
+            margin: 15px;
+            color: #FFF8E1;
+            box-shadow: 0 0 20px rgba(255, 23, 68, 0.3);
+            min-width: 150px;
+        }
+        .memory-box strong {
+            color: var(--gold);
+            font-size: 1.2em;
+        }
+        .arrow {
+            display: inline-block;
+            color: var(--gold);
+            font-size: 3em;
+            margin: 0 20px;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+        }
+        .code-snippet {
+            background: #0D0000;
+            color: #FFE0B2;
+            padding: 30px;
+            border-radius: 14px;
+            font-family: 'Source Code Pro', monospace;
+            margin: 30px 0;
+            overflow-x: auto;
+            font-size: 0.95em;
+            border: 2px solid var(--scarlet);
+            box-shadow: 0 0 25px rgba(183, 28, 28, 0.3);
+            position: relative;
+        }
+        .code-snippet::before {
+            content: 'C++';
+            position: absolute;
+            top: 12px;
+            right: 18px;
+            font-size: 0.75em;
+            color: var(--gold);
+            font-weight: 700;
+            font-family: 'Exo 2', sans-serif;
+        }
+        .code-keyword { color: #FF6E6E; }
+        .code-type { color: var(--neon-red); }
+        .code-string { color: #A5D6A7; }
+        .code-comment { color: #9E9E9E; font-style: italic; }
+        .code-number { color: var(--gold-bright); }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            box-shadow: 0 0 30px rgba(183, 28, 28, 0.3);
+            border-radius: 14px;
+            overflow: hidden;
+            border: 2px solid var(--scarlet);
+        }
+        .comparison-table th {
+            background: linear-gradient(135deg, var(--crimson) 0%, var(--red-bright) 100%);
+            color: var(--gold);
+            padding: 24px;
+            text-align: left;
+            font-family: 'Exo 2', sans-serif;
+            font-weight: 700;
+            font-size: 1.1em;
+            border-bottom: 2px solid var(--gold);
+        }
+        .comparison-table td {
+            padding: 22px 24px;
+            border-bottom: 1px solid var(--red-main);
+            color: #D4C4B0;
+        }
+        .comparison-table tr:last-child td { border-bottom: none; }
+        .comparison-table tr:nth-child(even) {
+            background: linear-gradient(to right, #1F0A0A 0%, #1A0A0A 100%);
+        }
+        .type-card, .technique-card {
+            background: linear-gradient(135deg, #2A1515 0%, #1F0F0F 100%);
+            border-left: 6px solid var(--gold);
+            padding: 32px;
+            margin: 28px 0;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+        .type-card h3, .type-card h4, .technique-card h4 {
+            color: var(--gold);
+            margin-bottom: 16px;
+            font-family: 'Exo 2', sans-serif;
+        }
+        .operation-grid, .problem-grid, .use-case-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 28px;
+            margin: 35px 0;
+        }
+        .operation-card, .problem-item, .use-case {
+            background: linear-gradient(135deg, #2A1515 0%, #1F0F0F 100%);
+            border: 2px solid var(--scarlet);
+            border-radius: 18px;
+            padding: 32px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(229, 57, 53, 0.2);
+        }
+        .operation-card:hover, .problem-item:hover, .use-case:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 0 40px rgba(255, 23, 68, 0.5);
+            border-color: var(--gold);
+        }
+        .operation-card h4 {
+            font-family: 'Exo 2', sans-serif;
+            color: var(--gold);
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        .complexity-box {
+            background: linear-gradient(135deg, #2A1515 0%, #1F0F0F 100%);
+            border: 2px solid var(--scarlet);
+            padding: 32px 40px;
+            margin: 28px 0;
+            border-radius: 18px;
+            box-shadow: 0 0 25px rgba(229, 57, 53, 0.2);
+        }
+        .complexity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 0;
+            border-bottom: 1px solid var(--red-main);
+        }
+        .complexity-item:last-child { border-bottom: none; }
+        .complexity-value {
+            font-family: 'Exo 2', monospace;
+            background: linear-gradient(135deg, var(--crimson) 0%, var(--red-bright) 100%);
+            color: var(--gold);
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-weight: 700;
+            box-shadow: 0 0 15px rgba(255, 23, 68, 0.4);
+            border: 1px solid var(--gold);
+        }
+        .tip-box {
+            background: linear-gradient(135deg, #1A2A1A 0%, #0F1F0F 100%);
+            border-left: 6px solid #4CAF50;
+            padding: 28px 32px;
+            margin: 28px 0;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.2);
+        }
+        .tip-box strong {
+            color: #66BB6A;
+            font-size: 1.25em;
+            font-family: 'Exo 2', sans-serif;
+        }
+        .mistake-card {
+            background: linear-gradient(135deg, #3A1515 0%, #2F0F0F 100%);
+            border-left: 6px solid #FF3333;
+            padding: 32px;
+            margin: 28px 0;
+            border-radius: 12px;
+            box-shadow: 0 0 25px rgba(255, 51, 51, 0.3);
+        }
+        .mistake-card h4 {
+            color: #FF6666;
+            margin-bottom: 18px;
+            font-family: 'Exo 2', sans-serif;
+            font-size: 1.45em;
+        }
+        .problem-difficulty {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 28px;
+            font-size: 0.82em;
+            font-weight: 700;
+            margin-bottom: 16px;
+            font-family: 'Exo 2', sans-serif;
+        }
+        .difficulty-easy { background: #4CAF50; color: #000; }
+        .difficulty-medium { background: #FF9800; color: #000; }
+        .difficulty-hard { background: #F44336; color: white; }
+        .problem-title {
+            font-weight: 700;
+            color: var(--gold);
+            font-size: 1.25em;
+            margin-bottom: 14px;
+            font-family: 'Exo 2', sans-serif;
+        }
+        .use-case {
+            text-align: center;
+        }
+        .use-case-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        .use-case-label {
+            font-weight: 700;
+            font-family: 'Exo 2', sans-serif;
+            color: var(--gold);
+            font-size: 1.15em;
+        }
+        .summary-box {
+            background: linear-gradient(135deg, var(--blood-red) 0%, var(--crimson) 100%);
+            color: #FFF8E1;
+            padding: 60px;
+            border-radius: 24px;
+            margin: 40px 0;
+            box-shadow: 0 0 50px rgba(183, 28, 28, 0.5);
+            border: 3px solid var(--gold);
+        }
+        .summary-box h3 {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 2.5em;
+            margin-bottom: 32px;
+            color: var(--gold);
+        }
+        .summary-box ul {
+            list-style: none;
+            padding: 0;
+        }
+        .summary-box li {
+            padding: 18px 0;
+            font-size: 1.18em;
+            position: relative;
+            padding-left: 48px;
+            line-height: 1.9;
+        }
+        .summary-box li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            font-size: 1.5em;
+            color: var(--gold);
+        }
+        .decision-tree {
+            background: #1A0A0A;
+            padding: 40px;
+            border-radius: 20px;
+            margin: 35px 0;
+            border: 2px solid var(--scarlet);
+            box-shadow: 0 0 30px rgba(229, 57, 53, 0.3);
+        }
+        .decision-tree h3 {
+            font-family: 'Exo 2', sans-serif;
+            color: var(--gold);
+            margin-bottom: 28px;
+            font-size: 2.1em;
+        }
+        .decision-item {
+            padding: 20px;
+            margin: 16px 0;
+            border-left: 6px solid var(--gold);
+            background: linear-gradient(to right, #2A1515 0%, #1F0F0F 100%);
+            border-radius: 10px;
+        }
+        .decision-item strong {
+            color: var(--gold);
+            font-family: 'Exo 2', sans-serif;
+        }
+        .footer {
+            background: linear-gradient(to right, #1F0A0A 0%, #1A0A0A 100%);
+            padding: 50px;
+            text-align: center;
+            color: #FFF8E1;
+            border-top: 4px solid var(--gold);
+        }
+        .footer strong {
+            font-family: 'Exo 2', sans-serif;
+            color: var(--gold);
+            font-size: 1.2em;
+        }
+        .danger-box {
+            background: linear-gradient(135deg, #3A1515 0%, #2A0F0F 100%);
+            border: 3px solid #FF3333;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        .danger-box strong {
+            color: #FF6666;
+            font-size: 1.3em;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>POINTERS</h1>
+<p>COMPLETE DSA VISUAL GUIDE (C++)</p>
+</div>
+
+<!-- SECTION 1: WHAT IS A POINTER? -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">01</div>
+<span>What is a Pointer?</span>
+</div>
+
+<p style="font-size:1.18em;color:#FFE0B2;">A <strong style="color:var(--gold);">Pointer</strong> is a variable that stores the memory address of another variable. It "points to" the location in memory where data is stored, enabling direct memory access and manipulation.</p>
+
+<h3>Visual Representation:</h3>
+
+<div class="pointer-visual">
+<div style="margin:30px 0;">
+<div class="memory-box">
+<strong>p (Pointer)</strong><br>
+0x7ffd1234<br>
+<span style="color:var(--gold);font-size:0.9em;">stores address</span>
+</div>
+<span class="arrow">→</span>
+<div class="memory-box">
+<strong>x (Variable)</strong><br>
+42<br>
+<span style="color:var(--gold);font-size:0.9em;">at 0x7ffd1234</span>
+</div>
+</div>
+<p style="color:#D4C4B0;margin-top:30px;font-size:1.1em;">Pointer p contains the address where variable x is stored</p>
+</div>
+
+<div class="code-snippet"><span class="code-comment">// Pointer basics</span>
+<span class="code-keyword">int</span> x = <span class="code-number">42</span>;         <span class="code-comment">// Regular variable</span>
+<span class="code-keyword">int</span>* p = &amp;x;       <span class="code-comment">// p points to x (&amp;x = address of x)</span>
+
+cout &lt;&lt; x;          <span class="code-comment">// 42 (value of x)</span>
+cout &lt;&lt; &amp;x;         <span class="code-comment">// 0x7ffd1234 (address of x)</span>
+cout &lt;&lt; p;          <span class="code-comment">// 0x7ffd1234 (value of p = address)</span>
+cout &lt;&lt; *p;         <span class="code-comment">// 42 (dereference = value at address)</span>
+
+<span class="code-comment">// Modify through pointer</span>
+*p = <span class="code-number">100</span>;          <span class="code-comment">// x is now 100</span></div>
+
+<h3>Key Operators:</h3>
+<ul style="list-style-position:inside;margin-left:20px;color:#D4C4B0;line-height:2.4;">
+<li><strong style="color:var(--gold);">&</strong> = Address-of operator (get memory address)</li>
+<li><strong style="color:var(--gold);">*</strong> = Dereference operator (get value at address)</li>
+<li><strong style="color:var(--gold);">int*</strong> = Pointer to int type</li>
+<li><strong style="color:var(--gold);">nullptr</strong> = Null pointer (C++11, points to nothing)</li>
+<li><strong style="color:var(--gold);">NULL</strong> = Old-style null (defined as 0)</li>
+</ul>
+</div>
+
+<!-- SECTION 2: POINTER DECLARATION & INITIALIZATION -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">02</div>
+<span>Declaration & Initialization</span>
+</div>
+
+<div class="type-card">
+<h4>Basic Declaration</h4>
+<div class="code-snippet"><span class="code-comment">// Syntax: type* pointerName;</span>
+
+<span class="code-keyword">int</span>* p;           <span class="code-comment">// Pointer to int</span>
+<span class="code-keyword">double</span>* d;        <span class="code-comment">// Pointer to double</span>
+<span class="code-keyword">char</span>* c;          <span class="code-comment">// Pointer to char</span>
+<span class="code-keyword">void</span>* v;          <span class="code-comment">// Generic pointer (any type)</span>
+
+<span class="code-comment">// BEWARE: Multiple declarations</span>
+<span class="code-keyword">int</span>* a, b;        <span class="code-comment">// a is pointer, b is int!</span>
+<span class="code-keyword">int</span> *a, *b;       <span class="code-comment">// Both are pointers (correct)</span></div>
+</div>
+
+<div class="type-card">
+<h4>Initialization</h4>
+<div class="code-snippet"><span class="code-keyword">int</span> x = <span class="code-number">10</span>;
+<span class="code-keyword">int</span>* p = &amp;x;      <span class="code-comment">// Point to x</span>
+<span class="code-keyword">int</span>* q = <span class="code-keyword">nullptr</span>; <span class="code-comment">// NULL pointer (C++11)</span>
+<span class="code-keyword">int</span>* r = <span class="code-number">0</span>;        <span class="code-comment">// Also NULL (old style)</span>
+<span class="code-keyword">int</span>* s = <span class="code-keyword">NULL</span>;     <span class="code-comment">// Also NULL (C style)</span>
+
+<span class="code-comment">// Modern C++: Always use nullptr</span>
+<span class="code-keyword">int</span>* ptr = <span class="code-keyword">nullptr</span>;  <span class="code-comment">// Type-safe, recommended</span></div>
+</div>
+
+<div class="type-card">
+<h4>Pointer Size</h4>
+<div class="code-snippet"><span class="code-comment">// ALL pointers have same size (platform-dependent)</span>
+<span class="code-comment">// 32-bit system: 4 bytes</span>
+<span class="code-comment">// 64-bit system: 8 bytes</span>
+
+sizeof(<span class="code-keyword">int</span>*)      <span class="code-comment">// 8 bytes (64-bit)</span>
+sizeof(<span class="code-keyword">double</span>*)   <span class="code-comment">// 8 bytes (same!)</span>
+sizeof(<span class="code-keyword">char</span>*)     <span class="code-comment">// 8 bytes (same!)</span></div>
+<p style="color:#D4C4B0;margin-top:15px;">All pointer types have identical size regardless of what they point to!</p>
+</div>
+</div>
+
+<!-- SECTION 3: POINTER OPERATIONS -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">03</div>
+<span>Pointer Operations</span>
+</div>
+
+<div class="operation-grid">
+<div class="operation-card">
+<h4>Dereferencing (*)</h4>
+<div class="code-snippet" style="font-size:0.9em;"><span class="code-keyword">int</span> x = <span class="code-number">42</span>;
+<span class="code-keyword">int</span>* p = &amp;x;
+
+<span class="code-comment">// Read value</span>
+<span class="code-keyword">int</span> val = *p;  <span class="code-comment">// val = 42</span>
+
+<span class="code-comment">// Write value</span>
+*p = <span class="code-number">100</span>;        <span class="code-comment">// x is now 100</span></div>
+<p style="color:#D4C4B0;margin-top:10px;">Access value at address</p>
+</div>
+
+<div class="operation-card">
+<h4>Pointer Arithmetic</h4>
+<div class="code-snippet" style="font-size:0.9em;"><span class="code-keyword">int</span> arr[] = {<span class="code-number">10</span>, <span class="code-number">20</span>, <span class="code-number">30</span>};
+<span class="code-keyword">int</span>* p = arr;
+
+p++;           <span class="code-comment">// Move to next int</span>
+p += <span class="code-number">2</span>;         <span class="code-comment">// Move forward 2</span>
+p--;           <span class="code-comment">// Move back 1</span>
+
+*(p + <span class="code-number">1</span>);       <span class="code-comment">// Access offset</span></div>
+<p style="color:#D4C4B0;margin-top:10px;">Moves by sizeof(type)</p>
+</div>
+
+<div class="operation-card">
+<h4>Pointer Comparison</h4>
+<div class="code-snippet" style="font-size:0.9em;"><span class="code-keyword">int</span>* p = &amp;arr[<span class="code-number">0</span>];
+<span class="code-keyword">int</span>* q = &amp;arr[<span class="code-number">3</span>];
+
+p &lt; q;   <span class="code-comment">// true</span>
+p == q;  <span class="code-comment">// false</span>
+p != q;  <span class="code-comment">// true</span></div>
+<p style="color:#D4C4B0;margin-top:10px;">Compare addresses</p>
+</div>
+
+<div class="operation-card">
+<h4>Pointer to Pointer</h4>
+<div class="code-snippet" style="font-size:0.9em;"><span class="code-keyword">int</span> x = <span class="code-number">42</span>;
+<span class="code-keyword">int</span>* p = &amp;x;
+<span class="code-keyword">int</span>** pp = &amp;p;
+
+**pp = <span class="code-number">100</span>;  <span class="code-comment">// Changes x</span>
+*pp = <span class="code-keyword">nullptr</span>; <span class="code-comment">// Changes p</span></div>
+<p style="color:#D4C4B0;margin-top:10px;">Double indirection</p>
+</div>
+</div>
+</div>
+
+<!-- SECTION 4: POINTERS AND ARRAYS -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">04</div>
+<span>Pointers & Arrays</span>
+</div>
+
+<div class="type-card">
+<h4>Array-Pointer Relationship</h4>
+<div class="code-snippet"><span class="code-keyword">int</span> arr[] = {<span class="code-number">10</span>, <span class="code-number">20</span>, <span class="code-number">30</span>, <span class="code-number">40</span>, <span class="code-number">50</span>};
+<span class="code-keyword">int</span>* p = arr;  <span class="code-comment">// arr decays to pointer to first element</span>
+
+<span class="code-comment">// These are equivalent:</span>
+arr[i]     == *(arr + i)
+p[i]       == *(p + i)
+arr[i]     == *(p + i)
+&amp;arr[i]    == arr + i</div>
+</div>
+
+<div class="type-card">
+<h4>Array Traversal with Pointers</h4>
+<div class="code-snippet"><span class="code-keyword">int</span> arr[] = {<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>, <span class="code-number">4</span>, <span class="code-number">5</span>};
+<span class="code-keyword">int</span> n = <span class="code-number">5</span>;
+<span class="code-keyword">int</span>* end = arr + n;
+
+<span class="code-keyword">for</span> (<span class="code-keyword">int</span>* p = arr; p != end; p++) {
+    cout &lt;&lt; *p &lt;&lt; <span class="code-string">" "</span>;
+}</div>
+</div>
+
+<div class="danger-box">
+<strong>⚠️ ARRAY DECAY PITFALL:</strong>
+<div class="code-snippet" style="margin-top:15px;"><span class="code-keyword">int</span> arr[<span class="code-number">10</span>];
+sizeof(arr);  <span class="code-comment">// 40 bytes (full array)</span>
+
+<span class="code-keyword">void</span> test(<span class="code-keyword">int</span>* arr) {
+    sizeof(arr);  <span class="code-comment">// 8 bytes (just pointer!)</span>
+}</div>
+<p style="color:#FFE0B2;margin-top:10px;">Arrays decay to pointers when passed to functions - size information is lost!</p>
+</div>
+</div>
+
+<!-- SECTION 5: DYNAMIC MEMORY -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">05</div>
+<span>Dynamic Memory Allocation</span>
+</div>
+
+<div class="type-card">
+<h4>new and delete</h4>
+<div class="code-snippet"><span class="code-comment">// Single variable</span>
+<span class="code-keyword">int</span>* p = <span class="code-keyword">new int</span>;        <span class="code-comment">// Allocate</span>
+<span class="code-keyword">int</span>* q = <span class="code-keyword">new int</span>(<span class="code-number">42</span>);    <span class="code-comment">// Allocate + initialize</span>
+<span class="code-keyword">delete</span> p;                <span class="code-comment">// Deallocate</span>
+<span class="code-keyword">delete</span> q;
+
+<span class="code-comment">// Array</span>
+<span class="code-keyword">int</span>* arr = <span class="code-keyword">new int</span>[<span class="code-number">10</span>];      <span class="code-comment">// Allocate array</span>
+<span class="code-keyword">int</span>* arr2 = <span class="code-keyword">new int</span>[<span class="code-number">10</span>]{};   <span class="code-comment">// Zero-initialized</span>
+<span class="code-keyword">delete</span>[] arr;                <span class="code-comment">// MUST use delete[]!</span>
+<span class="code-keyword">delete</span>[] arr2;</div>
+</div>
+
+<div class="pointer-visual" style="text-align:left;">
+<h4 style="color:var(--gold);margin-bottom:25px;text-align:center;">Memory Layout</h4>
+<div style="border:2px solid var(--gold);padding:20px;margin:15px 0;border-radius:8px;">
+<strong style="color:var(--gold);">Stack Memory:</strong><br>
+<span style="color:#D4C4B0;">• Local variables</span><br>
+<span style="color:#D4C4B0;">• Function parameters</span><br>
+<span style="color:#D4C4B0;">• Fast allocation/deallocation</span><br>
+<span style="color:#D4C4B0;">• Automatic cleanup</span>
+</div>
+<div style="border:2px solid var(--scarlet);padding:20px;margin:15px 0;border-radius:8px;">
+<strong style="color:var(--scarlet);">Heap Memory:</strong><br>
+<span style="color:#D4C4B0;">• Dynamic allocation (new/delete)</span><br>
+<span style="color:#D4C4B0;">• Manual memory management</span><br>
+<span style="color:#D4C4B0;">• Slower but flexible size</span><br>
+<span style="color:#D4C4B0;">• Must explicitly free</span>
+</div>
+</div>
+
+<div class="type-card">
+<h4>Smart Pointers (Modern C++)</h4>
+<div class="code-snippet"><span class="code-comment">#include &lt;memory&gt;</span>
+
+<span class="code-comment">// unique_ptr - sole ownership</span>
+<span class="code-type">unique_ptr</span>&lt;<span class="code-keyword">int</span>&gt; up = <span class="code-type">make_unique</span>&lt;<span class="code-keyword">int</span>&gt;(<span class="code-number">42</span>);
+
+<span class="code-comment">// shared_ptr - shared ownership</span>
+<span class="code-type">shared_ptr</span>&lt;<span class="code-keyword">int</span>&gt; sp1 = <span class="code-type">make_shared</span>&lt;<span class="code-keyword">int</span>&gt;(<span class="code-number">42</span>);
+<span class="code-type">shared_ptr</span>&lt;<span class="code-keyword">int</span>&gt; sp2 = sp1;  <span class="code-comment">// Both share</span>
+
+<span class="code-comment">// weak_ptr - non-owning reference</span>
+<span class="code-type">weak_ptr</span>&lt;<span class="code-keyword">int</span>&gt; wp = sp1;
+
+<span class="code-comment">// No delete needed - automatic cleanup!</span></div>
+</div>
+</div>
+
+<!-- SECTION 6: COMMON MISTAKES -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">06</div>
+<span>Common Mistakes & Pitfalls</span>
+</div>
+
+<div class="mistake-card">
+<h4>❌ Dangling Pointer</h4>
+<div class="code-snippet"><span class="code-comment">// WRONG - Using freed memory</span>
+<span class="code-keyword">int</span>* p = <span class="code-keyword">new int</span>(<span class="code-number">42</span>);
+<span class="code-keyword">delete</span> p;
+cout &lt;&lt; *p;  <span class="code-comment">// UNDEFINED! p is dangling!</span>
+
+<span class="code-comment">// CORRECT - Set to nullptr after delete</span>
+<span class="code-keyword">delete</span> p;
+p = <span class="code-keyword">nullptr</span>;</div>
+</div>
+
+<div class="mistake-card">
+<h4>❌ Memory Leak</h4>
+<div class="code-snippet"><span class="code-comment">// WRONG - Never freed</span>
+<span class="code-keyword">void</span> func() {
+    <span class="code-keyword">int</span>* p = <span class="code-keyword">new int</span>(<span class="code-number">42</span>);
+    <span class="code-keyword">return</span>;  <span class="code-comment">// Memory leaked!</span>
+}
+
+<span class="code-comment">// CORRECT</span>
+<span class="code-keyword">void</span> func() {
+    <span class="code-keyword">int</span>* p = <span class="code-keyword">new int</span>(<span class="code-number">42</span>);
+    <span class="code-keyword">delete</span> p;  <span class="code-comment">// Free before return</span>
+}</div>
+</div>
+
+<div class="mistake-card">
+<h4>❌ Null Pointer Dereference</h4>
+<div class="code-snippet"><span class="code-comment">// WRONG - Crash!</span>
+<span class="code-keyword">int</span>* p = <span class="code-keyword">nullptr</span>;
+*p = <span class="code-number">42</span>;  <span class="code-comment">// SEGMENTATION FAULT!</span>
+
+<span class="code-comment">// CORRECT - Check first</span>
+<span class="code-keyword">if</span> (p != <span class="code-keyword">nullptr</span>) {
+    *p = <span class="code-number">42</span>;
+}</div>
+</div>
+
+<div class="mistake-card">
+<h4>❌ Double Delete</h4>
+<div class="code-snippet"><span class="code-comment">// WRONG</span>
+<span class="code-keyword">int</span>* p = <span class="code-keyword">new int</span>(<span class="code-number">42</span>);
+<span class="code-keyword">delete</span> p;
+<span class="code-keyword">delete</span> p;  <span class="code-comment">// UNDEFINED BEHAVIOR!</span>
+
+<span class="code-comment">// CORRECT</span>
+<span class="code-keyword">delete</span> p;
+p = <span class="code-keyword">nullptr</span>;  <span class="code-comment">// Prevents double delete</span></div>
+</div>
+
+<div class="mistake-card">
+<h4>❌ Wrong delete for Array</h4>
+<div class="code-snippet"><span class="code-comment">// WRONG</span>
+<span class="code-keyword">int</span>* arr = <span class="code-keyword">new int</span>[<span class="code-number">10</span>];
+<span class="code-keyword">delete</span> arr;    <span class="code-comment">// UNDEFINED BEHAVIOR!</span>
+
+<span class="code-comment">// CORRECT</span>
+<span class="code-keyword">delete</span>[] arr;  <span class="code-comment">// Use delete[] for arrays</span></div>
+</div>
+
+<div class="mistake-card">
+<h4>❌ Returning Local Variable Address</h4>
+<div class="code-snippet"><span class="code-comment">// WRONG - x destroyed after return</span>
+<span class="code-keyword">int</span>* bad() {
+    <span class="code-keyword">int</span> x = <span class="code-number">42</span>;
+    <span class="code-keyword">return</span> &amp;x;  <span class="code-comment">// DANGLING POINTER!</span>
+}
+
+<span class="code-comment">// CORRECT - Use dynamic memory</span>
+<span class="code-keyword">int</span>* good() {
+    <span class="code-keyword">int</span>* p = <span class="code-keyword">new int</span>(<span class="code-number">42</span>);
+    <span class="code-keyword">return</span> p;  <span class="code-comment">// OK - heap allocated</span>
+}</div>
+</div>
+</div>
+
+<!-- SECTION 7: CONST POINTERS -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">07</div>
+<span>const Pointers</span>
+</div>
+
+<div class="operation-grid">
+<div class="operation-card">
+<h4>Pointer to const</h4>
+<div class="code-snippet" style="font-size:0.85em;"><span class="code-keyword">const int</span>* p = &amp;x;
+*p = <span class="code-number">20</span>;    <span class="code-comment">// ERROR</span>
+p = &amp;y;     <span class="code-comment">// OK</span></div>
+<p style="color:#D4C4B0;">Can't change value, can change pointer</p>
+</div>
+
+<div class="operation-card">
+<h4>const Pointer</h4>
+<div class="code-snippet" style="font-size:0.85em;"><span class="code-keyword">int</span>* <span class="code-keyword">const</span> p = &amp;x;
+*p = <span class="code-number">20</span>;    <span class="code-comment">// OK</span>
+p = &amp;y;     <span class="code-comment">// ERROR</span></div>
+<p style="color:#D4C4B0;">Can change value, can't change pointer</p>
+</div>
+
+<div class="operation-card">
+<h4>const Pointer to const</h4>
+<div class="code-snippet" style="font-size:0.85em;"><span class="code-keyword">const int</span>* <span class="code-keyword">const</span> p = &amp;x;
+*p = <span class="code-number">20</span>;    <span class="code-comment">// ERROR</span>
+p = &amp;y;     <span class="code-comment">// ERROR</span></div>
+<p style="color:#D4C4B0;">Can't change either</p>
+</div>
+
+<div class="operation-card">
+<h4>Regular Pointer</h4>
+<div class="code-snippet" style="font-size:0.85em;"><span class="code-keyword">int</span>* p = &amp;x;
+*p = <span class="code-number">20</span>;    <span class="code-comment">// OK</span>
+p = &amp;y;     <span class="code-comment">// OK</span></div>
+<p style="color:#D4C4B0;">Can change both</p>
+</div>
+</div>
+
+<div class="tip-box">
+<strong>💡 MNEMONIC:</strong> Read right-to-left!<br>
+<span style="color:#D4C4B0;margin-top:10px;display:block;">
+• <strong style="color:#66BB6A;">const int* p</strong> = "p is a pointer to int that is const"<br>
+• <strong style="color:#66BB6A;">int* const p</strong> = "p is a const pointer to int"
+</span>
+</div>
+</div>
+
+<!-- SECTION 8: REFERENCES VS POINTERS -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">08</div>
+<span>References vs Pointers</span>
+</div>
+
+<table class="comparison-table">
+<tr><th>Feature</th><th>Pointer</th><th>Reference</th></tr>
+<tr><td>Declaration</td><td>int* p = &x</td><td>int& r = x</td></tr>
+<tr><td>Null</td><td>Can be null</td><td>Cannot be null</td></tr>
+<tr><td>Reassignment</td><td>Can point elsewhere</td><td>Cannot reassign</td></tr>
+<tr><td>Arithmetic</td><td>Supported</td><td>Not supported</td></tr>
+<tr><td>Indirection</td><td>Needs * to access</td><td>Automatic</td></tr>
+<tr><td>Memory</td><td>Occupies memory</td><td>May not</td></tr>
+<tr><td>Arrays</td><td>Can traverse</td><td>Cannot</td></tr>
+<tr><td>Use Case</td><td>Dynamic, arrays, DSA</td><td>Function params</td></tr>
+</table>
+
+<div class="code-snippet"><span class="code-keyword">int</span> x = <span class="code-number">10</span>;
+
+<span class="code-comment">// Pointer</span>
+<span class="code-keyword">int</span>* p = &amp;x;
+*p = <span class="code-number">20</span>;     <span class="code-comment">// Needs dereference</span>
+
+<span class="code-comment">// Reference</span>
+<span class="code-keyword">int</span>&amp; r = x;
+r = <span class="code-number">20</span>;      <span class="code-comment">// No dereference needed</span>
+
+<span class="code-comment">// In functions</span>
+<span class="code-keyword">void</span> addPointer(<span class="code-keyword">int</span>* p) { (*p)++; }
+<span class="code-keyword">void</span> addReference(<span class="code-keyword">int</span>&amp; r) { r++; }</div>
+</div>
+
+<!-- SECTION 9: SMART POINTERS -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">09</div>
+<span>Smart Pointers Deep Dive</span>
+</div>
+
+<div class="type-card">
+<h4>unique_ptr - Sole Ownership</h4>
+<div class="code-snippet"><span class="code-comment">#include &lt;memory&gt;</span>
+
+<span class="code-type">unique_ptr</span>&lt;<span class="code-keyword">int</span>&gt; p = <span class="code-type">make_unique</span>&lt;<span class="code-keyword">int</span>&gt;(<span class="code-number">42</span>);
+
+*p;              <span class="code-comment">// Dereference</span>
+p.get();         <span class="code-comment">// Get raw pointer</span>
+p.reset();       <span class="code-comment">// Delete and set null</span>
+
+<span class="code-comment">// Transfer ownership (can't copy)</span>
+<span class="code-type">unique_ptr</span>&lt;<span class="code-keyword">int</span>&gt; q = <span class="code-type">move</span>(p);  <span class="code-comment">// p is now null</span></div>
+</div>
+
+<div class="type-card">
+<h4>shared_ptr - Shared Ownership</h4>
+<div class="code-snippet"><span class="code-type">shared_ptr</span>&lt;<span class="code-keyword">int</span>&gt; p1 = <span class="code-type">make_shared</span>&lt;<span class="code-keyword">int</span>&gt;(<span class="code-number">42</span>);
+<span class="code-type">shared_ptr</span>&lt;<span class="code-keyword">int</span>&gt; p2 = p1;  <span class="code-comment">// Reference count = 2</span>
+
+p1.use_count();  <span class="code-comment">// 2</span>
+p2.reset();      <span class="code-comment">// Count goes to 1</span>
+p1.reset();      <span class="code-comment">// Count goes to 0, memory freed</span></div>
+</div>
+
+<div class="type-card">
+<h4>weak_ptr - Breaks Circular References</h4>
+<div class="code-snippet"><span class="code-type">shared_ptr</span>&lt;<span class="code-keyword">int</span>&gt; sp = <span class="code-type">make_shared</span>&lt;<span class="code-keyword">int</span>&gt;(<span class="code-number">42</span>);
+<span class="code-type">weak_ptr</span>&lt;<span class="code-keyword">int</span>&gt; wp = sp;
+
+<span class="code-comment">// Must lock to use</span>
+<span class="code-keyword">if</span> (<span class="code-keyword">auto</span> locked = wp.lock()) {
+    *locked;  <span class="code-comment">// Safe to use</span>
+}</div>
+</div>
+</div>
+
+<!-- SECTION 10: APPLICATIONS IN DSA -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">10</div>
+<span>Pointer Applications in DSA</span>
+</div>
+
+<div class="operation-grid">
+<div class="operation-card">
+<h4>Linked List</h4>
+<div class="code-snippet" style="font-size:0.85em;"><span class="code-keyword">struct</span> <span class="code-type">Node</span> {
+    <span class="code-keyword">int</span> data;
+    <span class="code-type">Node</span>* next;
+};</div>
+</div>
+
+<div class="operation-card">
+<h4>Binary Tree</h4>
+<div class="code-snippet" style="font-size:0.85em;"><span class="code-keyword">struct</span> <span class="code-type">TreeNode</span> {
+    <span class="code-keyword">int</span> val;
+    <span class="code-type">TreeNode</span>* left;
+    <span class="code-type">TreeNode</span>* right;
+};</div>
+</div>
+
+<div class="operation-card">
+<h4>Two Pointers</h4>
+<div class="code-snippet" style="font-size:0.85em;"><span class="code-keyword">int</span> left = <span class="code-number">0</span>, right = n-<span class="code-number">1</span>;
+<span class="code-keyword">while</span> (left &lt; right) {
+    <span class="code-comment">// process</span>
+    left++; right--;
+}</div>
+</div>
+
+<div class="operation-card">
+<h4>Floyd's Cycle</h4>
+<div class="code-snippet" style="font-size:0.85em;"><span class="code-type">Node</span>* slow = head;
+<span class="code-type">Node</span>* fast = head;
+<span class="code-keyword">while</span> (fast &amp;&amp; fast-&gt;next) {
+    slow = slow-&gt;next;
+    fast = fast-&gt;next-&gt;next;
+}</div>
+</div>
+</div>
+</div>
+
+<!-- SUMMARY -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">13</div>
+<span>Summary & Decision Tree</span>
+</div>
+
+<div class="summary-box">
+<h3>Key Properties</h3>
+<ul>
+<li>Pointer stores memory address of variable</li>
+<li>& gets address, * dereferences (gets value)</li>
+<li>nullptr for null/uninitialized pointers</li>
+<li>Always delete dynamic memory to prevent leaks</li>
+<li>Pointer arithmetic moves by sizeof(type)</li>
+<li>Essential for linked structures (lists, trees)</li>
+<li>Prefer smart pointers in modern C++</li>
+</ul>
+</div>
+
+<div class="decision-tree">
+<h3>🎯 Pointer Decision Tree</h3>
+<div class="decision-item"><strong>Single dynamic value?</strong> → unique_ptr&lt;T&gt;</div>
+<div class="decision-item"><strong>Shared ownership?</strong> → shared_ptr&lt;T&gt;</div>
+<div class="decision-item"><strong>Non-owning reference?</strong> → weak_ptr&lt;T&gt;</div>
+<div class="decision-item"><strong>Modify function param?</strong> → Pass by reference (&)</div>
+<div class="decision-item"><strong>Dynamic array?</strong> → new[] with delete[]</div>
+<div class="decision-item"><strong>Linked structures?</strong> → Raw pointers (next/left/right)</div>
+<div class="decision-item"><strong>Legacy C code?</strong> → Raw pointers with care</div>
+</div>
+
+<div class="type-card" style="margin-top:35px;">
+<h3>📌 Top 15 Pointer Concepts/Problems</h3>
+<ol style="list-style-position:inside;line-height:2.2;color:#D4C4B0;">
+<li><strong style="color:var(--gold);">Linked List operations</strong> - Insert, delete, traverse</li>
+<li><strong style="color:var(--gold);">Reverse Linked List</strong> - Three pointers</li>
+<li><strong style="color:var(--gold);">Detect cycle</strong> - Floyd's algorithm</li>
+<li><strong style="color:var(--gold);">Two-pointer technique</strong> - Array problems</li>
+<li><strong style="color:var(--gold);">Fast-slow pointer</strong> - Find middle</li>
+<li><strong style="color:var(--gold);">Binary tree</strong> - Left/right pointers</li>
+<li><strong style="color:var(--gold);">Deep copy</strong> - Clone with random pointers</li>
+<li><strong style="color:var(--gold);">Smart pointers</strong> - Modern C++ memory</li>
+<li><strong style="color:var(--gold);">Dynamic arrays</strong> - Heap allocation</li>
+<li><strong style="color:var(--gold);">Function pointers</strong> - Callbacks</li>
+<li><strong style="color:var(--gold);">const correctness</strong> - Four variations</li>
+<li><strong style="color:var(--gold);">Memory leaks</strong> - Detection/prevention</li>
+<li><strong style="color:var(--gold);">Dangling pointers</strong> - Common pitfall</li>
+<li><strong style="color:var(--gold);">this pointer</strong> - Object self-reference</li>
+<li><strong style="color:var(--gold);">Pointer arithmetic</strong> - Array traversal</li>
+</ol>
+</div>
+
+<div class="tip-box" style="margin-top:35px;">
+<strong>💡 FINAL TIP:</strong> In modern C++, prefer smart pointers (unique_ptr, shared_ptr) over raw pointers for automatic memory management. Use raw pointers only for linked structures where ownership is clear!
+</div>
+</div>
+
+<div class="footer">
+<p><strong>POINTERS - COMPLETE DSA VISUAL GUIDE (C++)</strong></p>
+<p style="margin-top:14px;color:#D4C4B0;">Master Data Structures & Algorithms • Perfect for Interviews, Exams & Revision</p>
+<p style="margin-top:22px;font-size:0.95em;color:var(--gold);">
+→ Remember: With great pointers comes great responsibility - manage memory wisely!
+</p>
+</div>
+</div>
+</body>
+</html>
