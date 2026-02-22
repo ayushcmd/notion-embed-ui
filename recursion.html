@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recursion - Complete DSA Visual Guide (C++)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --deep-purple: #4A148C;
+            --purple-dark: #6A1B9A;
+            --purple-main: #7B1FA2;
+            --purple-bright: #8E24AA;
+            --magenta: #E040FB;
+            --neon-purple: #D500F9;
+            --violet: #AA00FF;
+            --gold: #FFD700;
+            --gold-dark: #FFC107;
+        }
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, var(--deep-purple) 0%, var(--purple-dark) 30%, var(--purple-main) 60%, var(--purple-bright) 100%);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #1A0A1F;
+            border-radius: 20px;
+            box-shadow: 0 0 60px rgba(138, 43, 226, 0.5), 0 20px 60px rgba(0, 0, 0, 0.9);
+            overflow: hidden;
+            border: 3px solid var(--magenta);
+        }
+        .header {
+            background: linear-gradient(135deg, var(--deep-purple) 0%, var(--purple-dark) 50%, var(--purple-main) 100%);
+            color: #F3E5F5;
+            padding: 80px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 4px solid var(--gold);
+        }
+        .header::before {
+            content: '∞ ∞ ∞ ∞ ∞ ∞ ∞ ∞ ∞ ∞ ∞ ∞ ∞ ∞ ∞ ∞ ∞ ∞ ∞ ∞ ∞ ∞ ∞';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            font-size: 3em;
+            line-height: 1.5;
+            opacity: 0.05;
+            pointer-events: none;
+        }
+        .header h1 {
+            font-family: 'Righteous', sans-serif;
+            font-size: 6em;
+            font-weight: 900;
+            letter-spacing: 18px;
+            text-shadow: 0 0 30px var(--magenta), 0 0 60px var(--neon-purple), 4px 4px 12px rgba(0,0,0,0.8);
+            position: relative;
+            animation: glow 2.5s ease-in-out infinite alternate;
+        }
+        @keyframes glow {
+            from { text-shadow: 0 0 30px var(--magenta), 0 0 60px var(--neon-purple); }
+            to { text-shadow: 0 0 50px var(--magenta), 0 0 90px var(--violet); }
+        }
+        .header p {
+            font-family: 'Righteous', sans-serif;
+            font-size: 1.5em;
+            letter-spacing: 8px;
+            font-weight: 700;
+            margin-top: 15px;
+            color: var(--gold);
+            text-shadow: 0 0 10px var(--gold-dark);
+        }
+        .section {
+            padding: 50px 60px;
+            border-bottom: 2px solid var(--purple-main);
+        }
+        .section:nth-child(even) {
+            background: linear-gradient(to right, #1F0A2A 0%, #1A0A1F 100%);
+        }
+        .section:last-child { border-bottom: none; }
+        .section-title {
+            font-family: 'Righteous', sans-serif;
+            font-size: 2.4em;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            text-shadow: 0 0 15px var(--gold-dark);
+        }
+        .section-number {
+            background: linear-gradient(135deg, var(--purple-main) 0%, var(--purple-bright) 100%);
+            color: var(--gold);
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4em;
+            font-weight: 900;
+            box-shadow: 0 0 25px var(--magenta);
+            border: 3px solid var(--gold);
+        }
+        h3 {
+            color: var(--gold);
+            font-family: 'Righteous', sans-serif;
+            margin: 35px 0 20px;
+            font-size: 1.7em;
+            text-shadow: 0 0 8px var(--gold-dark);
+        }
+        p {
+            color: #D4C4E0;
+            line-height: 2;
+            margin-bottom: 18px;
+        }
+        .recursion-visual {
+            background: linear-gradient(135deg, #2A1535 0%, #1F0F2A 100%);
+            border: 3px solid var(--magenta);
+            border-radius: 16px;
+            padding: 40px;
+            margin: 30px 0;
+            font-family: 'Righteous', sans-serif;
+            box-shadow: 0 0 30px rgba(224, 64, 251, 0.3);
+        }
+        .stack-frame {
+            background: var(--purple-dark);
+            border: 2px solid var(--magenta);
+            border-radius: 10px;
+            padding: 15px 25px;
+            margin: 10px 0;
+            color: #F3E5F5;
+            box-shadow: 0 0 15px rgba(224, 64, 251, 0.3);
+            text-align: center;
+        }
+        .stack-frame.base {
+            background: var(--gold-dark);
+            color: var(--deep-purple);
+            border-color: var(--gold);
+            font-weight: 700;
+        }
+        .arrow-down {
+            text-align: center;
+            color: var(--magenta);
+            font-size: 2em;
+            margin: 5px 0;
+        }
+        .arrow-up {
+            text-align: center;
+            color: var(--gold);
+            font-size: 2em;
+            margin: 5px 0;
+        }
+        .code-snippet {
+            background: #0D000D;
+            color: #E1BEE7;
+            padding: 30px;
+            border-radius: 14px;
+            font-family: 'Fira Code', monospace;
+            margin: 30px 0;
+            overflow-x: auto;
+            font-size: 0.95em;
+            border: 2px solid var(--magenta);
+            box-shadow: 0 0 25px rgba(138, 43, 226, 0.3);
+            position: relative;
+        }
+        .code-snippet::before {
+            content: 'C++';
+            position: absolute;
+            top: 12px;
+            right: 18px;
+            font-size: 0.75em;
+            color: var(--gold);
+            font-weight: 700;
+            font-family: 'Righteous', sans-serif;
+        }
+        .code-keyword { color: #CE93D8; }
+        .code-type { color: var(--magenta); }
+        .code-string { color: #A5D6A7; }
+        .code-comment { color: #9E9E9E; font-style: italic; }
+        .code-number { color: var(--gold); }
+        .hinglish-box {
+            background: linear-gradient(135deg, #1A3A1A 0%, #0F2A0F 100%);
+            border: 3px solid #4CAF50;
+            border-radius: 16px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 0 25px rgba(76, 175, 80, 0.3);
+        }
+        .hinglish-box h4 {
+            color: #66BB6A;
+            font-family: 'Righteous', sans-serif;
+            font-size: 1.6em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .hinglish-box p, .hinglish-box li {
+            color: #C8E6C9;
+            line-height: 2.2;
+            font-size: 1.05em;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            box-shadow: 0 0 30px rgba(138, 43, 226, 0.3);
+            border-radius: 14px;
+            overflow: hidden;
+            border: 2px solid var(--magenta);
+        }
+        .comparison-table th {
+            background: linear-gradient(135deg, var(--purple-main) 0%, var(--purple-bright) 100%);
+            color: var(--gold);
+            padding: 24px;
+            text-align: left;
+            font-family: 'Righteous', sans-serif;
+            font-weight: 700;
+            font-size: 1.1em;
+            border-bottom: 2px solid var(--gold);
+        }
+        .comparison-table td {
+            padding: 22px 24px;
+            border-bottom: 1px solid var(--purple-main);
+            color: #D4C4E0;
+        }
+        .comparison-table tr:last-child td { border-bottom: none; }
+        .comparison-table tr:nth-child(even) {
+            background: linear-gradient(to right, #1F0A2A 0%, #1A0A1F 100%);
+        }
+        .type-card, .technique-card {
+            background: linear-gradient(135deg, #2A1535 0%, #1F0F2A 100%);
+            border-left: 6px solid var(--gold);
+            padding: 32px;
+            margin: 28px 0;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+        .type-card h3, .type-card h4, .technique-card h4 {
+            color: var(--gold);
+            margin-bottom: 16px;
+            font-family: 'Righteous', sans-serif;
+        }
+        .operation-grid, .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 28px;
+            margin: 35px 0;
+        }
+        .operation-card, .problem-item {
+            background: linear-gradient(135deg, #2A1535 0%, #1F0F2A 100%);
+            border: 2px solid var(--magenta);
+            border-radius: 18px;
+            padding: 32px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(224, 64, 251, 0.2);
+        }
+        .operation-card:hover, .problem-item:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 0 40px rgba(224, 64, 251, 0.5);
+            border-color: var(--gold);
+        }
+        .operation-card h4 {
+            font-family: 'Righteous', sans-serif;
+            color: var(--gold);
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        .mistake-card {
+            background: linear-gradient(135deg, #3A1515 0%, #2F0F0F 100%);
+            border-left: 6px solid #FF3333;
+            padding: 32px;
+            margin: 28px 0;
+            border-radius: 12px;
+            box-shadow: 0 0 25px rgba(255, 51, 51, 0.3);
+        }
+        .mistake-card h4 {
+            color: #FF6666;
+            margin-bottom: 18px;
+            font-family: 'Righteous', sans-serif;
+            font-size: 1.45em;
+        }
+        .problem-difficulty {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 28px;
+            font-size: 0.82em;
+            font-weight: 700;
+            margin-bottom: 16px;
+            font-family: 'Righteous', sans-serif;
+        }
+        .difficulty-easy { background: #4CAF50; color: #000; }
+        .difficulty-medium { background: #FF9800; color: #000; }
+        .difficulty-hard { background: #F44336; color: white; }
+        .problem-title {
+            font-weight: 700;
+            color: var(--gold);
+            font-size: 1.25em;
+            margin-bottom: 14px;
+            font-family: 'Righteous', sans-serif;
+        }
+        .summary-box {
+            background: linear-gradient(135deg, var(--deep-purple) 0%, var(--purple-main) 100%);
+            color: #F3E5F5;
+            padding: 60px;
+            border-radius: 24px;
+            margin: 40px 0;
+            box-shadow: 0 0 50px rgba(138, 43, 226, 0.5);
+            border: 3px solid var(--gold);
+        }
+        .summary-box h3 {
+            font-family: 'Righteous', sans-serif;
+            font-size: 2.5em;
+            margin-bottom: 32px;
+            color: var(--gold);
+        }
+        .summary-box ul {
+            list-style: none;
+            padding: 0;
+        }
+        .summary-box li {
+            padding: 18px 0;
+            font-size: 1.18em;
+            position: relative;
+            padding-left: 48px;
+            line-height: 1.9;
+        }
+        .summary-box li:before {
+            content: "∞";
+            position: absolute;
+            left: 0;
+            font-size: 1.5em;
+            color: var(--gold);
+        }
+        .decision-tree {
+            background: #1A0A1F;
+            padding: 40px;
+            border-radius: 20px;
+            margin: 35px 0;
+            border: 2px solid var(--magenta);
+            box-shadow: 0 0 30px rgba(224, 64, 251, 0.3);
+        }
+        .decision-tree h3 {
+            font-family: 'Righteous', sans-serif;
+            color: var(--gold);
+            margin-bottom: 28px;
+            font-size: 2.1em;
+        }
+        .decision-item {
+            padding: 20px;
+            margin: 16px 0;
+            border-left: 6px solid var(--gold);
+            background: linear-gradient(to right, #2A1535 0%, #1F0F2A 100%);
+            border-radius: 10px;
+        }
+        .decision-item strong {
+            color: var(--gold);
+            font-family: 'Righteous', sans-serif;
+        }
+        .footer {
+            background: linear-gradient(to right, #1F0A2A 0%, #1A0A1F 100%);
+            padding: 50px;
+            text-align: center;
+            color: #F3E5F5;
+            border-top: 4px solid var(--gold);
+        }
+        .footer strong {
+            font-family: 'Righteous', sans-serif;
+            color: var(--gold);
+            font-size: 1.2em;
+        }
+        .tip-box {
+            background: linear-gradient(135deg, #1A2A3A 0%, #0F1F2F 100%);
+            border-left: 6px solid #2196F3;
+            padding: 28px 32px;
+            margin: 28px 0;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(33, 150, 243, 0.2);
+        }
+        .tip-box strong {
+            color: #64B5F6;
+            font-size: 1.25em;
+            font-family: 'Righteous', sans-serif;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>RECURSION</h1>
+<p>COMPLETE DSA VISUAL GUIDE (C++)</p>
+</div>
+
+<!-- SECTION 1: WHAT IS RECURSION? -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">01</div>
+<span>What is Recursion?</span>
+</div>
+
+<p style="font-size:1.18em;color:#E1BEE7;">A <strong style="color:var(--gold);">Recursive Function</strong> is a function that calls itself to solve smaller instances of the same problem. It breaks down complex problems into simpler subproblems until reaching a base case.</p>
+
+<h3>Call Stack Visualization:</h3>
+
+<div class="recursion-visual">
+<div style="text-align:center;margin-bottom:30px;">
+<h4 style="color:var(--gold);font-size:1.4em;">factorial(3) Execution</h4>
+</div>
+
+<div class="stack-frame">factorial(3) → needs 3 × factorial(2)</div>
+<div class="arrow-down">↓</div>
+<div class="stack-frame">factorial(2) → needs 2 × factorial(1)</div>
+<div class="arrow-down">↓</div>
+<div class="stack-frame">factorial(1) → needs 1 × factorial(0)</div>
+<div class="arrow-down">↓</div>
+<div class="stack-frame base">factorial(0) → returns 1 (BASE CASE! ✓)</div>
+<div class="arrow-up">↑</div>
+<div class="stack-frame">factorial(1) → returns 1 × 1 = 1</div>
+<div class="arrow-up">↑</div>
+<div class="stack-frame">factorial(2) → returns 2 × 1 = 2</div>
+<div class="arrow-up">↑</div>
+<div class="stack-frame">factorial(3) → returns 3 × 2 = 6 ✅</div>
+</div>
+
+<div class="code-snippet"><span class="code-comment">// Classic Factorial - Recursion Example</span>
+<span class="code-keyword">int</span> <span class="code-type">factorial</span>(<span class="code-keyword">int</span> n) {
+    <span class="code-comment">// BASE CASE - Stopping condition</span>
+    <span class="code-keyword">if</span> (n == <span class="code-number">0</span> || n == <span class="code-number">1</span>) <span class="code-keyword">return</span> <span class="code-number">1</span>;
+    
+    <span class="code-comment">// RECURSIVE CASE - Function calls itself</span>
+    <span class="code-keyword">return</span> n * factorial(n - <span class="code-number">1</span>);
+}
+
+<span class="code-comment">// factorial(5) = 5 * 4 * 3 * 2 * 1 = 120</span></div>
+
+<div class="hinglish-box">
+<h4>🇮🇳 RECURSION KYA HAI?</h4>
+<p><strong>Recursion matlab:</strong> Ek function apne aap ko call kare. Jaise:</p>
+<ul style="list-style-position:inside;margin-left:20px;">
+<li>factorial(5) kehta: <strong>5 × factorial(4)</strong></li>
+<li>factorial(4) kehta: <strong>4 × factorial(3)</strong></li>
+<li>Chalte raho... jab tak factorial(0) nahi aa jaye</li>
+<li>factorial(0) = 1 pe ruk jao (BASE CASE)</li>
+<li>Phir wapas aate hue sab multiply karo</li>
+</ul>
+<p style="margin-top:15px;"><strong>Yaad rakho:</strong> Base case nahi to infinite loop! 🔄</p>
+</div>
+
+<h3>Two Essential Components:</h3>
+<div class="operation-grid">
+<div class="operation-card">
+<h4>1. Base Case</h4>
+<p style="color:#D4C4E0;">Stopping condition - simplest case with direct answer</p>
+<div class="code-snippet" style="font-size:0.85em;margin-top:15px;"><span class="code-keyword">if</span> (n == <span class="code-number">0</span>) <span class="code-keyword">return</span> <span class="code-number">1</span>;</div>
+<p style="color:#C8E6C9;margin-top:10px;font-size:0.9em;">🇮🇳 Rukne ki jagah</p>
+</div>
+
+<div class="operation-card">
+<h4>2. Recursive Case</h4>
+<p style="color:#D4C4E0;">Function calls itself with smaller input</p>
+<div class="code-snippet" style="font-size:0.85em;margin-top:15px;"><span class="code-keyword">return</span> n * factorial(n-<span class="code-number">1</span>);</div>
+<p style="color:#C8E6C9;margin-top:10px;font-size:0.9em;">🇮🇳 Chhoti problem banao</p>
+</div>
+</div>
+</div>
+
+<!-- SECTION 2: TYPES OF RECURSION -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">02</div>
+<span>Types of Recursion</span>
+</div>
+
+<div class="type-card">
+<h4>1. Linear Recursion (Single Call)</h4>
+<div class="code-snippet"><span class="code-keyword">int</span> sum(<span class="code-keyword">int</span> n) {
+    <span class="code-keyword">if</span> (n == <span class="code-number">0</span>) <span class="code-keyword">return</span> <span class="code-number">0</span>;
+    <span class="code-keyword">return</span> n + sum(n - <span class="code-number">1</span>);  <span class="code-comment">// One recursive call</span>
+}</div>
+<p style="color:#C8E6C9;margin-top:10px;">🇮🇳 Ek hi recursive call - Simple aur samajhne mein easy</p>
+</div>
+
+<div class="type-card">
+<h4>2. Binary Recursion (Two Calls)</h4>
+<div class="code-snippet"><span class="code-keyword">int</span> fibonacci(<span class="code-keyword">int</span> n) {
+    <span class="code-keyword">if</span> (n &lt;= <span class="code-number">1</span>) <span class="code-keyword">return</span> n;
+    <span class="code-keyword">return</span> fibonacci(n-<span class="code-number">1</span>) + fibonacci(n-<span class="code-number">2</span>);  <span class="code-comment">// Two calls</span>
+}</div>
+<p style="color:#C8E6C9;margin-top:10px;">🇮🇳 Do recursive calls - Tree structure banta, exponential time</p>
+</div>
+
+<div class="type-card">
+<h4>3. Tail Recursion (Last Operation)</h4>
+<div class="code-snippet"><span class="code-keyword">void</span> printN(<span class="code-keyword">int</span> n) {
+    <span class="code-keyword">if</span> (n == <span class="code-number">0</span>) <span class="code-keyword">return</span>;
+    cout &lt;&lt; n &lt;&lt; <span class="code-string">" "</span>;
+    printN(n - <span class="code-number">1</span>);  <span class="code-comment">// Last operation - tail recursive</span>
+}</div>
+<p style="color:#C8E6C9;margin-top:10px;">🇮🇳 Last call recursive hai - Compiler optimize kar sakta (loop jaisa)</p>
+</div>
+
+<div class="type-card">
+<h4>4. Head Recursion (First Operation)</h4>
+<div class="code-snippet"><span class="code-keyword">void</span> printN(<span class="code-keyword">int</span> n) {
+    <span class="code-keyword">if</span> (n == <span class="code-number">0</span>) <span class="code-keyword">return</span>;
+    printN(n - <span class="code-number">1</span>);  <span class="code-comment">// First recursive call</span>
+    cout &lt;&lt; n &lt;&lt; <span class="code-string">" "</span>;  <span class="code-comment">// Then print (prints AFTER return)</span>
+}</div>
+<p style="color:#C8E6C9;margin-top:10px;">🇮🇳 Pehle recursion, phir kaam - Ulta print karne mein useful</p>
+</div>
+</div>
+
+<!-- SECTION 3: CLASSIC PROBLEMS -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">03</div>
+<span>Classic Recursion Problems</span>
+</div>
+
+<div class="problem-grid">
+<div class="problem-item">
+<span class="problem-difficulty difficulty-easy">EASY</span>
+<div class="problem-title">Factorial</div>
+<div class="code-snippet" style="font-size:0.85em;"><span class="code-keyword">int</span> factorial(<span class="code-keyword">int</span> n) {
+    <span class="code-keyword">if</span> (n &lt;= <span class="code-number">1</span>) <span class="code-keyword">return</span> <span class="code-number">1</span>;
+    <span class="code-keyword">return</span> n * factorial(n-<span class="code-number">1</span>);
+}</div>
+<p style="color:#C8E6C9;margin-top:10px;">🇮🇳 n! = n × (n-1)!</p>
+</div>
+
+<div class="problem-item">
+<span class="problem-difficulty difficulty-easy">EASY</span>
+<div class="problem-title">Fibonacci</div>
+<div class="code-snippet" style="font-size:0.85em;"><span class="code-keyword">int</span> fib(<span class="code-keyword">int</span> n) {
+    <span class="code-keyword">if</span> (n &lt;= <span class="code-number">1</span>) <span class="code-keyword">return</span> n;
+    <span class="code-keyword">return</span> fib(n-<span class="code-number">1</span>) + fib(n-<span class="code-number">2</span>);
+}</div>
+<p style="color:#C8E6C9;margin-top:10px;">🇮🇳 Har number = pichle 2 ka sum</p>
+</div>
+
+<div class="problem-item">
+<span class="problem-difficulty difficulty-easy">EASY</span>
+<div class="problem-title">Power (x^n)</div>
+<div class="code-snippet" style="font-size:0.85em;"><span class="code-keyword">int</span> power(<span class="code-keyword">int</span> x, <span class="code-keyword">int</span> n) {
+    <span class="code-keyword">if</span> (n == <span class="code-number">0</span>) <span class="code-keyword">return</span> <span class="code-number">1</span>;
+    <span class="code-keyword">return</span> x * power(x, n-<span class="code-number">1</span>);
+}</div>
+<p style="color:#C8E6C9;margin-top:10px;">🇮🇳 x^n = x × x^(n-1)</p>
+</div>
+
+<div class="problem-item">
+<span class="problem-difficulty difficulty-easy">EASY</span>
+<div class="problem-title">Sum of Digits</div>
+<div class="code-snippet" style="font-size:0.85em;"><span class="code-keyword">int</span> sumDigits(<span class="code-keyword">int</span> n) {
+    <span class="code-keyword">if</span> (n == <span class="code-number">0</span>) <span class="code-keyword">return</span> <span class="code-number">0</span>;
+    <span class="code-keyword">return</span> (n%<span class="code-number">10</span>) + sumDigits(n/<span class="code-number">10</span>);
+}</div>
+<p style="color:#C8E6C9;margin-top:10px;">🇮🇳 Last digit + baki ka sum</p>
+</div>
+
+<div class="problem-item">
+<span class="problem-difficulty difficulty-medium">MEDIUM</span>
+<div class="problem-title">Binary Search</div>
+<div class="code-snippet" style="font-size:0.75em;"><span class="code-keyword">int</span> binarySearch(<span class="code-keyword">int</span> arr[], <span class="code-keyword">int</span> l, <span class="code-keyword">int</span> r, <span class="code-keyword">int</span> x) {
+    <span class="code-keyword">if</span> (l &gt; r) <span class="code-keyword">return</span> -<span class="code-number">1</span>;
+    <span class="code-keyword">int</span> mid = l + (r-l)/<span class="code-number">2</span>;
+    <span class="code-keyword">if</span> (arr[mid] == x) <span class="code-keyword">return</span> mid;
+    <span class="code-keyword">if</span> (arr[mid] &gt; x) 
+        <span class="code-keyword">return</span> binarySearch(arr,l,mid-<span class="code-number">1</span>,x);
+    <span class="code-keyword">return</span> binarySearch(arr,mid+<span class="code-number">1</span>,r,x);
+}</div>
+<p style="color:#C8E6C9;margin-top:10px;">🇮🇳 Beech check → chhote ya bade half</p>
+</div>
+
+<div class="problem-item">
+<span class="problem-difficulty difficulty-medium">MEDIUM</span>
+<div class="problem-title">Reverse String</div>
+<div class="code-snippet" style="font-size:0.85em;"><span class="code-keyword">void</span> reverse(<span class="code-type">string</span>&amp; s, <span class="code-keyword">int</span> i, <span class="code-keyword">int</span> j) {
+    <span class="code-keyword">if</span> (i &gt;= j) <span class="code-keyword">return</span>;
+    swap(s[i], s[j]);
+    reverse(s, i+<span class="code-number">1</span>, j-<span class="code-number">1</span>);
+}</div>
+<p style="color:#C8E6C9;margin-top:10px;">🇮🇳 Start-end swap → beech recursion</p>
+</div>
+</div>
+</div>
+
+<!-- SECTION 4: BACKTRACKING -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">04</div>
+<span>Backtracking (Recursion + Choice)</span>
+</div>
+
+<p style="font-size:1.1em;color:#E1BEE7;">Backtracking = Try all possibilities + Backtrack if wrong path</p>
+
+<div class="type-card">
+<h4>Pattern: Choose → Explore → Undo</h4>
+<div class="code-snippet"><span class="code-comment">// Generate All Permutations</span>
+<span class="code-keyword">void</span> permute(<span class="code-type">string</span> s, <span class="code-keyword">int</span> l, <span class="code-keyword">int</span> r) {
+    <span class="code-keyword">if</span> (l == r) {
+        cout &lt;&lt; s &lt;&lt; endl;
+        <span class="code-keyword">return</span>;
+    }
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = l; i &lt;= r; i++) {
+        swap(s[l], s[i]);           <span class="code-comment">// CHOOSE</span>
+        permute(s, l+<span class="code-number">1</span>, r);         <span class="code-comment">// EXPLORE</span>
+        swap(s[l], s[i]);           <span class="code-comment">// UNDO (Backtrack)</span>
+    }
+}
+<span class="code-comment">// permute("ABC", 0, 2) → ABC, ACB, BAC, BCA, CAB, CBA</span></div>
+</div>
+
+<div class="hinglish-box">
+<h4>🇮🇳 BACKTRACKING SAMJHO</h4>
+<p><strong>Backtracking =</strong> Try karo → Galat raha? → Wapas jao → Dusra try karo</p>
+<p style="margin-top:15px;"><strong>3 Steps:</strong></p>
+<ul style="list-style-position:inside;margin-left:20px;">
+<li><strong>CHOOSE:</strong> Ek option choose karo</li>
+<li><strong>EXPLORE:</strong> Us option ko recursively explore karo</li>
+<li><strong>BACKTRACK:</strong> Undo karo (wapas original state)</li>
+</ul>
+<p style="margin-top:15px;"><strong>Example - Permutations:</strong></p>
+<ul style="list-style-position:inside;margin-left:20px;">
+<li>Position 0 pe 'A' rakho → Recursion → Undo</li>
+<li>Position 0 pe 'B' rakho → Recursion → Undo</li>
+<li>Position 0 pe 'C' rakho → Recursion → Undo</li>
+</ul>
+<p style="margin-top:15px;"><strong>Yaad rakho:</strong> Har try ke baad UNDO zaroori! 🔄</p>
+</div>
+
+<div class="type-card">
+<h4>N-Queens Problem</h4>
+<div class="code-snippet" style="font-size:0.8em;"><span class="code-keyword">void</span> solveNQueens(<span class="code-type">vector</span>&lt;<span class="code-type">string</span>&gt;&amp; board, <span class="code-keyword">int</span> row, <span class="code-keyword">int</span> n) {
+    <span class="code-keyword">if</span> (row == n) {
+        printBoard(board);
+        <span class="code-keyword">return</span>;
+    }
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> col = <span class="code-number">0</span>; col &lt; n; col++) {
+        <span class="code-keyword">if</span> (isSafe(board, row, col, n)) {
+            board[row][col] = <span class="code-string">'Q'</span>;              <span class="code-comment">// Choose</span>
+            solveNQueens(board, row+<span class="code-number">1</span>, n);      <span class="code-comment">// Explore</span>
+            board[row][col] = <span class="code-string">'.'</span>;              <span class="code-comment">// Backtrack</span>
+        }
+    }
+}</div>
+<p style="color:#C8E6C9;margin-top:10px;">🇮🇳 Har row mein queen rakho, safe hai to aage badho, nahi to backtrack</p>
+</div>
+</div>
+
+<!-- SECTION 5: RECURSION VS ITERATION -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">05</div>
+<span>Recursion vs Iteration</span>
+</div>
+
+<table class="comparison-table">
+<tr><th>Feature</th><th>Recursion</th><th>Iteration</th></tr>
+<tr><td>Definition</td><td>Function calls itself</td><td>Loop repeats code</td></tr>
+<tr><td>Termination</td><td>Base case</td><td>Loop condition</td></tr>
+<tr><td>Memory</td><td>Stack frames (higher)</td><td>Loop variables (lower)</td></tr>
+<tr><td>Speed</td><td>Slower (overhead)</td><td>Faster</td></tr>
+<tr><td>Code</td><td>Clean, intuitive</td><td>Can be verbose</td></tr>
+<tr><td>Overflow</td><td>Stack overflow possible</td><td>No</td></tr>
+<tr><td>Use Case</td><td>Trees, divide-conquer</td><td>Arrays, simple loops</td></tr>
+</table>
+
+<div class="operation-grid">
+<div class="operation-card">
+<h4>Recursion</h4>
+<div class="code-snippet" style="font-size:0.85em;"><span class="code-keyword">int</span> factorial(<span class="code-keyword">int</span> n) {
+    <span class="code-keyword">if</span> (n &lt;= <span class="code-number">1</span>) <span class="code-keyword">return</span> <span class="code-number">1</span>;
+    <span class="code-keyword">return</span> n * factorial(n-<span class="code-number">1</span>);
+}</div>
+</div>
+
+<div class="operation-card">
+<h4>Iteration</h4>
+<div class="code-snippet" style="font-size:0.85em;"><span class="code-keyword">int</span> factorial(<span class="code-keyword">int</span> n) {
+    <span class="code-keyword">int</span> res = <span class="code-number">1</span>;
+    <span class="code-keyword">for</span>(<span class="code-keyword">int</span> i=<span class="code-number">2</span>; i&lt;=n; i++)
+        res *= i;
+    <span class="code-keyword">return</span> res;
+}</div>
+</div>
+</div>
+
+<div class="hinglish-box">
+<h4>🇮🇳 RECURSION VS LOOP</h4>
+<p><strong>RECURSION:</strong></p>
+<ul style="list-style-position:inside;margin-left:20px;">
+<li>✅ Code chhota aur clean</li>
+<li>✅ Tree/Graph mein natural</li>
+<li>❌ Memory zyada (stack frames)</li>
+<li>❌ Slow (function call overhead)</li>
+</ul>
+<p style="margin-top:15px;"><strong>LOOP:</strong></p>
+<ul style="list-style-position:inside;margin-left:20px;">
+<li>✅ Fast performance</li>
+<li>✅ Memory kam</li>
+<li>❌ Code complex ho sakta</li>
+</ul>
+<p style="margin-top:15px;"><strong>Thumb Rule:</strong> Array → Loop, Tree → Recursion 💡</p>
+</div>
+</div>
+
+<!-- SECTION 6: COMMON MISTAKES -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">06</div>
+<span>Common Mistakes</span>
+</div>
+
+<div class="mistake-card">
+<h4>❌ Missing Base Case</h4>
+<div class="code-snippet"><span class="code-comment">// WRONG - Infinite recursion!</span>
+<span class="code-keyword">int</span> factorial(<span class="code-keyword">int</span> n) {
+    <span class="code-keyword">return</span> n * factorial(n-<span class="code-number">1</span>);  <span class="code-comment">// No base case!</span>
+}
+
+<span class="code-comment">// CORRECT</span>
+<span class="code-keyword">int</span> factorial(<span class="code-keyword">int</span> n) {
+    <span class="code-keyword">if</span> (n &lt;= <span class="code-number">1</span>) <span class="code-keyword">return</span> <span class="code-number">1</span>;  <span class="code-comment">// Base case</span>
+    <span class="code-keyword">return</span> n * factorial(n-<span class="code-number">1</span>);
+}</div>
+<p style="color:#C8E6C9;margin-top:10px;">🇮🇳 Base case nahi = Infinite loop 💥</p>
+</div>
+
+<div class="mistake-card">
+<h4>❌ Not Making Progress</h4>
+<div class="code-snippet"><span class="code-comment">// WRONG - No progress toward base</span>
+<span class="code-keyword">int</span> bad(<span class="code-keyword">int</span> n) {
+    <span class="code-keyword">if</span> (n == <span class="code-number">0</span>) <span class="code-keyword">return</span> <span class="code-number">0</span>;
+    <span class="code-keyword">return</span> bad(n);  <span class="code-comment">// Same n!</span>
+}
+
+<span class="code-comment">// CORRECT</span>
+<span class="code-keyword">return</span> bad(n - <span class="code-number">1</span>);  <span class="code-comment">// Moves toward base</span></div>
+<p style="color:#C8E6C9;margin-top:10px;">🇮🇳 Har call mein input chhota hona chahiye</p>
+</div>
+
+<div class="mistake-card">
+<h4>❌ Forgetting Return</h4>
+<div class="code-snippet"><span class="code-comment">// WRONG</span>
+<span class="code-keyword">int</span> factorial(<span class="code-keyword">int</span> n) {
+    <span class="code-keyword">if</span> (n &lt;= <span class="code-number">1</span>) <span class="code-keyword">return</span> <span class="code-number">1</span>;
+    n * factorial(n-<span class="code-number">1</span>);  <span class="code-comment">// Missing return!</span>
+}
+
+<span class="code-comment">// CORRECT</span>
+<span class="code-keyword">return</span> n * factorial(n-<span class="code-number">1</span>);</div>
+<p style="color:#C8E6C9;margin-top:10px;">🇮🇳 Return bhoolna = undefined behavior</p>
+</div>
+</div>
+
+<!-- SECTION 7: TIME & SPACE COMPLEXITY -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">07</div>
+<span>Time & Space Complexity</span>
+</div>
+
+<table class="comparison-table">
+<tr><th>Problem</th><th>Recurrence</th><th>Time</th><th>Space</th></tr>
+<tr><td>Factorial</td><td>T(n) = T(n-1) + O(1)</td><td>O(n)</td><td>O(n)</td></tr>
+<tr><td>Fibonacci (naive)</td><td>T(n) = T(n-1) + T(n-2)</td><td>O(2^n)</td><td>O(n)</td></tr>
+<tr><td>Binary Search</td><td>T(n) = T(n/2) + O(1)</td><td>O(log n)</td><td>O(log n)</td></tr>
+<tr><td>Merge Sort</td><td>T(n) = 2T(n/2) + O(n)</td><td>O(n log n)</td><td>O(n)</td></tr>
+<tr><td>Tower of Hanoi</td><td>T(n) = 2T(n-1) + O(1)</td><td>O(2^n)</td><td>O(n)</td></tr>
+</table>
+
+<div class="hinglish-box" style="margin-top:30px;">
+<h4>🇮🇳 COMPLEXITY SAMJHO</h4>
+<p><strong>TIME:</strong></p>
+<ul style="list-style-position:inside;margin-left:20px;">
+<li>Factorial: n calls = O(n)</li>
+<li>Fibonacci: Har call 2 calls = O(2^n) - Bohot slow!</li>
+<li>Binary Search: Aadha karte jao = O(log n)</li>
+</ul>
+<p style="margin-top:15px;"><strong>SPACE (STACK):</strong></p>
+<ul style="list-style-position:inside;margin-left:20px;">
+<li>Jitni depth, utna space</li>
+<li>factorial(100) = 100 stack frames</li>
+<li>Binary Search = log n frames</li>
+</ul>
+<p style="margin-top:15px;"><strong>Yaad rakho:</strong> Space bhi count hota! 💾</p>
+</div>
+</div>
+
+<!-- SUMMARY -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">13</div>
+<span>Summary & Complete Hinglish Guide</span>
+</div>
+
+<div class="summary-box">
+<h3>Key Properties</h3>
+<ul>
+<li>Function calls itself with smaller input</li>
+<li>Must have base case (stopping condition)</li>
+<li>Uses call stack (LIFO memory)</li>
+<li>Elegant for trees, divide-conquer, backtracking</li>
+<li>Can be memory-intensive (stack frames)</li>
+<li>Some problems naturally recursive</li>
+</ul>
+</div>
+
+<div class="decision-tree">
+<h3>🎯 When to Use Recursion?</h3>
+<div class="decision-item"><strong>Tree/Graph traversal?</strong> → YES (natural fit)</div>
+<div class="decision-item"><strong>Divide-and-conquer?</strong> → YES (merge sort, binary search)</div>
+<div class="decision-item"><strong>Backtracking?</strong> → YES (permutations, N-Queens)</div>
+<div class="decision-item"><strong>Mathematical formulas?</strong> → MAYBE (check if iteration simpler)</div>
+<div class="decision-item"><strong>Simple array loop?</strong> → NO (use iteration)</div>
+</div>
+
+<div class="hinglish-box" style="margin-top:40px;">
+<h4>🇮🇳 RECURSION - पूरी GUIDE (HINGLISH में)</h4>
+<div style="border-top:2px solid #4CAF50;margin:20px 0;padding-top:20px;">
+<p style="font-size:1.15em;"><strong>📌 RECURSION KYA HAI?</strong></p>
+<p>Function apne aap ko call kare. Jaise mirror mein mirror - endless reflection!</p>
+
+<p style="font-size:1.15em;margin-top:25px;"><strong>🎯 2 ZAROORI CHEEZEN:</strong></p>
+<p><strong>1. BASE CASE (रुकने की जगह):</strong></p>
+<ul style="list-style-position:inside;margin-left:20px;">
+<li>Jab recursion rukna chahiye</li>
+<li>Simplest problem ka seedha answer</li>
+<li>Example: factorial(0) = 1</li>
+</ul>
+
+<p style="margin-top:15px;"><strong>2. RECURSIVE CASE (अपने आप को call):</strong></p>
+<ul style="list-style-position:inside;margin-left:20px;">
+<li>Problem ko chhota banao</li>
+<li>Function ko phir se call karo</li>
+<li>Example: factorial(n) = n * factorial(n-1)</li>
+</ul>
+
+<p style="font-size:1.15em;margin-top:25px;"><strong>💡 YAAD RAKHNE KI BAATEIN:</strong></p>
+<ul style="list-style-position:inside;margin-left:20px;">
+<li><strong>BASE CASE ZAROORI:</strong> Nahi = Infinite loop 💥</li>
+<li><strong>PROGRESS ZAROORI:</strong> Har call chhoti honi chahiye</li>
+<li><strong>CALL STACK:</strong> Memory mein jaata, zyada deep = overflow</li>
+<li><strong>LOOP vs RECURSION:</strong> Array→Loop, Tree→Recursion</li>
+</ul>
+
+<p style="font-size:1.15em;margin-top:25px;"><strong>🚀 COMMON PROBLEMS:</strong></p>
+<p><strong>Easy:</strong> Factorial, Sum 1-N, Power, Print N-1</p>
+<p><strong>Medium:</strong> Fibonacci, Binary Search, Reverse String</p>
+<p><strong>Hard:</strong> Permutations, N-Queens, Sudoku, Merge Sort</p>
+
+<p style="font-size:1.15em;margin-top:25px;"><strong>❌ GALTIYAN:</strong></p>
+<ul style="list-style-position:inside;margin-left:20px;">
+<li>Base case nahi → Infinite loop</li>
+<li>Progress nahi → Infinite loop</li>
+<li>Return bhool gaye → Wrong answer</li>
+<li>Stack overflow → Zyada deep</li>
+</ul>
+
+<p style="font-size:1.15em;margin-top:25px;"><strong>💭 SOCHNE KA TARIKA:</strong></p>
+<ul style="list-style-position:inside;margin-left:20px;">
+<li>Sabse chhota case? (Base case)</li>
+<li>Bada ko chhote se kaise jodo?</li>
+<li>Har step base ki taraf?</li>
+</ul>
+
+<p style="font-size:1.2em;margin-top:30px;text-align:center;"><strong>याद रखो: "Recursion = Faith pe depend!"</strong></p>
+<p style="text-align:center;">Believe karo chhoti problem solve hogi, tum bas jodna seekho! 🎯</p>
+</div>
+</div>
+
+<div class="type-card" style="margin-top:35px;">
+<h3>📌 Top 15 Recursion Problems</h3>
+<ol style="list-style-position:inside;line-height:2.2;color:#D4C4E0;">
+<li><strong style="color:var(--gold);">Factorial</strong> - n * factorial(n-1)</li>
+<li><strong style="color:var(--gold);">Fibonacci</strong> - fib(n-1) + fib(n-2)</li>
+<li><strong style="color:var(--gold);">Power</strong> - x * power(x, n-1)</li>
+<li><strong style="color:var(--gold);">Binary Search</strong> - Divide and conquer</li>
+<li><strong style="color:var(--gold);">Merge Sort</strong> - Divide, sort, merge</li>
+<li><strong style="color:var(--gold);">Quick Sort</strong> - Partition recursively</li>
+<li><strong style="color:var(--gold);">Tower of Hanoi</strong> - Classic recursion</li>
+<li><strong style="color:var(--gold);">Permutations</strong> - Backtracking</li>
+<li><strong style="color:var(--gold);">Subsets</strong> - Include/exclude pattern</li>
+<li><strong style="color:var(--gold);">N-Queens</strong> - Backtracking problem</li>
+<li><strong style="color:var(--gold);">Sudoku Solver</strong> - Backtracking</li>
+<li><strong style="color:var(--gold);">Tree Traversals</strong> - Inorder, preorder, postorder</li>
+<li><strong style="color:var(--gold);">Reverse Linked List</strong> - Recursive pointers</li>
+<li><strong style="color:var(--gold);">Palindrome Check</strong> - Start-end recursion</li>
+<li><strong style="color:var(--gold);">Generate Parentheses</strong> - Valid combinations</li>
+</ol>
+</div>
+
+<div class="tip-box" style="margin-top:35px;">
+<strong>💡 MASTER TIP:</strong> Start with simple problems (factorial, sum), then move to binary recursion (fibonacci), master backtracking (permutations), and finally tackle tree problems. Practice drawing the call stack on paper - visualization helps understanding! 🎯
+</div>
+</div>
+
+<div class="footer">
+<p><strong>RECURSION - COMPLETE DSA VISUAL GUIDE (C++)</strong></p>
+<p style="margin-top:14px;color:#D4C4E0;">Master Data Structures & Algorithms • Perfect for Interviews, Exams & Revision</p>
+<p style="margin-top:22px;font-size:0.95em;color:var(--gold);">
+∞ Remember: Recursion = Faith that smaller problems will solve themselves!
+</p>
+<p style="margin-top:10px;font-size:0.95em;color:#C8E6C9;">
+🇮🇳 याद रखो: छोटी problem solve hogi, bas jodna seekho! 🚀
+</p>
+</div>
+</div>
+</body>
+</html>
