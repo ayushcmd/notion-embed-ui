@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorting - Complete DSA Visual Guide (C++)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --red: #FF6B6B;
+            --orange: #FF8E53;
+            --yellow: #FEE140;
+            --green: #4ECDC4;
+            --blue: #45B7D1;
+            --purple: #9B59B6;
+            --pink: #E056FD;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #0a0a0a;
+            border-radius: 20px;
+            box-shadow: 0 0 60px rgba(255, 107, 107, 0.3), 0 20px 60px rgba(0, 0, 0, 0.9);
+            overflow: hidden;
+            border: 3px solid var(--red);
+        }
+        .header {
+            background: linear-gradient(135deg, var(--red) 0%, var(--orange) 25%, var(--yellow) 50%, var(--green) 75%, var(--blue) 100%);
+            color: #000;
+            padding: 80px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .header h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 7em;
+            font-weight: 900;
+            letter-spacing: 20px;
+            text-shadow: 4px 4px 8px rgba(0,0,0,0.5);
+            position: relative;
+            animation: rainbow 3s ease-in-out infinite;
+        }
+        @keyframes rainbow {
+            0% { color: var(--red); }
+            20% { color: var(--orange); }
+            40% { color: var(--yellow); }
+            60% { color: var(--green); }
+            80% { color: var(--blue); }
+            100% { color: var(--red); }
+        }
+        .header p {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5em;
+            letter-spacing: 8px;
+            font-weight: 700;
+            margin-top: 15px;
+            color: #000;
+        }
+        .section {
+            padding: 50px 60px;
+            border-bottom: 2px solid #333;
+        }
+        .section:nth-child(even) {
+            background: linear-gradient(to right, #1a1a1a 0%, #0f0f0f 100%);
+        }
+        .section:last-child { border-bottom: none; }
+        .section-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.6em;
+            font-weight: 700;
+            margin-bottom: 30px;
+            background: linear-gradient(90deg, var(--red), var(--orange), var(--yellow), var(--green), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .section-number {
+            background: linear-gradient(135deg, var(--red) 0%, var(--orange) 100%);
+            color: white;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4em;
+            font-weight: 900;
+            box-shadow: 0 0 25px rgba(255, 107, 107, 0.5);
+            border: 3px solid var(--yellow);
+        }
+        h3 {
+            color: var(--orange);
+            font-family: 'Bebas Neue', sans-serif;
+            margin: 35px 0 20px;
+            font-size: 1.9em;
+            text-shadow: 0 0 10px rgba(255, 142, 83, 0.5);
+        }
+        p {
+            color: #D4D4D4;
+            line-height: 2;
+            margin-bottom: 18px;
+        }
+        .bars-visual {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+            border: 3px solid var(--green);
+            border-radius: 16px;
+            padding: 40px;
+            margin: 30px 0;
+            box-shadow: 0 0 30px rgba(78, 205, 196, 0.3);
+        }
+        .bars-container {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 10px;
+            height: 200px;
+            margin: 20px 0;
+        }
+        .bar {
+            width: 40px;
+            background: linear-gradient(to top, var(--red), var(--orange));
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            padding-bottom: 5px;
+            box-shadow: 0 0 15px rgba(255, 107, 107, 0.4);
+            transition: all 0.3s ease;
+        }
+        .bar.sorted {
+            background: linear-gradient(to top, var(--green), var(--blue));
+            box-shadow: 0 0 15px rgba(78, 205, 196, 0.4);
+        }
+        .code-snippet {
+            background: #000;
+            color: #E0E0E0;
+            padding: 30px;
+            border-radius: 14px;
+            font-family: 'JetBrains Mono', monospace;
+            margin: 30px 0;
+            overflow-x: auto;
+            font-size: 0.95em;
+            border: 2px solid var(--purple);
+            box-shadow: 0 0 25px rgba(155, 89, 182, 0.3);
+            position: relative;
+        }
+        .code-snippet::before {
+            content: 'C++';
+            position: absolute;
+            top: 12px;
+            right: 18px;
+            font-size: 0.75em;
+            color: var(--yellow);
+            font-weight: 700;
+            font-family: 'Bebas Neue', sans-serif;
+        }
+        .code-keyword { color: #FF6B6B; }
+        .code-type { color: #E056FD; }
+        .code-string { color: #4ECDC4; }
+        .code-comment { color: #777; font-style: italic; }
+        .code-number { color: #FEE140; }
+        .hinglish-box {
+            background: linear-gradient(135deg, #1a3a1a 0%, #0f2a0f 100%);
+            border: 3px solid #4CAF50;
+            border-radius: 16px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 0 25px rgba(76, 175, 80, 0.3);
+        }
+        .hinglish-box h4 {
+            color: #66BB6A;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .hinglish-box p, .hinglish-box li {
+            color: #C8E6C9;
+            line-height: 2.2;
+            font-size: 1.05em;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            box-shadow: 0 0 30px rgba(255, 107, 107, 0.3);
+            border-radius: 14px;
+            overflow: hidden;
+            border: 2px solid var(--red);
+        }
+        .comparison-table th {
+            background: linear-gradient(135deg, var(--red) 0%, var(--orange) 100%);
+            color: white;
+            padding: 24px;
+            text-align: left;
+            font-family: 'Bebas Neue', sans-serif;
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+        .comparison-table td {
+            padding: 22px 24px;
+            border-bottom: 1px solid #333;
+            color: #D4D4D4;
+        }
+        .comparison-table tr:last-child td { border-bottom: none; }
+        .comparison-table tr:nth-child(even) {
+            background: linear-gradient(to right, #1a1a1a 0%, #0f0f0f 100%);
+        }
+        .algo-card {
+            background: linear-gradient(135deg, #2a1a2a 0%, #1a0f1a 100%);
+            border-left: 6px solid var(--orange);
+            padding: 32px;
+            margin: 28px 0;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(255, 142, 83, 0.2);
+        }
+        .algo-card h4 {
+            color: var(--orange);
+            margin-bottom: 16px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8em;
+        }
+        .operation-grid, .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 28px;
+            margin: 35px 0;
+        }
+        .operation-card, .problem-item {
+            background: linear-gradient(135deg, #2a1a1a 0%, #1a0f0f 100%);
+            border: 2px solid var(--blue);
+            border-radius: 18px;
+            padding: 32px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(69, 183, 209, 0.2);
+        }
+        .operation-card:hover, .problem-item:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 0 40px rgba(69, 183, 209, 0.5);
+            border-color: var(--yellow);
+        }
+        .operation-card h4 {
+            font-family: 'Bebas Neue', sans-serif;
+            color: var(--yellow);
+            margin-bottom: 20px;
+            font-size: 1.7em;
+        }
+        .complexity-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 0.85em;
+            font-weight: 700;
+            margin: 5px;
+            font-family: 'Bebas Neue', sans-serif;
+        }
+        .badge-fast { background: var(--green); color: #000; }
+        .badge-medium { background: var(--yellow); color: #000; }
+        .badge-slow { background: var(--red); color: white; }
+        .problem-difficulty {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 28px;
+            font-size: 0.82em;
+            font-weight: 700;
+            margin-bottom: 16px;
+            font-family: 'Bebas Neue', sans-serif;
+        }
+        .difficulty-easy { background: #4CAF50; color: #000; }
+        .difficulty-medium { background: #FF9800; color: #000; }
+        .difficulty-hard { background: #F44336; color: white; }
+        .problem-title {
+            font-weight: 700;
+            color: var(--orange);
+            font-size: 1.25em;
+            margin-bottom: 14px;
+            font-family: 'Bebas Neue', sans-serif;
+        }
+        .summary-box {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #E0E0E0;
+            padding: 60px;
+            border-radius: 24px;
+            margin: 40px 0;
+            box-shadow: 0 0 50px rgba(255, 107, 107, 0.4);
+            border: 3px solid var(--red);
+        }
+        .summary-box h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.8em;
+            margin-bottom: 32px;
+            color: var(--yellow);
+        }
+        .summary-box ul {
+            list-style: none;
+            padding: 0;
+        }
+        .summary-box li {
+            padding: 18px 0;
+            font-size: 1.18em;
+            position: relative;
+            padding-left: 48px;
+            line-height: 1.9;
+        }
+        .summary-box li:before {
+            content: "▶";
+            position: absolute;
+            left: 0;
+            font-size: 1.3em;
+            color: var(--orange);
+        }
+        .decision-tree {
+            background: #0a0a0a;
+            padding: 40px;
+            border-radius: 20px;
+            margin: 35px 0;
+            border: 2px solid var(--green);
+            box-shadow: 0 0 30px rgba(78, 205, 196, 0.3);
+        }
+        .decision-tree h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            color: var(--yellow);
+            margin-bottom: 28px;
+            font-size: 2.3em;
+        }
+        .decision-item {
+            padding: 20px;
+            margin: 16px 0;
+            border-left: 6px solid var(--orange);
+            background: linear-gradient(to right, #2a1a1a 0%, #1a0f0f 100%);
+            border-radius: 10px;
+        }
+        .decision-item strong {
+            color: var(--yellow);
+            font-family: 'Bebas Neue', sans-serif;
+        }
+        .footer {
+            background: linear-gradient(to right, #1a1a1a 0%, #0f0f0f 100%);
+            padding: 50px;
+            text-align: center;
+            color: #E0E0E0;
+            border-top: 4px solid var(--red);
+        }
+        .footer strong {
+            font-family: 'Bebas Neue', sans-serif;
+            color: var(--yellow);
+            font-size: 1.2em;
+        }
+        .tip-box {
+            background: linear-gradient(135deg, #1a2a3a 0%, #0f1f2f 100%);
+            border-left: 6px solid var(--blue);
+            padding: 28px 32px;
+            margin: 28px 0;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(69, 183, 209, 0.3);
+        }
+        .tip-box strong {
+            color: var(--blue);
+            font-size: 1.25em;
+            font-family: 'Bebas Neue', sans-serif;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>SORTING</h1>
+<p>COMPLETE DSA VISUAL GUIDE (C++)</p>
+</div>
+
+<!-- SECTION 1: WHAT IS SORTING? -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">01</div>
+<span>What is Sorting?</span>
+</div>
+
+<p style="font-size:1.18em;color:#E0E0E0;"><strong style="color:var(--orange);">Sorting</strong> is the process of arranging elements in a particular order (ascending or descending). It's one of the most fundamental operations in computer science.</p>
+
+<h3>Visual Representation:</h3>
+
+<div class="bars-visual">
+<h4 style="color:var(--yellow);text-align:center;margin-bottom:20px;font-family:'Bebas Neue';font-size:1.5em;">UNSORTED ARRAY</h4>
+<div class="bars-container">
+<div class="bar" style="height:120px;">64</div>
+<div class="bar" style="height:70px;">34</div>
+<div class="bar" style="height:50px;">25</div>
+<div class="bar" style="height:25px;">12</div>
+<div class="bar" style="height:45px;">22</div>
+<div class="bar" style="height:22px;">11</div>
+<div class="bar" style="height:180px;">90</div>
+</div>
+<div style="text-align:center;margin:30px 0;font-size:2em;color:var(--yellow);">↓</div>
+<h4 style="color:var(--green);text-align:center;margin-bottom:20px;font-family:'Bebas Neue';font-size:1.5em;">SORTED ARRAY</h4>
+<div class="bars-container">
+<div class="bar sorted" style="height:22px;">11</div>
+<div class="bar sorted" style="height:25px;">12</div>
+<div class="bar sorted" style="height:45px;">22</div>
+<div class="bar sorted" style="height:50px;">25</div>
+<div class="bar sorted" style="height:70px;">34</div>
+<div class="bar sorted" style="height:120px;">64</div>
+<div class="bar sorted" style="height:180px;">90</div>
+</div>
+</div>
+
+<h3>Key Properties:</h3>
+<ul style="list-style-position:inside;margin-left:20px;color:#D4D4D4;line-height:2.4;">
+<li><strong style="color:var(--yellow);">Stable:</strong> Equal elements maintain relative order (Merge, Insertion)</li>
+<li><strong style="color:var(--yellow);">In-place:</strong> O(1) extra space (Bubble, Selection, Quick, Heap)</li>
+<li><strong style="color:var(--yellow);">Adaptive:</strong> Faster on partially sorted data (Insertion, Bubble)</li>
+<li><strong style="color:var(--yellow);">Comparison-based:</strong> Uses comparisons (most algorithms)</li>
+<li><strong style="color:var(--yellow);">Non-comparison:</strong> Uses other properties (Counting, Radix)</li>
+</ul>
+
+<div class="hinglish-box">
+<h4>🇮🇳 SORTING KYA HAI?</h4>
+<p><strong>Sorting =</strong> Elements ko order mein arrange karna</p>
+<ul style="list-style-position:inside;margin-left:20px;margin-top:15px;">
+<li><strong>Ascending:</strong> Chhote se bade → [11, 22, 34, 64, 90]</li>
+<li><strong>Descending:</strong> Bade se chhote → [90, 64, 34, 22, 11]</li>
+</ul>
+<p style="margin-top:15px;"><strong>Kyun zaroori?</strong></p>
+<ul style="list-style-position:inside;margin-left:20px;">
+<li>Searching fast (Binary Search)</li>
+<li>Data organized</li>
+<li>Duplicates easily find</li>
+<li>Many algorithms ko sorted data chahiye</li>
+</ul>
+</div>
+</div>
+
+<!-- SECTION 2: ALGORITHMS OVERVIEW -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">02</div>
+<span>Sorting Algorithms Overview</span>
+</div>
+
+<table class="comparison-table">
+<tr><th>Algorithm</th><th>Best</th><th>Average</th><th>Worst</th><th>Space</th><th>Stable</th></tr>
+<tr><td>Bubble Sort</td><td>O(n)</td><td>O(n²)</td><td>O(n²)</td><td>O(1)</td><td>Yes</td></tr>
+<tr><td>Selection Sort</td><td>O(n²)</td><td>O(n²)</td><td>O(n²)</td><td>O(1)</td><td>No</td></tr>
+<tr><td>Insertion Sort</td><td>O(n)</td><td>O(n²)</td><td>O(n²)</td><td>O(1)</td><td>Yes</td></tr>
+<tr><td>Merge Sort</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n)</td><td>Yes</td></tr>
+<tr><td>Quick Sort</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n²)</td><td>O(log n)</td><td>No</td></tr>
+<tr><td>Heap Sort</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n log n)</td><td>O(1)</td><td>No</td></tr>
+<tr><td>Counting Sort</td><td>O(n+k)</td><td>O(n+k)</td><td>O(n+k)</td><td>O(k)</td><td>Yes</td></tr>
+</table>
+
+<div class="hinglish-box">
+<h4>🇮🇳 ALGORITHMS KI CATEGORIES</h4>
+<p><strong>1. SIMPLE (O(n²) - सीखने के लिए):</strong></p>
+<ul style="list-style-position:inside;margin-left:20px;">
+<li>Bubble, Selection, Insertion</li>
+<li>Slow lekin samajhne mein easy</li>
+</ul>
+<p style="margin-top:15px;"><strong>2. EFFICIENT (O(n log n) - Production):</strong></p>
+<ul style="list-style-position:inside;margin-left:20px;">
+<li>Merge, Quick, Heap</li>
+<li>Fast aur practical!</li>
+</ul>
+<p style="margin-top:15px;"><strong>3. SPECIAL (O(n) - Specific cases):</strong></p>
+<ul style="list-style-position:inside;margin-left:20px;">
+<li>Counting, Radix, Bucket</li>
+<li>Linear time lekin conditions chahiye</li>
+</ul>
+</div>
+</div>
+
+<!-- SECTION 3: BUBBLE SORT -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">03</div>
+<span>Bubble Sort</span>
+</div>
+
+<div class="algo-card">
+<h4>Algorithm</h4>
+<p style="color:#D4D4D4;">Compare adjacent elements and swap if in wrong order. Largest element "bubbles up" to the end each pass.</p>
+<div style="margin-top:15px;">
+<span class="complexity-badge badge-slow">Time: O(n²)</span>
+<span class="complexity-badge badge-fast">Space: O(1)</span>
+<span class="complexity-badge badge-fast">Stable: Yes</span>
+</div>
+</div>
+
+<div class="code-snippet"><span class="code-comment">// Bubble Sort Implementation</span>
+<span class="code-keyword">void</span> <span class="code-type">bubbleSort</span>(<span class="code-keyword">int</span> arr[], <span class="code-keyword">int</span> n) {
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = <span class="code-number">0</span>; i &lt; n - <span class="code-number">1</span>; i++) {
+        <span class="code-keyword">bool</span> swapped = <span class="code-keyword">false</span>;
+        
+        <span class="code-comment">// Last i elements already sorted</span>
+        <span class="code-keyword">for</span> (<span class="code-keyword">int</span> j = <span class="code-number">0</span>; j &lt; n - i - <span class="code-number">1</span>; j++) {
+            <span class="code-keyword">if</span> (arr[j] &gt; arr[j + <span class="code-number">1</span>]) {
+                swap(arr[j], arr[j + <span class="code-number">1</span>]);
+                swapped = <span class="code-keyword">true</span>;
+            }
+        }
+        
+        <span class="code-comment">// If no swap, already sorted</span>
+        <span class="code-keyword">if</span> (!swapped) <span class="code-keyword">break</span>;
+    }
+}</div>
+
+<div class="hinglish-box">
+<h4>🇮🇳 BUBBLE SORT</h4>
+<p><strong>Kaise kaam karta:</strong></p>
+<ul style="list-style-position:inside;margin-left:20px;">
+<li>Do adjacent elements compare karo</li>
+<li>Galat order → Swap karo</li>
+<li>Sabse bada element "bubble" ki tarah upar!</li>
+</ul>
+<p style="margin-top:15px;"><strong>Pros:</strong> ✅ Simple, ✅ Adaptive (sorted pe O(n))</p>
+<p><strong>Cons:</strong> ❌ Bahut slow O(n²)</p>
+<p style="margin-top:10px;"><strong>Use:</strong> Teaching, tiny arrays (n &lt; 10)</p>
+</div>
+</div>
+
+<!-- SECTION 4: INSERTION SORT -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">04</div>
+<span>Insertion Sort</span>
+</div>
+
+<div class="algo-card">
+<h4>Algorithm</h4>
+<p style="color:#D4D4D4;">Build sorted array one element at a time. Insert each element at correct position in sorted part. Like sorting playing cards!</p>
+<div style="margin-top:15px;">
+<span class="complexity-badge badge-slow">Time: O(n²)</span>
+<span class="complexity-badge badge-fast">Space: O(1)</span>
+<span class="complexity-badge badge-fast">Stable: Yes</span>
+<span class="complexity-badge badge-fast">Adaptive: Yes</span>
+</div>
+</div>
+
+<div class="code-snippet"><span class="code-comment">// Insertion Sort Implementation</span>
+<span class="code-keyword">void</span> <span class="code-type">insertionSort</span>(<span class="code-keyword">int</span> arr[], <span class="code-keyword">int</span> n) {
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = <span class="code-number">1</span>; i &lt; n; i++) {
+        <span class="code-keyword">int</span> key = arr[i];
+        <span class="code-keyword">int</span> j = i - <span class="code-number">1</span>;
+        
+        <span class="code-comment">// Move elements &gt; key one position ahead</span>
+        <span class="code-keyword">while</span> (j &gt;= <span class="code-number">0</span> &amp;&amp; arr[j] &gt; key) {
+            arr[j + <span class="code-number">1</span>] = arr[j];
+            j--;
+        }
+        
+        arr[j + <span class="code-number">1</span>] = key;
+    }
+}</div>
+
+<div class="hinglish-box">
+<h4>🇮🇳 INSERTION SORT</h4>
+<p><strong>Kaise kaam karta:</strong></p>
+<ul style="list-style-position:inside;margin-left:20px;">
+<li>Ek-ek element uthao</li>
+<li>Sorted part mein sahi jagah INSERT karo</li>
+<li>Jaise playing cards arrange karte ho!</li>
+</ul>
+<p style="margin-top:15px;"><strong>Pros:</strong> ✅ Simple, ✅ Best for small/nearly sorted, ✅ Online</p>
+<p><strong>Cons:</strong> ❌ O(n²) on random data</p>
+<p style="margin-top:10px;"><strong>Use:</strong> Small arrays (n &lt; 50), nearly sorted, hybrid sorts</p>
+</div>
+</div>
+
+<!-- SECTION 5: MERGE SORT -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">05</div>
+<span>Merge Sort (Divide & Conquer)</span>
+</div>
+
+<div class="algo-card">
+<h4>Algorithm</h4>
+<p style="color:#D4D4D4;">Divide array into halves, recursively sort, then merge sorted halves.</p>
+<div style="margin-top:15px;">
+<span class="complexity-badge badge-fast">Time: O(n log n)</span>
+<span class="complexity-badge badge-medium">Space: O(n)</span>
+<span class="complexity-badge badge-fast">Stable: Yes</span>
+</div>
+</div>
+
+<div class="code-snippet" style="font-size:0.88em;"><span class="code-keyword">void</span> <span class="code-type">merge</span>(<span class="code-keyword">int</span> arr[], <span class="code-keyword">int</span> l, <span class="code-keyword">int</span> m, <span class="code-keyword">int</span> r) {
+    <span class="code-keyword">int</span> n1 = m - l + <span class="code-number">1</span>, n2 = r - m;
+    <span class="code-keyword">int</span> L[n1], R[n2];
+    
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = <span class="code-number">0</span>; i &lt; n1; i++) L[i] = arr[l + i];
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> j = <span class="code-number">0</span>; j &lt; n2; j++) R[j] = arr[m + <span class="code-number">1</span> + j];
+    
+    <span class="code-keyword">int</span> i = <span class="code-number">0</span>, j = <span class="code-number">0</span>, k = l;
+    
+    <span class="code-keyword">while</span> (i &lt; n1 &amp;&amp; j &lt; n2) {
+        <span class="code-keyword">if</span> (L[i] &lt;= R[j]) arr[k++] = L[i++];
+        <span class="code-keyword">else</span> arr[k++] = R[j++];
+    }
+    
+    <span class="code-keyword">while</span> (i &lt; n1) arr[k++] = L[i++];
+    <span class="code-keyword">while</span> (j &lt; n2) arr[k++] = R[j++];
+}
+
+<span class="code-keyword">void</span> <span class="code-type">mergeSort</span>(<span class="code-keyword">int</span> arr[], <span class="code-keyword">int</span> l, <span class="code-keyword">int</span> r) {
+    <span class="code-keyword">if</span> (l &gt;= r) <span class="code-keyword">return</span>;
+    
+    <span class="code-keyword">int</span> m = l + (r - l) / <span class="code-number">2</span>;
+    mergeSort(arr, l, m);       <span class="code-comment">// Sort left</span>
+    mergeSort(arr, m + <span class="code-number">1</span>, r);   <span class="code-comment">// Sort right</span>
+    merge(arr, l, m, r);        <span class="code-comment">// Merge</span>
+}</div>
+
+<div class="hinglish-box">
+<h4>🇮🇳 MERGE SORT</h4>
+<p><strong>Divide and Conquer:</strong></p>
+<ul style="list-style-position:inside;margin-left:20px;">
+<li><strong>DIVIDE:</strong> Array ko 2 halves mein todo</li>
+<li><strong>CONQUER:</strong> Dono halves sort karo (recursively)</li>
+<li><strong>MERGE:</strong> Do sorted arrays merge karo</li>
+</ul>
+<p style="margin-top:15px;"><strong>Pros:</strong> ✅ Guaranteed O(n log n), ✅ Stable, ✅ Predictable</p>
+<p><strong>Cons:</strong> ❌ O(n) extra space, ❌ Not in-place</p>
+<p style="margin-top:10px;"><strong>Use:</strong> Large data, stability chahiye, linked lists</p>
+</div>
+</div>
+
+<!-- SECTION 6: QUICK SORT -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">06</div>
+<span>Quick Sort (Divide & Conquer)</span>
+</div>
+
+<div class="algo-card">
+<h4>Algorithm</h4>
+<p style="color:#D4D4D4;">Choose pivot, partition array (smaller left, larger right), recursively sort partitions.</p>
+<div style="margin-top:15px;">
+<span class="complexity-badge badge-fast">Avg: O(n log n)</span>
+<span class="complexity-badge badge-slow">Worst: O(n²)</span>
+<span class="complexity-badge badge-fast">Space: O(log n)</span>
+<span class="complexity-badge badge-medium">Stable: No</span>
+</div>
+</div>
+
+<div class="code-snippet" style="font-size:0.88em;"><span class="code-keyword">int</span> <span class="code-type">partition</span>(<span class="code-keyword">int</span> arr[], <span class="code-keyword">int</span> low, <span class="code-keyword">int</span> high) {
+    <span class="code-keyword">int</span> pivot = arr[high];
+    <span class="code-keyword">int</span> i = low - <span class="code-number">1</span>;
+    
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> j = low; j &lt; high; j++) {
+        <span class="code-keyword">if</span> (arr[j] &lt; pivot) {
+            i++;
+            swap(arr[i], arr[j]);
+        }
+    }
+    
+    swap(arr[i + <span class="code-number">1</span>], arr[high]);
+    <span class="code-keyword">return</span> i + <span class="code-number">1</span>;
+}
+
+<span class="code-keyword">void</span> <span class="code-type">quickSort</span>(<span class="code-keyword">int</span> arr[], <span class="code-keyword">int</span> low, <span class="code-keyword">int</span> high) {
+    <span class="code-keyword">if</span> (low &lt; high) {
+        <span class="code-keyword">int</span> pi = partition(arr, low, high);
+        quickSort(arr, low, pi - <span class="code-number">1</span>);
+        quickSort(arr, pi + <span class="code-number">1</span>, high);
+    }
+}</div>
+
+<div class="hinglish-box">
+<h4>🇮🇳 QUICK SORT</h4>
+<p><strong>Kaise kaam karta:</strong></p>
+<ul style="list-style-position:inside;margin-left:20px;">
+<li><strong>PIVOT:</strong> Ek element choose karo (usually last)</li>
+<li><strong>PARTITION:</strong> Chhote left, bade right</li>
+<li><strong>RECURSE:</strong> Dono sides sort karo</li>
+</ul>
+<p style="margin-top:15px;"><strong>Pros:</strong> ✅ Average O(n log n) - FAST!, ✅ In-place, ✅ Cache-friendly</p>
+<p><strong>Cons:</strong> ❌ Worst O(n²) on sorted (fix: random pivot!)</p>
+<p style="margin-top:10px;"><strong>Use:</strong> General purpose - BEST! C++ std::sort uses it</p>
+</div>
+</div>
+
+<!-- SECTION 7: HEAP SORT -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">07</div>
+<span>Heap Sort</span>
+</div>
+
+<div class="algo-card">
+<h4>Algorithm</h4>
+<p style="color:#D4D4D4;">Build max heap, repeatedly extract maximum (root) and heapify.</p>
+<div style="margin-top:15px;">
+<span class="complexity-badge badge-fast">Time: O(n log n)</span>
+<span class="complexity-badge badge-fast">Space: O(1)</span>
+<span class="complexity-badge badge-medium">Stable: No</span>
+</div>
+</div>
+
+<div class="code-snippet" style="font-size:0.85em;"><span class="code-keyword">void</span> <span class="code-type">heapify</span>(<span class="code-keyword">int</span> arr[], <span class="code-keyword">int</span> n, <span class="code-keyword">int</span> i) {
+    <span class="code-keyword">int</span> largest = i;
+    <span class="code-keyword">int</span> left = <span class="code-number">2</span> * i + <span class="code-number">1</span>;
+    <span class="code-keyword">int</span> right = <span class="code-number">2</span> * i + <span class="code-number">2</span>;
+    
+    <span class="code-keyword">if</span> (left &lt; n &amp;&amp; arr[left] &gt; arr[largest])
+        largest = left;
+    
+    <span class="code-keyword">if</span> (right &lt; n &amp;&amp; arr[right] &gt; arr[largest])
+        largest = right;
+    
+    <span class="code-keyword">if</span> (largest != i) {
+        swap(arr[i], arr[largest]);
+        heapify(arr, n, largest);
+    }
+}
+
+<span class="code-keyword">void</span> <span class="code-type">heapSort</span>(<span class="code-keyword">int</span> arr[], <span class="code-keyword">int</span> n) {
+    <span class="code-comment">// Build heap</span>
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = n / <span class="code-number">2</span> - <span class="code-number">1</span>; i &gt;= <span class="code-number">0</span>; i--)
+        heapify(arr, n, i);
+    
+    <span class="code-comment">// Extract elements</span>
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = n - <span class="code-number">1</span>; i &gt; <span class="code-number">0</span>; i--) {
+        swap(arr[<span class="code-number">0</span>], arr[i]);
+        heapify(arr, i, <span class="code-number">0</span>);
+    }
+}</div>
+
+<div class="hinglish-box">
+<h4>🇮🇳 HEAP SORT</h4>
+<p><strong>Steps:</strong></p>
+<ul style="list-style-position:inside;margin-left:20px;">
+<li>Max heap banao (parent &gt; children)</li>
+<li>Root (max) ko last se swap</li>
+<li>Heap size kam karo, heapify</li>
+<li>Repeat</li>
+</ul>
+<p style="margin-top:15px;"><strong>Pros:</strong> ✅ Guaranteed O(n log n), ✅ In-place O(1)</p>
+<p><strong>Cons:</strong> ❌ Not stable, ❌ Slower than Quick in practice</p>
+<p style="margin-top:10px;"><strong>Use:</strong> Memory constrained, real-time systems</p>
+</div>
+</div>
+
+<!-- SECTION 8: STL & PRODUCTION -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">08</div>
+<span>C++ STL & Production Sorting</span>
+</div>
+
+<div class="code-snippet"><span class="code-comment">#include &lt;algorithm&gt;</span>
+<span class="code-comment">#include &lt;vector&gt;</span>
+
+<span class="code-type">vector</span>&lt;<span class="code-keyword">int</span>&gt; v = {<span class="code-number">5</span>, <span class="code-number">2</span>, <span class="code-number">8</span>, <span class="code-number">1</span>, <span class="code-number">9</span>};
+
+<span class="code-comment">// IntroSort (Quick + Heap + Insertion) - FASTEST!</span>
+sort(v.begin(), v.end());
+
+<span class="code-comment">// Stable sort (Merge Sort based)</span>
+stable_sort(v.begin(), v.end());
+
+<span class="code-comment">// Partial sort (Heap-based)</span>
+partial_sort(v.begin(), v.begin() + <span class="code-number">3</span>, v.end());
+
+<span class="code-comment">// Custom comparator - Descending</span>
+sort(v.begin(), v.end(), greater&lt;<span class="code-keyword">int</span>&gt;());
+
+<span class="code-comment">// Lambda comparator</span>
+sort(v.begin(), v.end(), [](<span class="code-keyword">int</span> a, <span class="code-keyword">int</span> b) {
+    <span class="code-keyword">return</span> a &gt; b;  <span class="code-comment">// Descending</span>
+});
+
+<span class="code-comment">// Sort array</span>
+<span class="code-keyword">int</span> arr[] = {<span class="code-number">5</span>, <span class="code-number">2</span>, <span class="code-number">8</span>};
+sort(arr, arr + <span class="code-number">3</span>);</div>
+
+<div class="tip-box">
+<strong>💡 PRODUCTION TIP:</strong> Always use std::sort() in real code! It's IntroSort (Quick + Heap + Insertion) - best of all worlds. Only implement sorting algorithms for learning or interviews!
+</div>
+
+<div class="hinglish-box">
+<h4>🇮🇳 STL SORTING</h4>
+<p><strong>Real world mein:</strong></p>
+<ul style="list-style-position:inside;margin-left:20px;">
+<li><strong>sort():</strong> General purpose - Use karo! (IntroSort)</li>
+<li><strong>stable_sort():</strong> Stability chahiye to</li>
+<li><strong>partial_sort():</strong> Top k elements</li>
+<li><strong>nth_element():</strong> Kth smallest</li>
+</ul>
+<p style="margin-top:15px;"><strong>Yaad rakho:</strong> Production mein hamesha STL! Interview mein implement karna aana chahiye 🎯</p>
+</div>
+</div>
+
+<!-- SECTION 9: DECISION TREE -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">09</div>
+<span>When to Use Which Sort?</span>
+</div>
+
+<div class="decision-tree">
+<h3>🎯 Sorting Algorithm Decision Tree</h3>
+<div class="decision-item"><strong>n &lt; 10?</strong> → Insertion Sort</div>
+<div class="decision-item"><strong>Need stability?</strong> → Merge Sort or stable_sort()</div>
+<div class="decision-item"><strong>In-place + Guaranteed O(n log n)?</strong> → Heap Sort</div>
+<div class="decision-item"><strong>General purpose?</strong> → Quick Sort or std::sort()</div>
+<div class="decision-item"><strong>Integer range small (k ≈ n)?</strong> → Counting Sort</div>
+<div class="decision-item"><strong>Fixed digits?</strong> → Radix Sort</div>
+<div class="decision-item"><strong>Nearly sorted?</strong> → Insertion Sort (adaptive!)</div>
+<div class="decision-item"><strong>Production code?</strong> → std::sort() (ALWAYS!)</div>
+</div>
+
+<div class="hinglish-box">
+<h4>🇮🇳 KAB KYA USE KARE?</h4>
+<p><strong>Situation → Algorithm:</strong></p>
+<ul style="list-style-position:inside;margin-left:20px;margin-top:10px;">
+<li>Small array (n &lt; 50) → <strong>Insertion Sort</strong></li>
+<li>Large, general → <strong>Quick Sort (std::sort)</strong></li>
+<li>Stability zaroori → <strong>Merge Sort</strong></li>
+<li>Memory constraint → <strong>Heap Sort</strong></li>
+<li>Integer range chhoti → <strong>Counting Sort</strong></li>
+<li>Nearly sorted → <strong>Insertion (adaptive!)</strong></li>
+<li>Production → <strong>std::sort() hamesha!</strong> ✅</li>
+</ul>
+</div>
+</div>
+
+<!-- SECTION 10: TOP PROBLEMS -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">10</div>
+<span>Top Sorting Problems</span>
+</div>
+
+<div class="problem-grid">
+<div class="problem-item">
+<span class="problem-difficulty difficulty-easy">EASY</span>
+<div class="problem-title">Sort Array</div>
+<p style="color:#D4D4D4;">Basic sorting implementation</p>
+</div>
+
+<div class="problem-item">
+<span class="problem-difficulty difficulty-medium">MEDIUM</span>
+<div class="problem-title">Sort Colors (Dutch Flag)</div>
+<p style="color:#D4D4D4;">3-way partitioning O(n)</p>
+</div>
+
+<div class="problem-item">
+<span class="problem-difficulty difficulty-medium">MEDIUM</span>
+<div class="problem-title">Kth Largest Element</div>
+<p style="color:#D4D4D4;">Quick Select O(n) average</p>
+</div>
+
+<div class="problem-item">
+<span class="problem-difficulty difficulty-medium">MEDIUM</span>
+<div class="problem-title">Merge Sorted Arrays</div>
+<p style="color:#D4D4D4;">Two-pointer merge</p>
+</div>
+
+<div class="problem-item">
+<span class="problem-difficulty difficulty-medium">MEDIUM</span>
+<div class="problem-title">Sort Linked List</div>
+<p style="color:#D4D4D4;">Merge sort O(n log n)</p>
+</div>
+
+<div class="problem-item">
+<span class="problem-difficulty difficulty-medium">MEDIUM</span>
+<div class="problem-title">Sort by Frequency</div>
+<p style="color:#D4D4D4;">Custom comparator</p>
+</div>
+
+<div class="problem-item">
+<span class="problem-difficulty difficulty-hard">HARD</span>
+<div class="problem-title">Largest Number</div>
+<p style="color:#D4D4D4;">Custom string sort</p>
+</div>
+
+<div class="problem-item">
+<span class="problem-difficulty difficulty-medium">MEDIUM</span>
+<div class="problem-title">Group Anagrams</div>
+<p style="color:#D4D4D4;">Sort then group</p>
+</div>
+</div>
+</div>
+
+<!-- SUMMARY -->
+<div class="section">
+<div class="section-title">
+<div class="section-number">13</div>
+<span>Summary & Complete Hinglish Guide</span>
+</div>
+
+<div class="summary-box">
+<h3>Key Takeaways</h3>
+<ul>
+<li>Sorting arranges elements in order (ascending/descending)</li>
+<li>Simple sorts: Bubble, Selection, Insertion - O(n²)</li>
+<li>Efficient sorts: Merge, Quick, Heap - O(n log n)</li>
+<li>Special sorts: Counting, Radix - O(n) for specific cases</li>
+<li>std::sort() uses IntroSort (hybrid) - best for production</li>
+<li>Choose algorithm based on: size, stability, space, adaptiveness</li>
+</ul>
+</div>
+
+<div class="hinglish-box" style="margin-top:40px;">
+<h4>🇮🇳 SORTING - पूरी GUIDE (HINGLISH)</h4>
+<div style="border-top:2px solid #4CAF50;margin:20px 0;padding-top:20px;">
+<p style="font-size:1.15em;"><strong>📌 SORTING KYA HAI?</strong></p>
+<p>Elements ko order mein arrange karna (ascending ya descending)</p>
+
+<p style="font-size:1.15em;margin-top:25px;"><strong>🎯 ALGORITHMS:</strong></p>
+
+<p style="margin-top:15px;"><strong>1. SIMPLE (O(n²)):</strong></p>
+<ul style="list-style-position:inside;margin-left:20px;">
+<li><strong>Bubble:</strong> Adjacent swap, bubble up</li>
+<li><strong>Selection:</strong> Minimum select, place</li>
+<li><strong>Insertion:</strong> Playing cards jaise insert</li>
+</ul>
+
+<p style="margin-top:15px;"><strong>2. EFFICIENT (O(n log n)):</strong></p>
+<ul style="list-style-position:inside;margin-left:20px;">
+<li><strong>Merge:</strong> Divide, sort, merge</li>
+<li><strong>Quick:</strong> Pivot, partition, recurse</li>
+<li><strong>Heap:</strong> Heap banao, extract max</li>
+</ul>
+
+<p style="margin-top:15px;"><strong>3. SPECIAL (O(n)):</strong></p>
+<ul style="list-style-position:inside;margin-left:20px;">
+<li><strong>Counting:</strong> Frequency count (integer range)</li>
+<li><strong>Radix:</strong> Digit-by-digit</li>
+</ul>
+
+<p style="font-size:1.15em;margin-top:25px;"><strong>💡 KAB KYA USE KARE:</strong></p>
+<ul style="list-style-position:inside;margin-left:20px;">
+<li>Small (n &lt; 50) → Insertion</li>
+<li>General → Quick (std::sort)</li>
+<li>Stability → Merge</li>
+<li>In-place + O(n log n) → Heap</li>
+<li>Integer range → Counting</li>
+<li>Nearly sorted → Insertion</li>
+</ul>
+
+<p style="font-size:1.15em;margin-top:25px;"><strong>⚡ COMPARISON:</strong></p>
+<table style="width:100%;margin-top:10px;color:#C8E6C9;">
+<tr><td><strong>Algorithm</strong></td><td><strong>Time</strong></td><td><strong>Space</strong></td></tr>
+<tr><td>Bubble</td><td>O(n²)</td><td>O(1)</td></tr>
+<tr><td>Insertion</td><td>O(n²)</td><td>O(1)</td></tr>
+<tr><td>Merge</td><td>O(n log n)</td><td>O(n)</td></tr>
+<tr><td>Quick</td><td>O(n log n)*</td><td>O(log n)</td></tr>
+<tr><td>Heap</td><td>O(n log n)</td><td>O(1)</td></tr>
+</table>
+
+<p style="font-size:1.15em;margin-top:25px;"><strong>🏆 MASTER TIPS:</strong></p>
+<ul style="list-style-position:inside;margin-left:20px;">
+<li>Interview → Merge/Quick implement kar sako</li>
+<li>Production → std::sort() use karo</li>
+<li>Stability matter → stable_sort()</li>
+<li>Top K → partial_sort()</li>
+<li>Quick on sorted → Random pivot!</li>
+</ul>
+
+<p style="font-size:1.2em;margin-top:30px;text-align:center;"><strong>याद रखो:</strong></p>
+<p style="text-align:center;">"Practice mein std::sort() use karo,<br>Interview mein implement karna aana chahiye!" 🎯</p>
+</div>
+</div>
+</div>
+
+<div class="footer">
+<p><strong>SORTING - COMPLETE DSA VISUAL GUIDE (C++)</strong></p>
+<p style="margin-top:14px;color:#D4D4D4;">Master Data Structures & Algorithms • Perfect for Interviews, Exams & Revision</p>
+<p style="margin-top:22px;font-size:0.95em;color:var(--yellow);">
+▶ Remember: Choose the right algorithm for the right situation!
+</p>
+<p style="margin-top:10px;font-size:0.95em;color:#C8E6C9;">
+🇮🇳 सही situation के लिए सही algorithm! Happy Sorting! 🚀
+</p>
+</div>
+</div>
+</body>
+</html>
