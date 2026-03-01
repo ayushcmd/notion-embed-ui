@@ -1,0 +1,2962 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DBMS Master Guide 🗄️</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d0f14;
+  --bg2: #13161e;
+  --bg3: #1a1e2a;
+  --card: #1e2332;
+  --border: #2a3048;
+  --text: #e8eaf0;
+  --text2: #9ba3bc;
+  --text3: #6b7494;
+  --accent: #6c63ff;
+  --accent2: #00d4ff;
+  --green: #00e5a0;
+  --yellow: #ffd93d;
+  --red: #ff6b6b;
+  --orange: #ff9f43;
+  --pink: #ff6fd8;
+  --u1: #6c63ff;
+  --u2: #00d4ff;
+  --u3: #00e5a0;
+  --u4: #ffd93d;
+  --u5: #ff9f43;
+  --u6: #ff6b6b;
+  --u7: #ff6fd8;
+  --sidebar-w: 280px;
+  --radius: 12px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+[data-theme="light"] {
+  --bg: #f0f2f8;
+  --bg2: #e8eaf2;
+  --bg3: #dde0ee;
+  --card: #ffffff;
+  --border: #d0d4e8;
+  --text: #1a1e2a;
+  --text2: #4a5068;
+  --text3: #8a90a8;
+  --shadow: 0 4px 24px rgba(0,0,0,0.1);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+}
+
+/* SIDEBAR */
+#sidebar {
+  width: var(--sidebar-w);
+  min-height: 100vh;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  position: fixed;
+  top: 0; left: 0;
+  overflow-y: auto;
+  z-index: 100;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+.sidebar-header {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0;
+  background: var(--bg2);
+  z-index: 10;
+}
+.sidebar-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.2rem;
+  color: var(--accent);
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 12px;
+}
+#searchBox {
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+#searchBox:focus { border-color: var(--accent); }
+.nav-unit { margin-bottom: 4px; }
+.nav-unit-btn {
+  width: 100%;
+  padding: 10px 20px;
+  background: none;
+  border: none;
+  color: var(--text2);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 8px;
+  transition: all 0.2s;
+  border-left: 3px solid transparent;
+}
+.nav-unit-btn:hover { color: var(--text); background: var(--bg3); }
+.nav-unit-btn.active { color: var(--text); background: var(--bg3); }
+.nav-unit-btn .dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.nav-topics { display: none; padding-left: 20px; }
+.nav-topics.open { display: block; }
+.nav-topic-link {
+  display: block;
+  padding: 6px 12px;
+  color: var(--text3);
+  text-decoration: none;
+  font-size: 0.8rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  margin: 1px 0;
+}
+.nav-topic-link:hover { color: var(--text); background: var(--bg3); }
+.progress-wrap { padding: 16px 20px; border-top: 1px solid var(--border); margin-top: auto; }
+.progress-label { font-size: 0.75rem; color: var(--text3); margin-bottom: 6px; display: flex; justify-content: space-between; }
+.progress-bar { height: 6px; background: var(--bg3); border-radius: 99px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 99px; transition: width 0.5s ease; }
+
+/* MAIN */
+#main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  min-height: 100vh;
+}
+#topbar {
+  position: sticky; top: 0; z-index: 50;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 32px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.topbar-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; color: var(--text2); }
+.topbar-right { display: flex; gap: 10px; align-items: center; }
+.theme-btn {
+  padding: 6px 14px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  color: var(--text2);
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+.theme-btn:hover { color: var(--text); border-color: var(--accent); }
+#content { padding: 40px 32px; max-width: 900px; }
+
+/* HERO */
+.hero {
+  background: linear-gradient(135deg, var(--bg3) 0%, var(--card) 100%);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 48px 40px;
+  margin-bottom: 40px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(108,99,255,0.2) 0%, transparent 70%);
+}
+.hero-tag {
+  display: inline-block;
+  background: rgba(108,99,255,0.15);
+  color: var(--accent);
+  border: 1px solid rgba(108,99,255,0.3);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 16px;
+}
+.hero h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: 2.4rem;
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, var(--text) 0%, var(--accent2) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero p { color: var(--text2); font-size: 1rem; line-height: 1.6; max-width: 540px; margin-bottom: 24px; }
+.hero-stats { display: flex; gap: 24px; flex-wrap: wrap; }
+.stat-box {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 20px;
+  text-align: center;
+}
+.stat-box .num { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800; color: var(--accent); }
+.stat-box .lbl { font-size: 0.72rem; color: var(--text3); }
+
+/* UNIT HEADER */
+.unit-header {
+  display: flex; align-items: center; gap: 16px;
+  margin-bottom: 32px; margin-top: 48px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.unit-num {
+  width: 48px; height: 48px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800; font-size: 1.1rem;
+  flex-shrink: 0;
+}
+.unit-header h2 { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; }
+.unit-header .unit-sub { color: var(--text2); font-size: 0.9rem; margin-top: 2px; }
+
+/* TOPIC CARD */
+.topic-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 24px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.topic-card:hover { border-color: var(--accent); }
+.topic-header {
+  padding: 20px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+}
+.topic-title { font-weight: 600; font-size: 1rem; display: flex; align-items: center; gap: 10px; }
+.topic-emoji { font-size: 1.2rem; }
+.badge {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+.badge-beginner { background: rgba(0,229,160,0.15); color: var(--green); border: 1px solid rgba(0,229,160,0.3); }
+.badge-intermediate { background: rgba(255,217,61,0.15); color: var(--yellow); border: 1px solid rgba(255,217,61,0.3); }
+.badge-advanced { background: rgba(255,107,107,0.15); color: var(--red); border: 1px solid rgba(255,107,107,0.3); }
+.chevron { color: var(--text3); transition: transform 0.3s; font-size: 0.8rem; }
+.chevron.open { transform: rotate(180deg); }
+.topic-body { display: none; padding: 0 24px 24px; border-top: 1px solid var(--border); }
+.topic-body.open { display: block; }
+
+/* CONTENT INSIDE TOPIC */
+.def-block {
+  background: var(--bg2);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 16px;
+  margin: 16px 0;
+}
+.def-block .def-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.def-block p { font-size: 0.9rem; color: var(--text); line-height: 1.6; }
+.hinglish-block {
+  background: rgba(255,217,61,0.08);
+  border: 1px dashed rgba(255,217,61,0.3);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 12px 0;
+  font-size: 0.88rem;
+  color: var(--text2);
+  line-height: 1.6;
+}
+.hinglish-block::before { content: '🗣️ Hinglish: '; color: var(--yellow); font-weight: 700; }
+.note-block {
+  background: rgba(0,212,255,0.08);
+  border: 1px solid rgba(0,212,255,0.2);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 12px 0;
+  font-size: 0.88rem;
+  color: var(--text2);
+}
+.note-block::before { content: '💡 Note: '; color: var(--accent2); font-weight: 700; }
+.tip-block {
+  background: rgba(0,229,160,0.08);
+  border: 1px solid rgba(0,229,160,0.2);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 12px 0;
+  font-size: 0.88rem;
+  color: var(--text2);
+}
+.tip-block::before { content: '✅ Exam Tip: '; color: var(--green); font-weight: 700; }
+.warn-block {
+  background: rgba(255,107,107,0.08);
+  border: 1px solid rgba(255,107,107,0.2);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 12px 0;
+  font-size: 0.88rem;
+  color: var(--text2);
+}
+.warn-block::before { content: '⚠️ Common Mistake: '; color: var(--red); font-weight: 700; }
+h3 { font-size: 1rem; font-weight: 600; margin: 20px 0 10px; color: var(--text); }
+h4 { font-size: 0.9rem; font-weight: 600; margin: 14px 0 8px; color: var(--text2); }
+p { font-size: 0.9rem; color: var(--text2); line-height: 1.7; margin: 8px 0; }
+ul, ol { padding-left: 20px; margin: 8px 0; }
+li { font-size: 0.9rem; color: var(--text2); line-height: 1.8; }
+code {
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--bg3);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.82rem;
+  color: var(--accent2);
+}
+pre {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 12px 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+/* TABLE */
+.tbl-wrap { overflow-x: auto; margin: 12px 0; }
+table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+th {
+  background: var(--bg3);
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: var(--text2);
+  border-bottom: 2px solid var(--border);
+}
+td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text2);
+  vertical-align: top;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--bg2); }
+
+/* MCQ SECTION */
+.mcq-section { margin-top: 28px; }
+.mcq-section-header {
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700; font-size: 0.95rem;
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  background: rgba(108,99,255,0.1);
+  border: 1px solid rgba(108,99,255,0.2);
+  border-radius: 8px;
+  color: var(--accent);
+}
+.mcq-card { margin-bottom: 16px; }
+.mcq-q {
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--text);
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+.mcq-q span { color: var(--accent); font-weight: 700; margin-right: 4px; }
+.mcq-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.mcq-opt {
+  padding: 9px 14px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.83rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text2);
+  display: flex; align-items: center; gap: 8px;
+  font-family: inherit;
+  text-align: left;
+}
+.mcq-opt:hover { border-color: var(--accent); color: var(--text); }
+.mcq-opt.correct { background: rgba(0,229,160,0.12); border-color: var(--green); color: var(--green); }
+.mcq-opt.wrong { background: rgba(255,107,107,0.12); border-color: var(--red); color: var(--red); }
+.mcq-opt:disabled { cursor: default; }
+.mcq-explanation {
+  margin-top: 10px;
+  padding: 10px 14px;
+  background: var(--bg3);
+  border-radius: 8px;
+  font-size: 0.82rem;
+  color: var(--text2);
+  display: none;
+  line-height: 1.6;
+}
+.mcq-explanation.show { display: block; }
+.mcq-explanation strong { color: var(--green); }
+
+/* SHORT QS */
+.shortq-section { margin-top: 20px; }
+.shortq-item {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.shortq-q {
+  padding: 12px 16px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex; justify-content: space-between; align-items: center;
+  color: var(--text);
+  user-select: none;
+}
+.shortq-q:hover { background: var(--bg3); }
+.shortq-a {
+  padding: 0 16px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s;
+  font-size: 0.85rem;
+  color: var(--text2);
+  line-height: 1.7;
+}
+.shortq-a.open { max-height: 400px; padding: 12px 16px; border-top: 1px solid var(--border); }
+
+/* INTERVIEW SECTION */
+.interview-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.interview-q {
+  padding: 16px 20px;
+  cursor: pointer;
+  display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;
+  user-select: none;
+}
+.interview-q:hover { background: var(--bg3); }
+.interview-q-text { font-size: 0.9rem; font-weight: 600; color: var(--text); line-height: 1.4; }
+.interview-level {
+  flex-shrink: 0;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+.lvl-fresher { background: rgba(0,229,160,0.15); color: var(--green); }
+.lvl-mid { background: rgba(255,217,61,0.15); color: var(--yellow); }
+.lvl-hard { background: rgba(255,107,107,0.15); color: var(--red); }
+.interview-a {
+  padding: 0 20px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s;
+  font-size: 0.87rem;
+  color: var(--text2);
+  line-height: 1.7;
+  border-top: 0px solid var(--border);
+}
+.interview-a.open { max-height: 500px; padding: 16px 20px; border-top: 1px solid var(--border); }
+
+/* DIVIDER */
+.divider { height: 1px; background: var(--border); margin: 32px 0; }
+
+/* TABS */
+.tab-bar { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 0; }
+.tab-btn {
+  padding: 8px 16px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text3);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: -1px;
+}
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-btn:hover { color: var(--text); }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* FORMULA BOX */
+.formula {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  margin: 12px 0;
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1rem;
+  color: var(--accent2);
+}
+
+/* DIAGRAM */
+.diagram {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 12px 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  line-height: 1.8;
+  color: var(--text2);
+  overflow-x: auto;
+  white-space: pre;
+}
+
+/* MOBILE */
+#menuBtn { display: none; }
+@media (max-width: 768px) {
+  #sidebar { transform: translateX(-100%); }
+  #sidebar.open { transform: translateX(0); }
+  #main { margin-left: 0; }
+  #content { padding: 20px 16px; }
+  #menuBtn { display: block; background: var(--bg3); border: 1px solid var(--border); color: var(--text); padding: 6px 12px; border-radius: 8px; cursor: pointer; font-family: inherit; font-size: 0.85rem; }
+  .hero h1 { font-size: 1.6rem; }
+  .mcq-options { grid-template-columns: 1fr; }
+  .hero-stats { gap: 12px; }
+}
+
+/* SCORE */
+.score-box {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 12px;
+  font-size: 0.85rem;
+  color: var(--text2);
+}
+.score-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.2rem; color: var(--accent); }
+
+/* SEARCH HIGHLIGHT */
+.highlight { background: rgba(255,217,61,0.3); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">🗄️ DBMS Guide</div>
+    <input type="text" id="searchBox" placeholder="🔍 Search topics..." oninput="searchTopics(this.value)">
+  </div>
+  <div style="padding:12px 0; flex:1;">
+    <div class="nav-unit" id="nav-u0">
+      <button class="nav-unit-btn" onclick="toggleNav('nav-u0')">
+        <span class="dot" style="background:#6c63ff"></span> Overview
+      </button>
+    </div>
+    <div class="nav-unit" id="nav-u1">
+      <button class="nav-unit-btn" onclick="toggleNav('nav-u1')">
+        <span class="dot" style="background:var(--u1)"></span> Unit 1 — Foundations
+        <span style="margin-left:auto">▾</span>
+      </button>
+      <div class="nav-topics" id="topics-nav-u1">
+        <a class="nav-topic-link" href="#t-intro">What is DBMS?</a>
+        <a class="nav-topic-link" href="#t-arch">3-Schema Architecture</a>
+        <a class="nav-topic-link" href="#t-er">ER Model</a>
+        <a class="nav-topic-link" href="#t-keys">Keys</a>
+        <a class="nav-topic-link" href="#t-mapping">ER to Relational</a>
+      </div>
+    </div>
+    <div class="nav-unit" id="nav-u2">
+      <button class="nav-unit-btn" onclick="toggleNav('nav-u2')">
+        <span class="dot" style="background:var(--u2)"></span> Unit 2 — Relational Model
+        <span style="margin-left:auto">▾</span>
+      </button>
+      <div class="nav-topics" id="topics-nav-u2">
+        <a class="nav-topic-link" href="#t-relmodel">Relational Model</a>
+        <a class="nav-topic-link" href="#t-ra">Relational Algebra</a>
+        <a class="nav-topic-link" href="#t-rc">Relational Calculus</a>
+      </div>
+    </div>
+    <div class="nav-unit" id="nav-u3">
+      <button class="nav-unit-btn" onclick="toggleNav('nav-u3')">
+        <span class="dot" style="background:var(--u3)"></span> Unit 3 — SQL
+        <span style="margin-left:auto">▾</span>
+      </button>
+      <div class="nav-topics" id="topics-nav-u3">
+        <a class="nav-topic-link" href="#t-ddl">DDL</a>
+        <a class="nav-topic-link" href="#t-dml">DML</a>
+        <a class="nav-topic-link" href="#t-joins">Joins</a>
+        <a class="nav-topic-link" href="#t-subquery">Subqueries</a>
+        <a class="nav-topic-link" href="#t-views">Views & Indexes</a>
+      </div>
+    </div>
+    <div class="nav-unit" id="nav-u4">
+      <button class="nav-unit-btn" onclick="toggleNav('nav-u4')">
+        <span class="dot" style="background:var(--u4)"></span> Unit 4 — Integrity & FDs
+        <span style="margin-left:auto">▾</span>
+      </button>
+      <div class="nav-topics" id="topics-nav-u4">
+        <a class="nav-topic-link" href="#t-ic">Integrity Constraints</a>
+        <a class="nav-topic-link" href="#t-fd">Functional Dependencies</a>
+        <a class="nav-topic-link" href="#t-armstrong">Armstrong's Axioms</a>
+        <a class="nav-topic-link" href="#t-closure">Closure & Cover</a>
+      </div>
+    </div>
+    <div class="nav-unit" id="nav-u5">
+      <button class="nav-unit-btn" onclick="toggleNav('nav-u5')">
+        <span class="dot" style="background:var(--u5)"></span> Unit 5 — Normalization
+        <span style="margin-left:auto">▾</span>
+      </button>
+      <div class="nav-topics" id="topics-nav-u5">
+        <a class="nav-topic-link" href="#t-1nf">1NF</a>
+        <a class="nav-topic-link" href="#t-2nf">2NF</a>
+        <a class="nav-topic-link" href="#t-3nf">3NF</a>
+        <a class="nav-topic-link" href="#t-bcnf">BCNF</a>
+        <a class="nav-topic-link" href="#t-decomp">Decomposition</a>
+      </div>
+    </div>
+    <div class="nav-unit" id="nav-u6">
+      <button class="nav-unit-btn" onclick="toggleNav('nav-u6')">
+        <span class="dot" style="background:var(--u6)"></span> Unit 6 — Transactions
+        <span style="margin-left:auto">▾</span>
+      </button>
+      <div class="nav-topics" id="topics-nav-u6">
+        <a class="nav-topic-link" href="#t-acid">ACID Properties</a>
+        <a class="nav-topic-link" href="#t-schedules">Schedules</a>
+        <a class="nav-topic-link" href="#t-concurrency">Concurrency Control</a>
+        <a class="nav-topic-link" href="#t-recovery">Recovery</a>
+      </div>
+    </div>
+    <div class="nav-unit" id="nav-u7">
+      <button class="nav-unit-btn" onclick="toggleNav('nav-u7')">
+        <span class="dot" style="background:var(--u7)"></span> Unit 7 — Advanced
+        <span style="margin-left:auto">▾</span>
+      </button>
+      <div class="nav-topics" id="topics-nav-u7">
+        <a class="nav-topic-link" href="#t-indexing">Indexing & Hashing</a>
+        <a class="nav-topic-link" href="#t-btree">B+ Trees</a>
+        <a class="nav-topic-link" href="#t-interview">Interview Questions</a>
+      </div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-label"><span>📊 Guide Progress</span><span id="pct">100%</span></div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:100%"></div></div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main id="main">
+  <div id="topbar">
+    <div style="display:flex;gap:10px;align-items:center;">
+      <button id="menuBtn" onclick="toggleSidebar()">☰ Menu</button>
+      <span class="topbar-title" id="currentUnit">🗄️ DBMS Master Guide</span>
+    </div>
+    <div class="topbar-right">
+      <button class="theme-btn" onclick="toggleTheme()">🌙 Toggle Theme</button>
+    </div>
+  </div>
+
+  <div id="content">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-tag">📚 COMPLETE STUDY GUIDE</div>
+      <h1>DBMS Master Guide</h1>
+      <p>Database Management Systems — beginner se expert tak. English definitions, Hinglish explanations, MCQs, short questions, aur interview prep — sab ek jagah! 🚀</p>
+      <div class="hero-stats">
+        <div class="stat-box"><div class="num">7</div><div class="lbl">Units</div></div>
+        <div class="stat-box"><div class="num">35+</div><div class="lbl">Topics</div></div>
+        <div class="stat-box"><div class="num">100+</div><div class="lbl">MCQs</div></div>
+        <div class="stat-box"><div class="num">50+</div><div class="lbl">Interview Qs</div></div>
+      </div>
+    </div>
+
+    <!-- ==================== UNIT 1 ==================== -->
+    <div class="unit-header" id="unit1">
+      <div class="unit-num" style="background:rgba(108,99,255,0.15);color:var(--u1)">U1</div>
+      <div>
+        <h2 style="color:var(--u1)">Foundations & ER Model</h2>
+        <div class="unit-sub">DBMS basics, 3-schema architecture, ER diagrams, keys</div>
+      </div>
+    </div>
+
+    <!-- Topic: What is DBMS -->
+    <div class="topic-card" id="t-intro">
+      <div class="topic-header" onclick="toggleTopic(this)">
+        <div class="topic-title"><span class="topic-emoji">🗄️</span> What is DBMS?</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <span class="badge badge-beginner">Beginner</span>
+          <span class="chevron">▼</span>
+        </div>
+      </div>
+      <div class="topic-body open">
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab(this,'theory')">📖 Theory</button>
+          <button class="tab-btn" onclick="switchTab(this,'mcq')">🧠 MCQs</button>
+          <button class="tab-btn" onclick="switchTab(this,'shortq')">✍️ Short Qs</button>
+        </div>
+        <div class="tab-panel active" data-tab="theory">
+          <div class="def-block">
+            <div class="def-label">Definition</div>
+            <p>A <strong>Database Management System (DBMS)</strong> is a software system that enables users to define, create, maintain, and control access to a database. It acts as an interface between the database and end users/applications.</p>
+          </div>
+          <div class="hinglish-block">Database ek organized data ka collection hai — aur DBMS woh software hai jo uss data ko manage karta hai. File system se better hai kyunki isme redundancy kam hoti hai, security hoti hai, aur data access easy hota hai!</div>
+          <h3>📌 Key Advantages over File System</h3>
+          <div class="tbl-wrap"><table>
+            <tr><th>File System ❌</th><th>DBMS ✅</th></tr>
+            <tr><td>Data redundancy high</td><td>Minimal redundancy</td></tr>
+            <tr><td>No data sharing</td><td>Concurrent access allowed</td></tr>
+            <tr><td>No backup/recovery</td><td>Built-in recovery</td></tr>
+            <tr><td>No security</td><td>Role-based access control</td></tr>
+            <tr><td>Inconsistency possible</td><td>ACID properties ensure consistency</td></tr>
+          </table></div>
+          <h3>🏗️ 3-Schema Architecture</h3>
+          <div class="def-block">
+            <div class="def-label">3 Levels of Abstraction</div>
+            <p>DBMS uses three levels to separate how data is stored from how users see it.</p>
+          </div>
+          <div class="diagram">┌─────────────────────────────────┐
+│   EXTERNAL LEVEL (View Level)    │  ← User 1 sees only salary data
+│   User A view | User B view      │    User 2 sees only student data
+├─────────────────────────────────┤
+│   CONCEPTUAL LEVEL (Logical)     │  ← Whole DB structure (tables, relationships)
+│   Tables, Relationships, FDs     │
+├─────────────────────────────────┤
+│   INTERNAL LEVEL (Physical)      │  ← How data actually stored on disk
+│   B-Trees, Hashing, Files        │    (blocks, pages, indexes)
+└─────────────────────────────────┘</div>
+          <div class="hinglish-block">Teen layers socho — <strong>External</strong> = User ko jo dikhta hai (apna portion), <strong>Conceptual</strong> = Poori DB ka logical map, <strong>Internal</strong> = Disk pe actually kaise store hua. Yeh separation data independence deta hai!</div>
+          <div class="tip-block">Data Independence = ek level change karo, doosra affect nahi hoga. Physical independence (internal change) vs Logical independence (conceptual change).</div>
+          <h3>👤 Database Users</h3>
+          <ul>
+            <li><strong>Naive Users</strong> — Simple apps use karte hain (ATM, forms)</li>
+            <li><strong>Application Programmers</strong> — SQL queries likhte hain</li>
+            <li><strong>Sophisticated Users</strong> — Directly query tools use karte hain</li>
+            <li><strong>Database Administrator (DBA)</strong> — Schema define karta hai, security manage karta hai</li>
+          </ul>
+        </div>
+        <div class="tab-panel" data-tab="mcq">
+          <div class="mcq-section">
+            <div class="mcq-section-header">🧠 MCQ Quiz — What is DBMS?</div>
+            <div id="score-intro" class="score-box" style="display:none">
+              Score: <span class="score-num" id="score-intro-num">0/0</span>
+            </div>
+            <!-- MCQ 1 -->
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q1.</span> Which of the following is NOT an advantage of DBMS over file system?</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','intro',1)">A) Reduced redundancy</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','intro',1)">B) Data sharing</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','intro',1)">C) Faster execution than assembly language</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','intro',1)">D) Data security</button>
+              </div>
+              <div class="mcq-explanation" id="exp-intro-1"><strong>Answer: C</strong> — DBMS doesn't inherently execute faster than low-level code. Its advantages are about data management: reduced redundancy, sharing, security, and consistency. 🗣️ DBMS speed advantage nahi, management advantage hai!</div>
+            </div>
+            <!-- MCQ 2 -->
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q2.</span> The conceptual level in 3-schema architecture describes:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','intro',2)">A) How data is physically stored</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','intro',2)">B) The logical structure of the entire database</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','intro',2)">C) What each individual user sees</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','intro',2)">D) The hardware configuration</button>
+              </div>
+              <div class="mcq-explanation" id="exp-intro-2"><strong>Answer: B</strong> — Conceptual level = entire DB ka logical view (tables, relationships, constraints). Poori DB structure yahan define hoti hai!</div>
+            </div>
+            <!-- MCQ 3 -->
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q3.</span> Physical data independence means:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','intro',3)">A) Changing logical schema doesn't affect physical storage</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','intro',3)">B) Changing physical storage doesn't affect conceptual schema</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','intro',3)">C) Users can directly access physical storage</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','intro',3)">D) Physical and logical schemas are identical</button>
+              </div>
+              <div class="mcq-explanation" id="exp-intro-3"><strong>Answer: B</strong> — Physical independence = internal (physical) layer change karo, conceptual layer affect nahi hoti. Hard disk change karo, tables wahi rehte hain!</div>
+            </div>
+            <!-- MCQ 4 -->
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q4.</span> Who is responsible for defining the conceptual schema?</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','intro',4)">A) Database Administrator (DBA)</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','intro',4)">B) Naive User</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','intro',4)">C) Application Programmer</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','intro',4)">D) End User</button>
+              </div>
+              <div class="mcq-explanation" id="exp-intro-4"><strong>Answer: A</strong> — DBA (Database Administrator) conceptual schema define karta hai, security manage karta hai, aur overall DB ka in-charge hota hai!</div>
+            </div>
+            <!-- MCQ 5 -->
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q5.</span> A view in DBMS is associated with which schema level?</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','intro',5)">A) Internal level</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','intro',5)">B) Conceptual level</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','intro',5)">C) External level</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','intro',5)">D) Physical level</button>
+              </div>
+              <div class="mcq-explanation" id="exp-intro-5"><strong>Answer: C</strong> — Views are at the external level — each user/group ka apna view hota hai jo sirf unhe relevant data dikhata hai!</div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-panel" data-tab="shortq">
+          <div class="shortq-section">
+            <div class="mcq-section-header">✍️ Short Answer Questions</div>
+            <div class="shortq-item">
+              <div class="shortq-q" onclick="toggleShortQ(this)">Q1. What is the difference between a database and a DBMS? <span>▾</span></div>
+              <div class="shortq-a">A <strong>Database</strong> is an organized collection of related data. A <strong>DBMS</strong> is the software that manages that database — it provides tools to create, read, update, delete, and control access to data. 🗣️ Database = data ka ghar, DBMS = ghar ka manager!</div>
+            </div>
+            <div class="shortq-item">
+              <div class="shortq-q" onclick="toggleShortQ(this)">Q2. Explain the concept of data abstraction in DBMS. <span>▾</span></div>
+              <div class="shortq-a">Data abstraction hides the complexity of how data is stored from users. Three levels: <strong>Physical</strong> (actual storage), <strong>Logical/Conceptual</strong> (structure), <strong>View/External</strong> (user's perspective). Each level abstracts the level below it.</div>
+            </div>
+            <div class="shortq-item">
+              <div class="shortq-q" onclick="toggleShortQ(this)">Q3. What are the functions of a DBA? <span>▾</span></div>
+              <div class="shortq-a">DBA's functions: (1) Schema definition, (2) Storage structure & access method definition, (3) Schema & physical organization modification, (4) Granting user authorization, (5) Routine maintenance (backup, performance monitoring, integrity checking). 🗣️ DBA = DB ka Superman!</div>
+            </div>
+            <div class="shortq-item">
+              <div class="shortq-q" onclick="toggleShortQ(this)">Q4. What is data independence? Name its types. <span>▾</span></div>
+              <div class="shortq-a"><strong>Data Independence</strong> = ability to change schema at one level without affecting the schema at the next higher level. Types: <br>1. <strong>Physical Data Independence</strong> — change internal schema without affecting conceptual schema.<br>2. <strong>Logical Data Independence</strong> — change conceptual schema without affecting external schema (harder to achieve).</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Topic: ER Model -->
+    <div class="topic-card" id="t-er">
+      <div class="topic-header" onclick="toggleTopic(this)">
+        <div class="topic-title"><span class="topic-emoji">🔷</span> Entity-Relationship (ER) Model</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <span class="badge badge-beginner">Beginner</span>
+          <span class="chevron">▼</span>
+        </div>
+      </div>
+      <div class="topic-body open">
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab(this,'theory')">📖 Theory</button>
+          <button class="tab-btn" onclick="switchTab(this,'mcq')">🧠 MCQs</button>
+          <button class="tab-btn" onclick="switchTab(this,'shortq')">✍️ Short Qs</button>
+        </div>
+        <div class="tab-panel active" data-tab="theory">
+          <div class="def-block">
+            <div class="def-label">Definition</div>
+            <p>The <strong>ER Model</strong> is a high-level conceptual data model used to design a database by representing data as <em>entities</em>, <em>attributes</em>, and <em>relationships</em>.</p>
+          </div>
+          <div class="hinglish-block">ER Model ek "blueprint" hai database ka — jaise ghar banane se pehle architect drawing banata hai. Boxes (entities), ovals (attributes), diamonds (relationships) — inse database ka structure dikhate hain paper pe!</div>
+          <h3>🧩 Components</h3>
+          <div class="tbl-wrap"><table>
+            <tr><th>Symbol</th><th>Represents</th><th>Example</th><th>🗣️ Matlab</th></tr>
+            <tr><td>🟦 Rectangle</td><td>Entity</td><td>STUDENT, COURSE</td><td>Real-world object/thing</td></tr>
+            <tr><td>🔵 Ellipse/Oval</td><td>Attribute</td><td>Name, Age, Roll</td><td>Object ka property</td></tr>
+            <tr><td>🔶 Diamond</td><td>Relationship</td><td>ENROLLS, TEACHES</td><td>Entities ke beech connection</td></tr>
+            <tr><td>🔲 Double Rectangle</td><td>Weak Entity</td><td>DEPENDENT (of Employee)</td><td>Bina parent exist nahi kar sakta</td></tr>
+            <tr><td>⭕ Double Ellipse</td><td>Multi-valued Attribute</td><td>Phone_numbers</td><td>Ek se zyada values ho sakti hain</td></tr>
+            <tr><td>🔵 Dashed Ellipse</td><td>Derived Attribute</td><td>Age (from DOB)</td><td>Doosre attribute se calculate hota hai</td></tr>
+          </table></div>
+          <h3>🔗 Cardinality Constraints</h3>
+          <div class="tbl-wrap"><table>
+            <tr><th>Type</th><th>Meaning</th><th>Example</th></tr>
+            <tr><td><strong>One-to-One (1:1)</strong></td><td>1 entity in A ↔ 1 entity in B</td><td>Person ↔ Passport</td></tr>
+            <tr><td><strong>One-to-Many (1:N)</strong></td><td>1 entity in A ↔ many in B</td><td>Teacher → many Students</td></tr>
+            <tr><td><strong>Many-to-One (N:1)</strong></td><td>Many in A ↔ 1 entity in B</td><td>Students → one Department</td></tr>
+            <tr><td><strong>Many-to-Many (M:N)</strong></td><td>Many in A ↔ many in B</td><td>Students ↔ Courses</td></tr>
+          </table></div>
+          <div class="hinglish-block">Cardinality = "kitne se kitne ka connection hai?" 1:1 matlab ek teacher ek hi class ka HOD. 1:N matlab ek teacher ke bahut saare students. M:N matlab ek student kai courses mein, ek course mein kai students!</div>
+          <h3>💪 Strong vs Weak Entity</h3>
+          <ul>
+            <li><strong>Strong Entity</strong> — Apni primary key hoti hai. Independently exist kar sakta hai. (STUDENT, EMPLOYEE)</li>
+            <li><strong>Weak Entity</strong> — Apni complete primary key nahi hoti. Doosre (owner) entity pe dependent hai. Double rectangle se represent karte hain. (DEPENDENT of Employee)</li>
+          </ul>
+          <div class="tip-block">Weak entity ka identifier = Owner's PK + Partial key (discriminator) of weak entity. Exam mein weak entity ko double rectangle se draw karo!</div>
+        </div>
+        <div class="tab-panel" data-tab="mcq">
+          <div class="mcq-section">
+            <div class="mcq-section-header">🧠 MCQ Quiz — ER Model</div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q1.</span> In ER diagram, a relationship is represented by:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','er',1)">A) Rectangle</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','er',1)">B) Ellipse</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','er',1)">C) Diamond</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','er',1)">D) Circle</button>
+              </div>
+              <div class="mcq-explanation" id="exp-er-1"><strong>Answer: C</strong> — Diamond shape = Relationship set. Rectangle = Entity, Ellipse = Attribute. 🗣️ Diamond = connection/relationship symbol!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q2.</span> A weak entity set is represented by:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','er',2)">A) Single rectangle</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','er',2)">B) Double rectangle</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','er',2)">C) Dashed rectangle</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','er',2)">D) Dotted ellipse</button>
+              </div>
+              <div class="mcq-explanation" id="exp-er-2"><strong>Answer: B</strong> — Double rectangle = weak entity. 🗣️ Double border = dependent/weak entity hai yeh!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q3.</span> "A person can have multiple phone numbers" — what type of attribute is phone number?</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','er',3)">A) Simple attribute</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','er',3)">B) Derived attribute</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','er',3)">C) Multi-valued attribute</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','er',3)">D) Composite attribute</button>
+              </div>
+              <div class="mcq-explanation" id="exp-er-3"><strong>Answer: C</strong> — Multi-valued = ek entity ke liye ek se zyada values. Represented by double ellipse. 🗣️ Ek number nahi — kai numbers ho sakte hain!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q4.</span> In a 1:N relationship between Department and Employee, the foreign key is placed in:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','er',4)">A) Department table</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','er',4)">B) Employee table</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','er',4)">C) A separate table</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','er',4)">D) Both tables</button>
+              </div>
+              <div class="mcq-explanation" id="exp-er-4"><strong>Answer: B</strong> — In 1:N, FK is placed on the "N" side (Employee). Har employee apna department jaanta hai! 🗣️ "Many" side pe FK jaata hai!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q5.</span> Age derived from Date of Birth is an example of:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','er',5)">A) Multi-valued attribute</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','er',5)">B) Composite attribute</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','er',5)">C) Derived attribute</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','er',5)">D) Simple attribute</button>
+              </div>
+              <div class="mcq-explanation" id="exp-er-5"><strong>Answer: C</strong> — Derived attribute = DOB se calculate kiya jaata hai. Dashed ellipse se represent karte hain.</div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-panel" data-tab="shortq">
+          <div class="shortq-section">
+            <div class="mcq-section-header">✍️ Short Answer Questions</div>
+            <div class="shortq-item">
+              <div class="shortq-q" onclick="toggleShortQ(this)">Q1. Differentiate between strong and weak entity with example. <span>▾</span></div>
+              <div class="shortq-a"><strong>Strong Entity:</strong> Has its own primary key, exists independently. Example: EMPLOYEE (identified by Employee_ID).<br><strong>Weak Entity:</strong> No sufficient attributes to form its own PK. Depends on owner entity. Example: DEPENDENT (identified by Employee_ID + Dependent_Name). 🗣️ Bina parent ke exist nahi kar sakta — isliye weak!</div>
+            </div>
+            <div class="shortq-item">
+              <div class="shortq-q" onclick="toggleShortQ(this)">Q2. What is a composite attribute? Give example. <span>▾</span></div>
+              <div class="shortq-a">A composite attribute can be divided into sub-parts. Example: <strong>Name</strong> = First_Name + Middle_Name + Last_Name. <strong>Address</strong> = Street + City + State + PIN. 🗣️ Composite = tod sakte ho chote parts mein!</div>
+            </div>
+            <div class="shortq-item">
+              <div class="shortq-q" onclick="toggleShortQ(this)">Q3. How is M:N relationship converted to relational tables? <span>▾</span></div>
+              <div class="shortq-a">M:N relationship creates a <strong>separate junction/bridge table</strong> containing the primary keys of both entities as foreign keys. Example: STUDENT(S_ID) and COURSE(C_ID) with ENROLLS relationship → new table ENROLLS(S_ID, C_ID, Grade) where (S_ID, C_ID) forms the composite PK.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Topic: Keys -->
+    <div class="topic-card" id="t-keys">
+      <div class="topic-header" onclick="toggleTopic(this)">
+        <div class="topic-title"><span class="topic-emoji">🔑</span> Keys in DBMS</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <span class="badge badge-beginner">Beginner</span>
+          <span class="chevron">▼</span>
+        </div>
+      </div>
+      <div class="topic-body open">
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab(this,'theory')">📖 Theory</button>
+          <button class="tab-btn" onclick="switchTab(this,'mcq')">🧠 MCQs</button>
+          <button class="tab-btn" onclick="switchTab(this,'shortq')">✍️ Short Qs</button>
+        </div>
+        <div class="tab-panel active" data-tab="theory">
+          <div class="hinglish-block">Keys = database ki "identity card" system. Har tuple ko uniquely identify karne ke liye key use hoti hai. Different types ke keys hain — sabka alag role hai!</div>
+          <div class="tbl-wrap"><table>
+            <tr><th>Key Type</th><th>Definition</th><th>Example</th></tr>
+            <tr><td><strong>Super Key</strong></td><td>Set of attributes that uniquely identifies a tuple (can have extra attributes)</td><td>{Roll}, {Roll, Name}, {Roll, Name, Age}</td></tr>
+            <tr><td><strong>Candidate Key</strong></td><td>Minimal super key (no redundant attributes). Multiple can exist.</td><td>{Roll}, {Email}</td></tr>
+            <tr><td><strong>Primary Key (PK)</strong></td><td>One chosen candidate key. Cannot be NULL.</td><td>{Roll} chosen as PK</td></tr>
+            <tr><td><strong>Alternate Key</strong></td><td>Candidate keys not chosen as PK</td><td>{Email} (if Roll is PK)</td></tr>
+            <tr><td><strong>Foreign Key (FK)</strong></td><td>Attribute in one table referencing PK of another table</td><td>Dept_ID in Employee referencing Department</td></tr>
+            <tr><td><strong>Composite Key</strong></td><td>Key made of two or more attributes together</td><td>{Student_ID, Course_ID} in ENROLLS</td></tr>
+          </table></div>
+          <div class="tip-block">Every Primary Key is a Candidate Key. Every Candidate Key is a Super Key. But reverse is NOT always true! Super Key ⊇ Candidate Key ⊇ Primary Key (hierarchy).</div>
+          <div class="warn-block">Common mistake: "Primary Key aur Candidate Key same hote hain" — WRONG! Multiple candidate keys ho sakti hain, PK unme se ek choose ki jaati hai.</div>
+        </div>
+        <div class="tab-panel" data-tab="mcq">
+          <div class="mcq-section">
+            <div class="mcq-section-header">🧠 MCQ Quiz — Keys</div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q1.</span> Which key is a minimal super key?</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','keys',1)">A) Primary Key</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','keys',1)">B) Candidate Key</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','keys',1)">C) Foreign Key</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','keys',1)">D) Super Key</button>
+              </div>
+              <div class="mcq-explanation" id="exp-keys-1"><strong>Answer: B</strong> — Candidate Key = minimal super key. No attribute can be removed while still uniquely identifying tuples. 🗣️ Super key ka chhota minimal version!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q2.</span> A foreign key references which key of another table?</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','keys',2)">A) Foreign Key</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','keys',2)">B) Candidate Key</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','keys',2)">C) Primary Key</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','keys',2)">D) Super Key</button>
+              </div>
+              <div class="mcq-explanation" id="exp-keys-2"><strong>Answer: C</strong> — Foreign Key always references the Primary Key of the referenced table.</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q3.</span> Primary key can have NULL values?</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','keys',3)">A) Yes, always</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','keys',3)">B) Yes, sometimes</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','keys',3)">C) Never</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','keys',3)">D) Only in weak entities</button>
+              </div>
+              <div class="mcq-explanation" id="exp-keys-3"><strong>Answer: C</strong> — Primary Key NEVER allows NULL. It must be unique AND non-null. 🗣️ Primary Key = unique + NOT NULL — yeh rule yaad rakho!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q4.</span> Table ENROLLS(Student_ID, Course_ID, Grade). What is the primary key?</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','keys',4)">A) Student_ID</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','keys',4)">B) Course_ID</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','keys',4)">C) (Student_ID, Course_ID)</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','keys',4)">D) Grade</button>
+              </div>
+              <div class="mcq-explanation" id="exp-keys-4"><strong>Answer: C</strong> — Composite key! Ek student ek course mein ek baar enroll hota hai. Together they uniquely identify each enrollment.</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q5.</span> Candidate keys that are not selected as primary key are called:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','keys',5)">A) Super keys</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','keys',5)">B) Alternate keys</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','keys',5)">C) Foreign keys</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','keys',5)">D) Composite keys</button>
+              </div>
+              <div class="mcq-explanation" id="exp-keys-5"><strong>Answer: B</strong> — Alternate keys = leftover candidate keys after PK selection. 🗣️ PK nahi bani, toh alternate/backup ki!</div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-panel" data-tab="shortq">
+          <div class="shortq-section">
+            <div class="mcq-section-header">✍️ Short Answer Questions</div>
+            <div class="shortq-item">
+              <div class="shortq-q" onclick="toggleShortQ(this)">Q1. What is the difference between Primary Key and Candidate Key? <span>▾</span></div>
+              <div class="shortq-a">A <strong>Candidate Key</strong> is any minimal super key that can uniquely identify tuples. There can be multiple candidate keys. A <strong>Primary Key</strong> is ONE candidate key selected by the DBA to serve as the official identifier. All primary keys are candidate keys, but not vice versa.</div>
+            </div>
+            <div class="shortq-item">
+              <div class="shortq-q" onclick="toggleShortQ(this)">Q2. Can a foreign key have NULL values? <span>▾</span></div>
+              <div class="shortq-a">Yes! A Foreign Key <strong>can have NULL values</strong> — it means the relationship is optional (the entity doesn't necessarily participate in the relationship). Example: An Employee may not belong to any department (Dept_ID can be NULL). However, if not NULL, the FK value MUST exist in the referenced table.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== UNIT 2 ==================== -->
+    <div class="unit-header" id="unit2">
+      <div class="unit-num" style="background:rgba(0,212,255,0.15);color:var(--u2)">U2</div>
+      <div>
+        <h2 style="color:var(--u2)">Relational Model & Algebra</h2>
+        <div class="unit-sub">Relations, tuples, Relational Algebra operations, Relational Calculus</div>
+      </div>
+    </div>
+
+    <!-- Topic: Relational Model -->
+    <div class="topic-card" id="t-relmodel">
+      <div class="topic-header" onclick="toggleTopic(this)">
+        <div class="topic-title"><span class="topic-emoji">📊</span> Relational Model</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <span class="badge badge-beginner">Beginner</span>
+          <span class="chevron">▼</span>
+        </div>
+      </div>
+      <div class="topic-body open">
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab(this,'theory')">📖 Theory</button>
+          <button class="tab-btn" onclick="switchTab(this,'mcq')">🧠 MCQs</button>
+          <button class="tab-btn" onclick="switchTab(this,'shortq')">✍️ Short Qs</button>
+        </div>
+        <div class="tab-panel active" data-tab="theory">
+          <div class="def-block">
+            <div class="def-label">Definition</div>
+            <p>The <strong>Relational Model</strong> represents data as a collection of <em>relations (tables)</em>. Each relation has a name, a set of attributes (columns), and a set of tuples (rows).</p>
+          </div>
+          <div class="hinglish-block">Relational model = sab kuch tables mein! Rows = tuples = records. Columns = attributes. Ek table = ek relation. Simple aur powerful!</div>
+          <div class="tbl-wrap"><table>
+            <tr><th>Term</th><th>Meaning</th><th>🗣️ Hinglish</th></tr>
+            <tr><td><strong>Relation</strong></td><td>A table with rows and columns</td><td>Table hi relation hai</td></tr>
+            <tr><td><strong>Tuple</strong></td><td>A row in a relation</td><td>Ek row = ek tuple = ek record</td></tr>
+            <tr><td><strong>Attribute</strong></td><td>A column in a relation</td><td>Column = attribute = field</td></tr>
+            <tr><td><strong>Domain</strong></td><td>Set of valid values for an attribute</td><td>Attribute ki valid value range</td></tr>
+            <tr><td><strong>Degree</strong></td><td>Number of attributes in a relation</td><td>Kitne columns hain</td></tr>
+            <tr><td><strong>Cardinality</strong></td><td>Number of tuples in a relation</td><td>Kitni rows hain</td></tr>
+            <tr><td><strong>Schema</strong></td><td>Structure of the relation (name + attributes)</td><td>Table ka blueprint/template</td></tr>
+            <tr><td><strong>Instance</strong></td><td>Actual data in the relation at a point in time</td><td>Abhi ke actual data</td></tr>
+          </table></div>
+          <div class="tip-block">Relation ≠ Relationship! Relation = table. Relationship = connection between entities (from ER model). Exam mein confuse mat karna!</div>
+        </div>
+        <div class="tab-panel" data-tab="mcq">
+          <div class="mcq-section">
+            <div class="mcq-section-header">🧠 MCQ Quiz — Relational Model</div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q1.</span> The number of attributes in a relation is called:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','rel',1)">A) Cardinality</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','rel',1)">B) Degree</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','rel',1)">C) Domain</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','rel',1)">D) Instance</button>
+              </div>
+              <div class="mcq-explanation" id="exp-rel-1"><strong>Answer: B</strong> — Degree = number of attributes (columns). Cardinality = number of tuples (rows).</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q2.</span> A relation in relational model is a:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','rel',2)">A) File</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','rel',2)">B) Table (set of tuples)</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','rel',2)">C) Row</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','rel',2)">D) Column</button>
+              </div>
+              <div class="mcq-explanation" id="exp-rel-2"><strong>Answer: B</strong> — Relation = Table = set of tuples. It's the fundamental structure of the relational model.</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q3.</span> In a relational table, rows are also called:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','rel',3)">A) Attributes</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','rel',3)">B) Tuples</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','rel',3)">C) Domains</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','rel',3)">D) Schemas</button>
+              </div>
+              <div class="mcq-explanation" id="exp-rel-3"><strong>Answer: B</strong> — Row = Tuple = Record. Three names, same thing!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q4.</span> Which of the following is TRUE about a relation?</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','rel',4)">A) Tuples can be duplicate</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','rel',4)">B) Order of tuples doesn't matter</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','rel',4)">C) Attributes can be unnamed</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','rel',4)">D) Attribute values can be multi-valued</button>
+              </div>
+              <div class="mcq-explanation" id="exp-rel-4"><strong>Answer: B</strong> — In a relation: (1) No duplicate tuples (set property), (2) Order of tuples doesn't matter, (3) Order of attributes doesn't matter, (4) All attribute values are atomic.</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q5.</span> The set of valid values an attribute can take is called its:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','rel',5)">A) Domain</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','rel',5)">B) Range</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','rel',5)">C) Cardinality</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','rel',5)">D) Degree</button>
+              </div>
+              <div class="mcq-explanation" id="exp-rel-5"><strong>Answer: A</strong> — Domain = valid values set for attribute. Example: Age domain = positive integers.</div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-panel" data-tab="shortq">
+          <div class="shortq-section">
+            <div class="mcq-section-header">✍️ Short Answer Questions</div>
+            <div class="shortq-item">
+              <div class="shortq-q" onclick="toggleShortQ(this)">Q1. What are the properties of a relation? <span>▾</span></div>
+              <div class="shortq-a">1. Each relation has a unique name. 2. Every attribute has a distinct name. 3. All values in a column are from the same domain. 4. No duplicate tuples. 5. Each cell contains exactly one (atomic) value. 6. Order of tuples/attributes doesn't matter. 🗣️ Set ki properties follow karta hai!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Topic: Relational Algebra -->
+    <div class="topic-card" id="t-ra">
+      <div class="topic-header" onclick="toggleTopic(this)">
+        <div class="topic-title"><span class="topic-emoji">⚙️</span> Relational Algebra</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <span class="badge badge-intermediate">Intermediate</span>
+          <span class="chevron">▼</span>
+        </div>
+      </div>
+      <div class="topic-body open">
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab(this,'theory')">📖 Theory</button>
+          <button class="tab-btn" onclick="switchTab(this,'mcq')">🧠 MCQs</button>
+          <button class="tab-btn" onclick="switchTab(this,'shortq')">✍️ Short Qs</button>
+        </div>
+        <div class="tab-panel active" data-tab="theory">
+          <div class="def-block">
+            <div class="def-label">Definition</div>
+            <p><strong>Relational Algebra</strong> is a <em>procedural</em> query language that takes one or two relations as input and produces a new relation as output. It uses operators to manipulate data.</p>
+          </div>
+          <div class="hinglish-block">Relational Algebra = step-by-step batao ki data kaise nikalna hai. Procedural = "HOW to do it" batao. SQL ka mathematical foundation hai yeh!</div>
+          <h3>🔧 Basic Operations</h3>
+          <div class="tbl-wrap"><table>
+            <tr><th>Symbol</th><th>Operation</th><th>What it does</th><th>🗣️ Hinglish</th></tr>
+            <tr><td><code>σ</code></td><td><strong>Select (sigma)</strong></td><td>Selects rows satisfying a condition</td><td>Condition wali rows lo (WHERE clause)</td></tr>
+            <tr><td><code>π</code></td><td><strong>Project (pi)</strong></td><td>Selects specific columns</td><td>Specific columns lo (SELECT clause)</td></tr>
+            <tr><td><code>∪</code></td><td><strong>Union</strong></td><td>All tuples from both relations</td><td>Dono tables milao (duplicates hatao)</td></tr>
+            <tr><td><code>−</code></td><td><strong>Set Difference</strong></td><td>Tuples in R1 but not in R2</td><td>R1 mein hai, R2 mein nahi — woh lo</td></tr>
+            <tr><td><code>×</code></td><td><strong>Cartesian Product</strong></td><td>Every tuple of R1 with every tuple of R2</td><td>Har row ko har row se join karo</td></tr>
+            <tr><td><code>⋈</code></td><td><strong>Natural Join</strong></td><td>Join on common attribute, no duplicates</td><td>Common column pe automatic join</td></tr>
+            <tr><td><code>⋈θ</code></td><td><strong>Theta Join</strong></td><td>Join with a condition</td><td>Custom condition pe join</td></tr>
+            <tr><td><code>÷</code></td><td><strong>Division</strong></td><td>Find tuples related to ALL in another relation</td><td>"Jo saare" wali query ke liye</td></tr>
+          </table></div>
+          <h3>📌 Examples</h3>
+          <pre>-- Select all students from CSE department
+σ(Dept='CSE') (STUDENT)
+
+-- Project only Name and Roll
+π(Name, Roll) (STUDENT)
+
+-- Students enrolled in course C1
+π(Name) (σ(Cid='C1') (STUDENT ⋈ ENROLL))
+
+-- Combine two tables (must be union-compatible)
+STUDENT_2022 ∪ STUDENT_2023</pre>
+          <div class="tip-block">Select (σ) = horizontal filtering (rows). Project (π) = vertical filtering (columns). Exam mein yeh most commonly asked operations hain!</div>
+          <h3>🔗 Join Types</h3>
+          <ul>
+            <li><strong>Natural Join (⋈)</strong> — Common attribute pe automatically join, duplicate column removed</li>
+            <li><strong>Theta Join (⋈θ)</strong> — Any condition pe join (≤, ≥, ≠, etc.)</li>
+            <li><strong>Equi Join</strong> — Theta join with only equality condition (=)</li>
+            <li><strong>Outer Join (⟕, ⟖, ⟗)</strong> — Left, Right, Full outer join — unmatched tuples bhi include</li>
+          </ul>
+          <div class="hinglish-block">Natural Join = sibling tables ko automatically common column pe jodo. Outer Join = jinke match nahi mila unhe bhi rakhо (NULL ke saath). 🗣️ Left outer join = left table ke saare records aayenge!</div>
+        </div>
+        <div class="tab-panel" data-tab="mcq">
+          <div class="mcq-section">
+            <div class="mcq-section-header">🧠 MCQ Quiz — Relational Algebra</div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q1.</span> Which RA operation is equivalent to the WHERE clause in SQL?</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','ra',1)">A) Projection (π)</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','ra',1)">B) Selection (σ)</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','ra',1)">C) Union (∪)</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','ra',1)">D) Join (⋈)</button>
+              </div>
+              <div class="mcq-explanation" id="exp-ra-1"><strong>Answer: B</strong> — Selection σ = WHERE clause. It filters rows based on a condition. 🗣️ σ(condition)(Table) = SELECT * FROM Table WHERE condition!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q2.</span> Projection operation removes:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','ra',2)">A) Duplicate tuples and unwanted attributes</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','ra',2)">B) Rows not satisfying condition</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','ra',2)">C) Only duplicate rows</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','ra',2)">D) NULL values</button>
+              </div>
+              <div class="mcq-explanation" id="exp-ra-2"><strong>Answer: A</strong> — Projection (π) selects specific columns AND removes duplicate tuples from the result (since relation is a set).</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q3.</span> For Union operation (R ∪ S) to be valid, R and S must be:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','ra',3)">A) Same size</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','ra',3)">B) Union-compatible (same degree and domains)</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','ra',3)">C) Related by a foreign key</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','ra',3)">D) From the same database</button>
+              </div>
+              <div class="mcq-explanation" id="exp-ra-3"><strong>Answer: B</strong> — Union-compatible = same number of attributes AND corresponding attributes have same domains. 🗣️ Same type ke columns hone chahiye dono mein!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q4.</span> If R has 3 tuples and S has 4 tuples, R × S (Cartesian product) has:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','ra',4)">A) 7 tuples</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','ra',4)">B) 12 tuples</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','ra',4)">C) 1 tuple</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','ra',4)">D) 4 tuples</button>
+              </div>
+              <div class="mcq-explanation" id="exp-ra-4"><strong>Answer: B</strong> — Cartesian Product = 3 × 4 = 12 tuples. Har row ko har doosri row se combine karo!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q5.</span> Natural Join differs from Equi-Join in that Natural Join:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','ra',5)">A) Can use inequality conditions</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','ra',5)">B) Removes duplicate columns from the result</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','ra',5)">C) Produces more tuples</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','ra',5)">D) Requires explicit join condition</button>
+              </div>
+              <div class="mcq-explanation" id="exp-ra-5"><strong>Answer: B</strong> — Natural Join automatically joins on common attributes AND removes duplicate columns. Equi-Join keeps both columns. 🗣️ Natural join = cleaner output!</div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-panel" data-tab="shortq">
+          <div class="shortq-section">
+            <div class="mcq-section-header">✍️ Short Answer Questions</div>
+            <div class="shortq-item">
+              <div class="shortq-q" onclick="toggleShortQ(this)">Q1. Write RA expression: Find names of students enrolled in course 'DBMS'. <span>▾</span></div>
+              <div class="shortq-a"><code>π(Name) (STUDENT ⋈ σ(Course_Name='DBMS')(ENROLL ⋈ COURSE))</code><br><br>Or step by step: <br>Step 1: σ(Course_Name='DBMS')(COURSE) — Find DBMS course<br>Step 2: Join with ENROLL — Find enrollments in DBMS<br>Step 3: Join with STUDENT — Get student details<br>Step 4: π(Name) — Project only names</div>
+            </div>
+            <div class="shortq-item">
+              <div class="shortq-q" onclick="toggleShortQ(this)">Q2. What is the difference between Left Outer Join and Inner Join? <span>▾</span></div>
+              <div class="shortq-a"><strong>Inner Join</strong> — Only matching tuples from both tables are returned. Non-matching rows are discarded.<br><strong>Left Outer Join (⟕)</strong> — All tuples from left table are returned. For non-matching right tuples, NULL is filled. 🗣️ Left join = left table ke saare aayenge, chahe match mile ya na mile!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Topic: Relational Calculus -->
+    <div class="topic-card" id="t-rc">
+      <div class="topic-header" onclick="toggleTopic(this)">
+        <div class="topic-title"><span class="topic-emoji">🧮</span> Relational Calculus (TRC & DRC)</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <span class="badge badge-intermediate">Intermediate</span>
+          <span class="chevron">▼</span>
+        </div>
+      </div>
+      <div class="topic-body open">
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab(this,'theory')">📖 Theory</button>
+          <button class="tab-btn" onclick="switchTab(this,'mcq')">🧠 MCQs</button>
+          <button class="tab-btn" onclick="switchTab(this,'shortq')">✍️ Short Qs</button>
+        </div>
+        <div class="tab-panel active" data-tab="theory">
+          <div class="def-block">
+            <div class="def-label">Definition</div>
+            <p><strong>Relational Calculus</strong> is a <em>non-procedural (declarative)</em> query language based on First-Order Predicate Logic. You specify WHAT you want, not HOW to get it.</p>
+          </div>
+          <div class="hinglish-block">RA mein batate the "kaise nikalna hai" (procedural). RC mein batate hain "kya chahiye" (declarative). SQL bhi declarative hai — isliye RC SQL ka mathematical base hai!</div>
+          <div class="tbl-wrap"><table>
+            <tr><th></th><th>Relational Algebra (RA)</th><th>Relational Calculus (RC)</th></tr>
+            <tr><td>Type</td><td>Procedural</td><td>Non-procedural (Declarative)</td></tr>
+            <tr><td>Focus</td><td>HOW to get the result</td><td>WHAT the result should be</td></tr>
+            <tr><td>Uses</td><td>Operations (σ, π, ⋈)</td><td>Logic predicates (conditions)</td></tr>
+          </table></div>
+          <h3>A) Tuple Relational Calculus (TRC)</h3>
+          <div class="def-block">
+            <div class="def-label">General Form</div>
+            <p><code>{ t | P(t) }</code> — Set of all tuples t such that predicate P(t) is true</p>
+          </div>
+          <pre>-- Find names of all students in CSE
+{ t | t ∈ STUDENT ∧ t.Dept = 'CSE' }
+
+-- Find students enrolled in course C1
+{ t | t ∈ STUDENT ∧ ∃e (e ∈ ENROLL ∧ e.Roll = t.Roll ∧ e.Cid = 'C1') }</pre>
+          <h3>B) Domain Relational Calculus (DRC)</h3>
+          <div class="def-block">
+            <div class="def-label">General Form</div>
+            <p><code>{ ⟨x₁, x₂, ..., xₙ⟩ | P(x₁, x₂, ..., xₙ) }</code> — Variables represent domain values</p>
+          </div>
+          <pre>-- Get (Roll, Name) of CSE students
+{ ⟨r, n⟩ | ∃d (⟨r, n, d⟩ ∈ STUDENT ∧ d = 'CSE') }
+
+-- Find rolls of students enrolled in C1
+{ ⟨r⟩ | ∃c (⟨r, c⟩ ∈ ENROLL ∧ c = 'C1') }</pre>
+          <div class="hinglish-block">TRC mein variables = whole tuples (rows). DRC mein variables = individual values (columns). TRC more intuitive for row-based queries, DRC for column-value queries!</div>
+          <div class="tip-block">∃ = "there exists at least one" (Exists). ∀ = "for all" (Universal). ∧ = AND, ∨ = OR, ¬ = NOT. Safety = queries should produce finite results!</div>
+        </div>
+        <div class="tab-panel" data-tab="mcq">
+          <div class="mcq-section">
+            <div class="mcq-section-header">🧠 MCQ Quiz — Relational Calculus</div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q1.</span> Relational Calculus is based on:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','rc',1)">A) Set theory only</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','rc',1)">B) First-Order Predicate Logic</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','rc',1)">C) Procedural programming</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','rc',1)">D) Relational Algebra</button>
+              </div>
+              <div class="mcq-explanation" id="exp-rc-1"><strong>Answer: B</strong> — Relational Calculus is based on First-Order Predicate Logic — conditions/predicates define what you want.</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q2.</span> In TRC, variables represent:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','rc',2)">A) Tuples (rows)</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','rc',2)">B) Attribute values</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','rc',2)">C) Relations</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','rc',2)">D) Domains</button>
+              </div>
+              <div class="mcq-explanation" id="exp-rc-2"><strong>Answer: A</strong> — In TRC, t represents a tuple (whole row). In DRC, variables represent individual domain values (attribute values).</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q3.</span> The symbol ∃ in relational calculus means:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','rc',3)">A) For all</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','rc',3)">B) There exists</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','rc',3)">C) Not exists</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','rc',3)">D) Implies</button>
+              </div>
+              <div class="mcq-explanation" id="exp-rc-3"><strong>Answer: B</strong> — ∃ = "there exists at least one." ∀ = "for all." 🗣️ ∃ = "koi ek toh hoga" wala symbol!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q4.</span> Which is a declarative query language?</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','rc',4)">A) Relational Algebra</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','rc',4)">B) Relational Calculus</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','rc',4)">C) Both A and B</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','rc',4)">D) Neither</button>
+              </div>
+              <div class="mcq-explanation" id="exp-rc-4"><strong>Answer: B</strong> — RC is declarative (WHAT). RA is procedural (HOW). SQL is also declarative, making RC closer to SQL philosophically.</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q5.</span> "Safety" in relational calculus ensures:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','rc',5)">A) Queries run fast</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','rc',5)">B) Queries produce finite results</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','rc',5)">C) No NULL values</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','rc',5)">D) Data is encrypted</button>
+              </div>
+              <div class="mcq-explanation" id="exp-rc-5"><strong>Answer: B</strong> — Safety/range restriction ensures queries don't produce infinite results. Variables must range over existing tuples/values in the DB.</div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-panel" data-tab="shortq">
+          <div class="shortq-section">
+            <div class="mcq-section-header">✍️ Short Answer Questions</div>
+            <div class="shortq-item">
+              <div class="shortq-q" onclick="toggleShortQ(this)">Q1. What is the difference between TRC and DRC? <span>▾</span></div>
+              <div class="shortq-a"><strong>TRC:</strong> Variables represent tuples (rows). Form: {t | P(t)}. More intuitive when selecting whole rows based on conditions.<br><strong>DRC:</strong> Variables represent domain values (attribute values). Form: {⟨x₁,...,xₙ⟩ | P(x₁,...,xₙ)}. More natural when selecting specific column values. 🗣️ TRC = row-centric, DRC = value-centric!</div>
+            </div>
+            <div class="shortq-item">
+              <div class="shortq-q" onclick="toggleShortQ(this)">Q2. What is a free variable vs bound variable in RC? <span>▾</span></div>
+              <div class="shortq-a">A <strong>free variable</strong> represents the output — it appears in the result set notation. A <strong>bound variable</strong> exists only within the scope of a quantifier (∃ or ∀) — it doesn't appear in the output. 🗣️ Free = result mein aata hai, Bound = quantifier ke andar rahta hai!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== UNIT 3 ==================== -->
+    <div class="unit-header" id="unit3">
+      <div class="unit-num" style="background:rgba(0,229,160,0.15);color:var(--u3)">U3</div>
+      <div>
+        <h2 style="color:var(--u3)">SQL — Structured Query Language</h2>
+        <div class="unit-sub">DDL, DML, Joins, Subqueries, Views, Aggregations</div>
+      </div>
+    </div>
+
+    <!-- Topic: SQL DDL + DML -->
+    <div class="topic-card" id="t-ddl">
+      <div class="topic-header" onclick="toggleTopic(this)">
+        <div class="topic-title"><span class="topic-emoji">🖥️</span> SQL — DDL & DML</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <span class="badge badge-beginner">Beginner</span>
+          <span class="chevron">▼</span>
+        </div>
+      </div>
+      <div class="topic-body open">
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab(this,'theory')">📖 Theory</button>
+          <button class="tab-btn" onclick="switchTab(this,'mcq')">🧠 MCQs</button>
+          <button class="tab-btn" onclick="switchTab(this,'shortq')">✍️ Short Qs</button>
+        </div>
+        <div class="tab-panel active" data-tab="theory">
+          <div class="def-block">
+            <div class="def-label">Definition</div>
+            <p><strong>SQL (Structured Query Language)</strong> is a standard language for managing relational databases. It is declarative — you tell the DB WHAT you want, not HOW to get it.</p>
+          </div>
+          <div class="hinglish-block">SQL = database se baat karne ki language. English jaisi syntax hai — easy to learn, powerful to use. DDL = table banao/hatao. DML = data daalo/nikalo/badlo!</div>
+          <h3>📦 SQL Categories</h3>
+          <div class="tbl-wrap"><table>
+            <tr><th>Category</th><th>Full Form</th><th>Commands</th><th>🗣️ Matlab</th></tr>
+            <tr><td><strong>DDL</strong></td><td>Data Definition Language</td><td>CREATE, ALTER, DROP, TRUNCATE</td><td>Table banao, badlo, hatao</td></tr>
+            <tr><td><strong>DML</strong></td><td>Data Manipulation Language</td><td>SELECT, INSERT, UPDATE, DELETE</td><td>Data daalo, nikalo, badlo, hatao</td></tr>
+            <tr><td><strong>DCL</strong></td><td>Data Control Language</td><td>GRANT, REVOKE</td><td>Permission do ya wapas lo</td></tr>
+            <tr><td><strong>TCL</strong></td><td>Transaction Control Language</td><td>COMMIT, ROLLBACK, SAVEPOINT</td><td>Transaction manage karo</td></tr>
+          </table></div>
+          <h3>🔨 DDL Examples</h3>
+          <pre>-- Create a table
+CREATE TABLE STUDENT (
+    Roll    INT         PRIMARY KEY,
+    Name    VARCHAR(50) NOT NULL,
+    Age     INT         CHECK (Age > 0 AND Age < 100),
+    Dept    VARCHAR(20) DEFAULT 'CSE',
+    Email   VARCHAR(100) UNIQUE
+);
+
+-- Add a new column
+ALTER TABLE STUDENT ADD CGPA FLOAT;
+
+-- Delete the table (structure + data)
+DROP TABLE STUDENT;
+
+-- Delete all data but keep structure
+TRUNCATE TABLE STUDENT;</pre>
+          <h3>📝 DML Examples</h3>
+          <pre>-- Insert data
+INSERT INTO STUDENT VALUES (101, 'Rahul', 20, 'CSE', 'rahul@example.com');
+
+-- Select with conditions
+SELECT Name, Age FROM STUDENT WHERE Dept = 'CSE' AND Age > 18;
+
+-- Update data
+UPDATE STUDENT SET Age = 21 WHERE Roll = 101;
+
+-- Delete specific rows
+DELETE FROM STUDENT WHERE Dept = 'ECE';
+
+-- Aggregate functions
+SELECT COUNT(*), AVG(Age), MAX(Age), MIN(Age) FROM STUDENT;
+
+-- Group By + Having
+SELECT Dept, COUNT(*) as cnt 
+FROM STUDENT 
+GROUP BY Dept 
+HAVING COUNT(*) > 5
+ORDER BY cnt DESC;</pre>
+          <div class="tip-block">WHERE filters individual rows BEFORE grouping. HAVING filters groups AFTER GROUP BY. Remember: WHERE → GROUP BY → HAVING → ORDER BY (execution order)!</div>
+        </div>
+        <div class="tab-panel" data-tab="mcq">
+          <div class="mcq-section">
+            <div class="mcq-section-header">🧠 MCQ Quiz — SQL DDL & DML</div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q1.</span> Which SQL command removes a table along with its structure?</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','sql',1)">A) DELETE</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','sql',1)">B) TRUNCATE</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','sql',1)">C) DROP</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','sql',1)">D) REMOVE</button>
+              </div>
+              <div class="mcq-explanation" id="exp-sql-1"><strong>Answer: C</strong> — DROP removes table structure + data. TRUNCATE removes only data (structure remains). DELETE removes specific rows. 🗣️ DROP = pura table hi uda do!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q2.</span> Which clause filters rows AFTER GROUP BY?</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','sql',2)">A) WHERE</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','sql',2)">B) HAVING</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','sql',2)">C) ORDER BY</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','sql',2)">D) FILTER</button>
+              </div>
+              <div class="mcq-explanation" id="exp-sql-2"><strong>Answer: B</strong> — HAVING filters groups after GROUP BY. WHERE filters individual rows before grouping. 🗣️ GROUP ke baad filter = HAVING!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q3.</span> What does TRUNCATE do differently from DELETE?</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','sql',3)">A) TRUNCATE can have WHERE clause</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','sql',3)">B) TRUNCATE is faster and cannot be rolled back (DDL)</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','sql',3)">C) TRUNCATE deletes the table structure</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','sql',3)">D) TRUNCATE deletes only duplicate rows</button>
+              </div>
+              <div class="mcq-explanation" id="exp-sql-3"><strong>Answer: B</strong> — TRUNCATE is DDL (faster, no rollback possible, resets auto-increment). DELETE is DML (slower, can rollback, can use WHERE). 🗣️ TRUNCATE = bhari safai — undo nahi hogi!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q4.</span> SELECT * FROM STUDENT WHERE Age BETWEEN 18 AND 25 — how many age values are included?</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','sql',4)">A) 6 (19 to 24)</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','sql',4)">B) 8 (18 to 25 inclusive)</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','sql',4)">C) 7 (18 to 24)</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','sql',4)">D) Depends on database</button>
+              </div>
+              <div class="mcq-explanation" id="exp-sql-4"><strong>Answer: B</strong> — BETWEEN is inclusive on both ends. 18,19,20,21,22,23,24,25 = 8 values. 🗣️ BETWEEN = boundary values bhi include hoti hain!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q5.</span> Which constraint ensures a column cannot have NULL values?</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','sql',5)">A) UNIQUE</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','sql',5)">B) NOT NULL</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','sql',5)">C) DEFAULT</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','sql',5)">D) CHECK</button>
+              </div>
+              <div class="mcq-explanation" id="exp-sql-5"><strong>Answer: B</strong> — NOT NULL constraint prevents NULL values in a column. PRIMARY KEY implicitly adds NOT NULL too.</div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-panel" data-tab="shortq">
+          <div class="shortq-section">
+            <div class="mcq-section-header">✍️ Short Answer Questions</div>
+            <div class="shortq-item">
+              <div class="shortq-q" onclick="toggleShortQ(this)">Q1. Difference between DELETE, TRUNCATE and DROP. <span>▾</span></div>
+              <div class="shortq-a"><strong>DELETE:</strong> DML, removes specific rows (can use WHERE), can be rolled back, slow for large data.<br><strong>TRUNCATE:</strong> DDL, removes ALL rows, cannot use WHERE, cannot rollback, resets auto-increment, fast.<br><strong>DROP:</strong> DDL, removes entire table (structure + data), cannot rollback. 🗣️ DELETE = row hatao, TRUNCATE = saare rows hatao, DROP = poori table hi hatao!</div>
+            </div>
+            <div class="shortq-item">
+              <div class="shortq-q" onclick="toggleShortQ(this)">Q2. Write SQL to find departments with more than 3 students. <span>▾</span></div>
+              <div class="shortq-a"><pre>SELECT Dept, COUNT(*) as student_count
+FROM STUDENT
+GROUP BY Dept
+HAVING COUNT(*) > 3;</pre>Explanation: GROUP BY Dept = har department ke students group karo. HAVING COUNT(*) > 3 = sirf woh departments jahan 3 se zyada students hain.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Topic: Joins in SQL -->
+    <div class="topic-card" id="t-joins">
+      <div class="topic-header" onclick="toggleTopic(this)">
+        <div class="topic-title"><span class="topic-emoji">🔗</span> SQL Joins</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <span class="badge badge-intermediate">Intermediate</span>
+          <span class="chevron">▼</span>
+        </div>
+      </div>
+      <div class="topic-body open">
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab(this,'theory')">📖 Theory</button>
+          <button class="tab-btn" onclick="switchTab(this,'mcq')">🧠 MCQs</button>
+          <button class="tab-btn" onclick="switchTab(this,'shortq')">✍️ Short Qs</button>
+        </div>
+        <div class="tab-panel active" data-tab="theory">
+          <div class="hinglish-block">Join = do ya zyada tables ko ek saath query karo. Without join, sirf ek table se data milta. Real world mein data multiple tables mein hota hai — join se sab connect karo!</div>
+          <div class="tbl-wrap"><table>
+            <tr><th>Join Type</th><th>Returns</th><th>🗣️ Hinglish</th></tr>
+            <tr><td><strong>INNER JOIN</strong></td><td>Only matching rows from both tables</td><td>Dono mein match ho tab hi aao</td></tr>
+            <tr><td><strong>LEFT OUTER JOIN</strong></td><td>All rows from left + matching from right (NULL if no match)</td><td>Left ke saare aayenge, right ka NULL hoga if no match</td></tr>
+            <tr><td><strong>RIGHT OUTER JOIN</strong></td><td>All rows from right + matching from left</td><td>Right ke saare aayenge</td></tr>
+            <tr><td><strong>FULL OUTER JOIN</strong></td><td>All rows from both tables</td><td>Dono ke saare aayenge, NULL jahan match nahi</td></tr>
+            <tr><td><strong>CROSS JOIN</strong></td><td>Cartesian product of both tables</td><td>Har row × har row</td></tr>
+            <tr><td><strong>SELF JOIN</strong></td><td>Table joined with itself</td><td>Table apne aap se join hoti hai (hierarchy queries)</td></tr>
+          </table></div>
+          <pre>-- INNER JOIN: Find students and their enrolled courses
+SELECT S.Name, C.Title
+FROM STUDENT S
+INNER JOIN ENROLL E ON S.Roll = E.Roll
+INNER JOIN COURSE C ON E.Cid = C.Cid;
+
+-- LEFT JOIN: All students, even if not enrolled in any course
+SELECT S.Name, C.Title
+FROM STUDENT S
+LEFT JOIN ENROLL E ON S.Roll = E.Roll
+LEFT JOIN COURSE C ON E.Cid = C.Cid;
+
+-- SELF JOIN: Find employees and their managers
+SELECT E1.Name as Employee, E2.Name as Manager
+FROM EMPLOYEE E1
+JOIN EMPLOYEE E2 ON E1.Manager_ID = E2.Emp_ID;</pre>
+        </div>
+        <div class="tab-panel" data-tab="mcq">
+          <div class="mcq-section">
+            <div class="mcq-section-header">🧠 MCQ Quiz — SQL Joins</div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q1.</span> Which join returns only the rows that have matching values in both tables?</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','joins',1)">A) INNER JOIN</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','joins',1)">B) LEFT JOIN</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','joins',1)">C) FULL OUTER JOIN</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','joins',1)">D) CROSS JOIN</button>
+              </div>
+              <div class="mcq-explanation" id="exp-joins-1"><strong>Answer: A</strong> — INNER JOIN returns only matching rows. 🗣️ Dono mein milna chahiye — tabhi aayega!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q2.</span> Table A has 5 rows, Table B has 4 rows. What does CROSS JOIN return?</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','joins',2)">A) 9 rows</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','joins',2)">B) 20 rows</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','joins',2)">C) 5 rows</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','joins',2)">D) Depends on condition</button>
+              </div>
+              <div class="mcq-explanation" id="exp-joins-2"><strong>Answer: B</strong> — CROSS JOIN = Cartesian product = 5 × 4 = 20 rows.</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q3.</span> Which join is used to find an employee's manager from the same EMPLOYEE table?</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','joins',3)">A) INNER JOIN</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','joins',3)">B) OUTER JOIN</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','joins',3)">C) SELF JOIN</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','joins',3)">D) CROSS JOIN</button>
+              </div>
+              <div class="mcq-explanation" id="exp-joins-3"><strong>Answer: C</strong> — SELF JOIN = table joins with itself using aliases. Used for hierarchical data like employee-manager. 🗣️ Apne aap se join — hierarchy dikhane ke liye!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q4.</span> LEFT JOIN returns NULL for which side?</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','joins',4)">A) Left table unmatched rows</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','joins',4)">B) Right table unmatched rows</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','joins',4)">C) Both sides</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','joins',4)">D) Neither side</button>
+              </div>
+              <div class="mcq-explanation" id="exp-joins-4"><strong>Answer: B</strong> — LEFT JOIN keeps ALL left table rows. Right table columns show NULL when no match found. 🗣️ Left ke saare aayenge — right ka NULL hoga if koi match nahi!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q5.</span> FULL OUTER JOIN combines results of:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','joins',5)">A) Only INNER JOIN</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','joins',5)">B) LEFT JOIN + RIGHT JOIN</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','joins',5)">C) LEFT JOIN + CROSS JOIN</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','joins',5)">D) INNER JOIN + CROSS JOIN</button>
+              </div>
+              <div class="mcq-explanation" id="exp-joins-5"><strong>Answer: B</strong> — FULL OUTER JOIN = LEFT JOIN UNION RIGHT JOIN. Dono tables ke saare rows aate hain!</div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-panel" data-tab="shortq">
+          <div class="shortq-section">
+            <div class="mcq-section-header">✍️ Short Answer Questions</div>
+            <div class="shortq-item">
+              <div class="shortq-q" onclick="toggleShortQ(this)">Q1. Write a query to find all students NOT enrolled in any course using LEFT JOIN. <span>▾</span></div>
+              <div class="shortq-a"><pre>SELECT S.Name
+FROM STUDENT S
+LEFT JOIN ENROLL E ON S.Roll = E.Roll
+WHERE E.Roll IS NULL;</pre>Left join se saare students aate hain. Jahan E.Roll = NULL means woh student enrolled nahi hai kisi course mein!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== UNIT 4 ==================== -->
+    <div class="unit-header" id="unit4">
+      <div class="unit-num" style="background:rgba(255,217,61,0.15);color:var(--u4)">U4</div>
+      <div>
+        <h2 style="color:var(--u4)">Integrity Constraints & Functional Dependencies</h2>
+        <div class="unit-sub">Domain, Referential Integrity, FDs, Armstrong's Axioms, Canonical Cover</div>
+      </div>
+    </div>
+
+    <!-- Topic: Integrity Constraints -->
+    <div class="topic-card" id="t-ic">
+      <div class="topic-header" onclick="toggleTopic(this)">
+        <div class="topic-title"><span class="topic-emoji">🔒</span> Integrity Constraints</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <span class="badge badge-intermediate">Intermediate</span>
+          <span class="chevron">▼</span>
+        </div>
+      </div>
+      <div class="topic-body open">
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab(this,'theory')">📖 Theory</button>
+          <button class="tab-btn" onclick="switchTab(this,'mcq')">🧠 MCQs</button>
+          <button class="tab-btn" onclick="switchTab(this,'shortq')">✍️ Short Qs</button>
+        </div>
+        <div class="tab-panel active" data-tab="theory">
+          <div class="def-block">
+            <div class="def-label">Definition</div>
+            <p>Integrity Constraints are rules that ensure the database remains correct, valid, and consistent at all times. They are checked during every INSERT, UPDATE, and DELETE operation.</p>
+          </div>
+          <div class="hinglish-block">DB mein koi bhi operation karo — pehle constraints check honge. Constraints fail → operation reject! Jaise ATM pe negative balance allowed nahi — yeh ek constraint hai!</div>
+          <h3>🗂️ Types of Constraints</h3>
+          <div class="tbl-wrap"><table>
+            <tr><th>Type</th><th>Definition</th><th>Example</th></tr>
+            <tr><td><strong>Domain</strong></td><td>Valid data type/range per attribute</td><td>Age > 0, DOI ≥ 2019</td></tr>
+            <tr><td><strong>NOT NULL</strong></td><td>Column cannot be empty</td><td>Name NOT NULL</td></tr>
+            <tr><td><strong>UNIQUE</strong></td><td>No duplicate values (NULLs allowed)</td><td>Email UNIQUE</td></tr>
+            <tr><td><strong>PRIMARY KEY</strong></td><td>Unique + NOT NULL</td><td>Roll PRIMARY KEY</td></tr>
+            <tr><td><strong>FOREIGN KEY</strong></td><td>Must reference existing PK in another table</td><td>Dept_ID REFERENCES DEPT(Dept_ID)</td></tr>
+            <tr><td><strong>CHECK</strong></td><td>Custom condition must be true</td><td>CHECK(Salary > 0)</td></tr>
+            <tr><td><strong>DEFAULT</strong></td><td>Default value if none provided</td><td>Dept DEFAULT 'CSE'</td></tr>
+          </table></div>
+          <h3>🟩 Referential Integrity in Detail</h3>
+          <div class="formula">Πα(r₂) ⊆ ΠK₁(r₁)</div>
+          <p>FK values in child table must exist in parent table's PK.</p>
+          <div class="tbl-wrap"><table>
+            <tr><th>Scenario</th><th>Result</th></tr>
+            <tr><td>INSERT child with FK not in parent</td><td>❌ REJECT</td></tr>
+            <tr><td>DELETE parent when child references it</td><td>❌ REJECT (or CASCADE)</td></tr>
+            <tr><td>Parent exists, no child references</td><td>✅ CONSISTENT</td></tr>
+          </table></div>
+          <div class="tip-block">ON DELETE CASCADE = parent delete karo toh child automatically delete. ON DELETE SET NULL = parent delete, child ka FK NULL ho jaata hai. Exam mein yeh options puchhe jaate hain!</div>
+        </div>
+        <div class="tab-panel" data-tab="mcq">
+          <div class="mcq-section">
+            <div class="mcq-section-header">🧠 MCQ Quiz — Integrity Constraints</div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q1.</span> Which constraint allows NULL values but no duplicates?</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','ic',1)">A) UNIQUE</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','ic',1)">B) PRIMARY KEY</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','ic',1)">C) NOT NULL</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','ic',1)">D) CHECK</button>
+              </div>
+              <div class="mcq-explanation" id="exp-ic-1"><strong>Answer: A</strong> — UNIQUE allows NULL (multiple NULLs in some DBs) but no duplicate non-null values. PRIMARY KEY = UNIQUE + NOT NULL. 🗣️ UNIQUE = duplicate nahi, but NULL allowed!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q2.</span> ON DELETE CASCADE means:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','ic',2)">A) Delete is prevented</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','ic',2)">B) Deleting parent auto-deletes related child rows</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','ic',2)">C) Child FK is set to NULL</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','ic',2)">D) Child FK is set to DEFAULT</button>
+              </div>
+              <div class="mcq-explanation" id="exp-ic-2"><strong>Answer: B</strong> — CASCADE = effect propagates down. Parent delete → child auto-delete. Like a waterfall! 🗣️ Cascade = pani ki tarah baah jaata hai!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q3.</span> CHECK constraint is violated when:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','ic',3)">A) The condition is TRUE</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','ic',3)">B) The condition is FALSE</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','ic',3)">C) The column is NULL</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','ic',3)">D) The value is duplicate</button>
+              </div>
+              <div class="mcq-explanation" id="exp-ic-3"><strong>Answer: B</strong> — CHECK constraint must evaluate to TRUE for the operation to succeed. FALSE = violation = REJECT!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q4.</span> Referential integrity constraint is maintained by:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','ic',4)">A) Primary Key</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','ic',4)">B) Foreign Key</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','ic',4)">C) Unique constraint</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','ic',4)">D) NOT NULL</button>
+              </div>
+              <div class="mcq-explanation" id="exp-ic-4"><strong>Answer: B</strong> — Foreign Key maintains referential integrity by ensuring child values exist in parent table.</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q5.</span> A table can have how many PRIMARY KEYs?</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','ic',5)">A) Only one</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','ic',5)">B) As many as needed</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','ic',5)">C) Maximum two</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','ic',5)">D) Depends on DB</button>
+              </div>
+              <div class="mcq-explanation" id="exp-ic-5"><strong>Answer: A</strong> — A table can have ONLY ONE Primary Key (though it can be composite). But multiple UNIQUE constraints are allowed!</div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-panel" data-tab="shortq">
+          <div class="shortq-section">
+            <div class="mcq-section-header">✍️ Short Answer Questions</div>
+            <div class="shortq-item">
+              <div class="shortq-q" onclick="toggleShortQ(this)">Q1. What happens when you try to INSERT a row that violates referential integrity? <span>▾</span></div>
+              <div class="shortq-a">The INSERT operation is <strong>rejected</strong> by the DBMS. If you try to insert a row in the child table with a FK value that doesn't exist in the parent table's PK, the DB throws an error: "Foreign key constraint fails." 🗣️ Child ko parent chahiye — parent nahi hai toh child nahi aayega!</div>
+            </div>
+            <div class="shortq-item">
+              <div class="shortq-q" onclick="toggleShortQ(this)">Q2. What is the difference between UNIQUE and PRIMARY KEY? <span>▾</span></div>
+              <div class="shortq-a"><strong>UNIQUE:</strong> No duplicate values, but NULL is allowed (and multiple NULLs). Can have multiple UNIQUE constraints per table.<br><strong>PRIMARY KEY:</strong> UNIQUE + NOT NULL. Only ONE per table. The main identifier of the relation.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Topic: Functional Dependencies -->
+    <div class="topic-card" id="t-fd">
+      <div class="topic-header" onclick="toggleTopic(this)">
+        <div class="topic-title"><span class="topic-emoji">🔀</span> Functional Dependencies (FD)</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <span class="badge badge-intermediate">Intermediate</span>
+          <span class="chevron">▼</span>
+        </div>
+      </div>
+      <div class="topic-body open">
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab(this,'theory')">📖 Theory</button>
+          <button class="tab-btn" onclick="switchTab(this,'mcq')">🧠 MCQs</button>
+          <button class="tab-btn" onclick="switchTab(this,'shortq')">✍️ Short Qs</button>
+        </div>
+        <div class="tab-panel active" data-tab="theory">
+          <div class="def-block">
+            <div class="def-label">Definition</div>
+            <p><code>α → β</code> (α determines β): For any two tuples t₁ and t₂ in relation r, if t₁[α] = t₂[α] then t₁[β] = t₂[β]. Same α values always give same β values.</p>
+          </div>
+          <div class="hinglish-block">Simple bolo: agar α ki value same hai dono rows mein, toh β ki value bhi same hogi — hamesha! Jaise ACC_NO → TITLE: ek book ka ek hi title hoga!</div>
+          <div class="formula">t₁[α] = t₂[α] ⟹ t₁[β] = t₂[β]</div>
+          <h3>🔑 FD Types</h3>
+          <div class="tbl-wrap"><table>
+            <tr><th>Type</th><th>Definition</th><th>Example</th></tr>
+            <tr><td><strong>Trivial FD</strong></td><td>β ⊆ α (right side is subset of left side)</td><td>AB → A (always holds)</td></tr>
+            <tr><td><strong>Non-trivial FD</strong></td><td>β ⊄ α (right has something new)</td><td>A → B (useful FD)</td></tr>
+            <tr><td><strong>Full FD</strong></td><td>Remove any attribute from α → FD no longer holds</td><td>AB → C (if A→C doesn't hold alone)</td></tr>
+            <tr><td><strong>Partial FD</strong></td><td>Remove some attribute from α → FD still holds</td><td>AB → C but A→C also holds</td></tr>
+            <tr><td><strong>Transitive FD</strong></td><td>A → B and B → C → A → C (indirectly)</td><td>Roll → Dept → HOD</td></tr>
+          </table></div>
+          <div class="tip-block">FDs are used to identify keys! If α → R (all attributes), then α is a superkey. If α → R and no proper subset of α does so, α is a candidate key!</div>
+        </div>
+        <div class="tab-panel" data-tab="mcq">
+          <div class="mcq-section">
+            <div class="mcq-section-header">🧠 MCQ Quiz — Functional Dependencies</div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q1.</span> AB → A is an example of:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','fd',1)">A) Trivial FD</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','fd',1)">B) Non-trivial FD</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','fd',1)">C) Partial FD</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','fd',1)">D) Transitive FD</button>
+              </div>
+              <div class="mcq-explanation" id="exp-fd-1"><strong>Answer: A</strong> — AB → A is trivial because A is already part of AB (β ⊆ α). Trivial FDs always hold! 🗣️ RHS already LHS ka part hai — trivial!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q2.</span> If A → B and B → C, then A → C is called:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','fd',2)">A) Partial Dependency</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','fd',2)">B) Transitive Dependency</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','fd',2)">C) Full Dependency</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','fd',2)">D) Trivial Dependency</button>
+              </div>
+              <div class="mcq-explanation" id="exp-fd-2"><strong>Answer: B</strong> — Transitivity: A→B, B→C → A→C. A directly determines C through B indirectly. 🗣️ Chain reaction — A se B, B se C — toh A se directly C bhi!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q3.</span> In relation ENROLL(Student_ID, Course_ID, Grade): Student_ID → Grade is a:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','fd',3)">A) Full FD</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','fd',3)">B) Partial FD</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','fd',3)">C) Trivial FD</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','fd',3)">D) Transitive FD</button>
+              </div>
+              <div class="mcq-explanation" id="exp-fd-3"><strong>Answer: B</strong> — PK is (Student_ID, Course_ID). Student_ID alone determining Grade is a PARTIAL dependency (only part of PK used). This causes 2NF violation!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q4.</span> If α → R holds, then α is a:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','fd',4)">A) Superkey</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','fd',4)">B) Foreign key</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','fd',4)">C) Alternate key</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','fd',4)">D) Composite key</button>
+              </div>
+              <div class="mcq-explanation" id="exp-fd-4"><strong>Answer: A</strong> — If α determines ALL attributes (entire relation R), then α is a superkey by definition. 🗣️ Sab kuch determine kare → superkey!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q5.</span> Which FD type causes 3NF violation?</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','fd',5)">A) Trivial FD</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','fd',5)">B) Full FD</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','fd',5)">C) Transitive FD</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','fd',5)">D) Partial FD</button>
+              </div>
+              <div class="mcq-explanation" id="exp-fd-5"><strong>Answer: C</strong> — Transitive dependency (non-key → non-key) causes 3NF violation. Partial dependency causes 2NF violation. 🗣️ Transitive = 3NF problem, Partial = 2NF problem — yaad rakho!</div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-panel" data-tab="shortq">
+          <div class="shortq-section">
+            <div class="mcq-section-header">✍️ Short Answer Questions</div>
+            <div class="shortq-item">
+              <div class="shortq-q" onclick="toggleShortQ(this)">Q1. Find all FDs from table: R(A,B,C,D) where A→BC, B→D. <span>▾</span></div>
+              <div class="shortq-a">Given: A→BC, B→D<br>By decomposition: A→B, A→C<br>By transitivity (A→B, B→D): A→D<br>By union: A→BCD<br>Trivial: A→A, B→B, etc.<br><br>So non-trivial FDs: A→B, A→C, A→D, A→BC, A→BD, A→CD, A→BCD, B→D</div>
+            </div>
+            <div class="shortq-item">
+              <div class="shortq-q" onclick="toggleShortQ(this)">Q2. What is the difference between full and partial functional dependency? <span>▾</span></div>
+              <div class="shortq-a"><strong>Full FD</strong>: X → Y is full if removing ANY attribute from X makes the FD invalid. Example: (A,B) → C where neither A→C nor B→C hold alone.<br><strong>Partial FD</strong>: X → Y is partial if removing SOME attribute from X and FD still holds. Example: (A,B) → C but A→C also holds (B is redundant). 🗣️ Full = saare attributes zaroori hain LHS mein!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Topic: Armstrong's Axioms & Closure -->
+    <div class="topic-card" id="t-armstrong">
+      <div class="topic-header" onclick="toggleTopic(this)">
+        <div class="topic-title"><span class="topic-emoji">⚡</span> Armstrong's Axioms & Attribute Closure</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <span class="badge badge-intermediate">Intermediate</span>
+          <span class="chevron">▼</span>
+        </div>
+      </div>
+      <div class="topic-body open">
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab(this,'theory')">📖 Theory</button>
+          <button class="tab-btn" onclick="switchTab(this,'mcq')">🧠 MCQs</button>
+          <button class="tab-btn" onclick="switchTab(this,'shortq')">✍️ Short Qs</button>
+        </div>
+        <div class="tab-panel active" data-tab="theory">
+          <div class="def-block">
+            <div class="def-label">Armstrong's Axioms</div>
+            <p>A set of <strong>sound and complete</strong> inference rules used to derive all functional dependencies in the closure F⁺ from a given set F.</p>
+          </div>
+          <div class="hinglish-block">Armstrong ke 3 rules se hum F mein diye FDs se saari possible FDs derive kar sakte hain. Sound = jo derive kiya woh sach hai. Complete = jo sach hai woh derive ho sakta hai!</div>
+          <div class="tbl-wrap"><table>
+            <tr><th>Rule</th><th>Statement</th><th>🗣️ Hinglish</th></tr>
+            <tr><td><strong>🔁 Reflexivity</strong></td><td>If β ⊆ α, then α → β</td><td>Agar B, A ka part hai toh A determines B trivially</td></tr>
+            <tr><td><strong>➕ Augmentation</strong></td><td>If α → β, then γα → γβ</td><td>Dono sides mein same attributes add karo — FD valid!</td></tr>
+            <tr><td><strong>🔗 Transitivity</strong></td><td>If α → β and β → γ, then α → γ</td><td>Chain rule — A se B, B se C → A se C!</td></tr>
+          </table></div>
+          <h3>📦 Derived Rules</h3>
+          <div class="tbl-wrap"><table>
+            <tr><th>Rule</th><th>Statement</th></tr>
+            <tr><td><strong>Union</strong></td><td>α→β and α→γ ⟹ α→βγ</td></tr>
+            <tr><td><strong>Decomposition</strong></td><td>α→βγ ⟹ α→β and α→γ</td></tr>
+            <tr><td><strong>Pseudo-transitivity</strong></td><td>α→β and γβ→δ ⟹ γα→δ</td></tr>
+          </table></div>
+          <h3>🎯 Attribute Closure (α⁺)</h3>
+          <div class="def-block">
+            <div class="def-label">Algorithm</div>
+            <p>α⁺ = all attributes functionally determined by α under set F.</p>
+          </div>
+          <pre>Result ← α
+while (changes occur):
+    for each FD (A → B) in F:
+        if A ⊆ Result:
+            Result ← Result ∪ B
+return Result  // This is α⁺</pre>
+          <h3>📌 Solved Example</h3>
+          <p>F = {A→BC, CD→E, B→D, E→A}, Find (AC)⁺</p>
+          <div class="tbl-wrap"><table>
+            <tr><th>Step</th><th>FD Applied</th><th>Result</th></tr>
+            <tr><td>Start</td><td>—</td><td>{A, C}</td></tr>
+            <tr><td>2</td><td>A→BC: A ⊆ {A,C} ✅</td><td>{A, B, C}</td></tr>
+            <tr><td>3</td><td>B→D: B ⊆ {A,B,C} ✅</td><td>{A, B, C, D}</td></tr>
+            <tr><td>4</td><td>CD→E: CD ⊆ {A,B,C,D} ✅</td><td>{A, B, C, D, E}</td></tr>
+            <tr><td>5</td><td>E→A: already in result</td><td>{A, B, C, D, E}</td></tr>
+          </table></div>
+          <p>(AC)⁺ = {A, B, C, D, E} = R → <strong>AC is a Superkey!</strong></p>
+        </div>
+        <div class="tab-panel" data-tab="mcq">
+          <div class="mcq-section">
+            <div class="mcq-section-header">🧠 MCQ Quiz — Armstrong's Axioms</div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q1.</span> Armstrong's Axioms are said to be:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','aa',1)">A) Sound only</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','aa',1)">B) Complete only</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','aa',1)">C) Sound and Complete</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','aa',1)">D) Neither</button>
+              </div>
+              <div class="mcq-explanation" id="exp-aa-1"><strong>Answer: C</strong> — Sound = only valid FDs derived. Complete = ALL valid FDs can be derived. Together they guarantee the complete closure F⁺.</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q2.</span> Using augmentation: if A → B, then AC → ?</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','aa',2)">A) A</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','aa',2)">B) BC</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','aa',2)">C) B only</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','aa',2)">D) ABC</button>
+              </div>
+              <div class="mcq-explanation" id="exp-aa-2"><strong>Answer: B</strong> — Augmentation: A→B, add C to both sides: AC→BC. 🗣️ Dono sides mein C add kiya!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q3.</span> Given F = {A→B, B→C, C→D}. What is A⁺?</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','aa',3)">A) {A, B}</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','aa',3)">B) {A, B, C}</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','aa',3)">C) {A, B, C, D}</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','aa',3)">D) {A}</button>
+              </div>
+              <div class="mcq-explanation" id="exp-aa-3"><strong>Answer: C</strong> — A→B, then B→C, then C→D. By transitivity A→D. So A⁺ = {A, B, C, D}. 🗣️ A se shuru karo, chain follow karo!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q4.</span> F⁺ (closure of F) contains:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','aa',4)">A) Only FDs given in F</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','aa',4)">B) All FDs logically derivable from F</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','aa',4)">C) Only trivial FDs</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','aa',4)">D) FDs not in F</button>
+              </div>
+              <div class="mcq-explanation" id="exp-aa-4"><strong>Answer: B</strong> — F⁺ includes ALL FDs that can be derived from F (using Armstrong's axioms), including original + derived ones. 🗣️ F se nikalne wali saari FDs!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q5.</span> If A⁺ = {A, B, C, D} = R (all attributes of R), then A is:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','aa',5)">A) A superkey</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','aa',5)">B) A foreign key</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','aa',5)">C) Only an attribute</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','aa',5)">D) An alternate key</button>
+              </div>
+              <div class="mcq-explanation" id="exp-aa-5"><strong>Answer: A</strong> — If α⁺ = R (all attributes), then α → R, making α a superkey. To check if it's also a candidate key, verify no proper subset of α gives same closure.</div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-panel" data-tab="shortq">
+          <div class="shortq-section">
+            <div class="mcq-section-header">✍️ Short Answer Questions</div>
+            <div class="shortq-item">
+              <div class="shortq-q" onclick="toggleShortQ(this)">Q1. Find canonical cover for F = {A→BC, B→C, A→B, AB→C} <span>▾</span></div>
+              <div class="shortq-a">Step 1 — Single RHS: A→B, A→C, B→C, A→B, AB→C<br>Step 2 — Merge same LHS: A→BC (from A→B and A→C), B→C<br>Step 3 — Remove redundant RHS: A→BC: Is B redundant? Check if A→C without B: A→B, B→C, so A→C. YES B is redundant → A→C<br>Step 4 — Remove redundant FDs: Is AB→C redundant? A⁺ = {A,B,C}, so A alone → C already. YES remove AB→C<br><br><strong>Canonical Cover Fc = {A→B, B→C}</strong> ✅<br>🗣️ Bas do FDs bachti hain — minimal aur equivalent!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== UNIT 5 ==================== -->
+    <div class="unit-header" id="unit5">
+      <div class="unit-num" style="background:rgba(255,159,67,0.15);color:var(--u5)">U5</div>
+      <div>
+        <h2 style="color:var(--u5)">Normalization</h2>
+        <div class="unit-sub">1NF, 2NF, 3NF, BCNF, Decomposition</div>
+      </div>
+    </div>
+
+    <!-- Topic: Normalization Overview + 1NF + 2NF + 3NF + BCNF -->
+    <div class="topic-card" id="t-1nf">
+      <div class="topic-header" onclick="toggleTopic(this)">
+        <div class="topic-title"><span class="topic-emoji">📐</span> Normalization — 1NF to BCNF</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <span class="badge badge-advanced">Advanced</span>
+          <span class="chevron">▼</span>
+        </div>
+      </div>
+      <div class="topic-body open">
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab(this,'theory')">📖 Theory</button>
+          <button class="tab-btn" onclick="switchTab(this,'mcq')">🧠 MCQs</button>
+          <button class="tab-btn" onclick="switchTab(this,'shortq')">✍️ Short Qs</button>
+        </div>
+        <div class="tab-panel active" data-tab="theory">
+          <div class="def-block">
+            <div class="def-label">Definition</div>
+            <p><strong>Normalization</strong> is the process of organizing a database to reduce data redundancy and improve data integrity by decomposing tables into smaller, well-structured ones.</p>
+          </div>
+          <div class="hinglish-block">Normalization = DB ko "clean" karna. Jab ek table mein bahut zyada information hoti hai, toh anomalies aati hain. Normalization se tables chote chote ho jaate hain — sab organized!</div>
+          <h3>⚠️ Why Normalize? Anomalies</h3>
+          <div class="tbl-wrap"><table>
+            <tr><th>Anomaly</th><th>Problem</th><th>Example</th></tr>
+            <tr><td><strong>Insertion Anomaly</strong></td><td>Can't insert without extra unwanted data</td><td>New student can't be added without course</td></tr>
+            <tr><td><strong>Deletion Anomaly</strong></td><td>Deleting data removes unintended information</td><td>Deleting last course deletes student info too</td></tr>
+            <tr><td><strong>Update Anomaly</strong></td><td>Updating one value requires multiple changes</td><td>Change dept name in 100 rows instead of 1</td></tr>
+          </table></div>
+          <h3>📋 1NF — First Normal Form</h3>
+          <div class="def-block"><div class="def-label">Rule</div><p>A relation is in <strong>1NF</strong> if every attribute contains only atomic (indivisible) values — no multi-valued or composite attributes in cells.</p></div>
+          <div class="hinglish-block">1NF = har cell mein sirf ek value! No lists, no sets in a single cell. Table ka har column atomic hona chahiye.</div>
+          <div class="tbl-wrap"><table>
+            <tr><th>❌ Not 1NF</th><th>✅ 1NF</th></tr>
+            <tr><td>Student: {Roll: 1, Courses: {DBMS, OS, CN}}</td><td>Three rows: (1,DBMS), (1,OS), (1,CN)</td></tr>
+            <tr><td>Phone: {101, 9876543210, 9123456789}</td><td>Two rows with single phone each</td></tr>
+          </table></div>
+          <h3>📋 2NF — Second Normal Form</h3>
+          <div class="def-block"><div class="def-label">Rule</div><p>A relation is in <strong>2NF</strong> if it is in 1NF AND every non-key attribute is <em>fully functionally dependent</em> on the entire primary key (no partial dependencies).</p></div>
+          <div class="hinglish-block">2NF = 1NF + koi partial dependency nahi. Partial dependency = non-key attribute sirf primary key ke ek part pe depend kare. Sirf composite PKs mein yeh issue aata hai!</div>
+          <pre>-- ❌ Not 2NF: ENROLL(Stud_ID, Course_ID, Stud_Name, Grade)
+-- PK = (Stud_ID, Course_ID)
+-- Stud_Name depends only on Stud_ID (partial!) 
+
+-- ✅ 2NF Decomposition:
+-- STUDENT(Stud_ID, Stud_Name)      -- Stud_Name depends on Stud_ID only
+-- ENROLL(Stud_ID, Course_ID, Grade) -- Grade depends on full PK</pre>
+          <h3>📋 3NF — Third Normal Form</h3>
+          <div class="def-block"><div class="def-label">Rule</div><p>A relation is in <strong>3NF</strong> if it is in 2NF AND there are no transitive dependencies (non-key attribute should not depend on another non-key attribute).</p></div>
+          <div class="hinglish-block">3NF = 2NF + koi transitive dependency nahi. Non-key se non-key dependency = problem! Roll → Dept → HOD (HOD transitively depends on Roll via Dept — bad!)</div>
+          <pre>-- ❌ Not 3NF: STUDENT(Roll, Name, Dept, HOD)
+-- Roll → Dept → HOD (transitive!)
+
+-- ✅ 3NF Decomposition:
+-- STUDENT(Roll, Name, Dept)
+-- DEPARTMENT(Dept, HOD)</pre>
+          <h3>📋 BCNF — Boyce-Codd Normal Form</h3>
+          <div class="def-block"><div class="def-label">Rule</div><p>A relation is in <strong>BCNF</strong> if for every FD α → β, α must be a superkey. Stronger than 3NF.</p></div>
+          <div class="hinglish-block">BCNF = 3NF ka strict version. Agar koi FD exist kare jahan LHS superkey na ho → BCNF violation! Every determinant must be a superkey!</div>
+          <pre>-- ❌ Not BCNF: TEACH(Student, Subject, Teacher)
+-- FDs: (Student,Subject)→Teacher, Teacher→Subject
+-- Teacher→Subject: Teacher is not a superkey! BCNF violation
+
+-- ✅ BCNF Decomposition:
+-- TEACHER_SUBJECT(Teacher, Subject)
+-- STUDENT_TEACHER(Student, Teacher)</pre>
+          <div class="tip-block">Every BCNF relation is in 3NF. But every 3NF relation may NOT be in BCNF. BCNF is stronger! Also: BCNF may lose dependency preservation, 3NF guarantees it.</div>
+          <h3>🆚 Summary: All Normal Forms</h3>
+          <div class="tbl-wrap"><table>
+            <tr><th>NF</th><th>Condition</th><th>Removes</th></tr>
+            <tr><td><strong>1NF</strong></td><td>Atomic values only</td><td>Multi-valued attributes</td></tr>
+            <tr><td><strong>2NF</strong></td><td>1NF + No partial dependencies</td><td>Partial FDs</td></tr>
+            <tr><td><strong>3NF</strong></td><td>2NF + No transitive dependencies</td><td>Transitive FDs</td></tr>
+            <tr><td><strong>BCNF</strong></td><td>For every α→β, α is superkey</td><td>All anomalies (mostly)</td></tr>
+          </table></div>
+        </div>
+        <div class="tab-panel" data-tab="mcq">
+          <div class="mcq-section">
+            <div class="mcq-section-header">🧠 MCQ Quiz — Normalization</div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q1.</span> A table with repeating groups (multi-valued cells) violates:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','norm',1)">A) 1NF</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','norm',1)">B) 2NF</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','norm',1)">C) 3NF</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','norm',1)">D) BCNF</button>
+              </div>
+              <div class="mcq-explanation" id="exp-norm-1"><strong>Answer: A</strong> — 1NF requires all attributes to be atomic. Multi-valued cells violate 1NF. 🗣️ Pehla rule = ek cell mein ek hi value!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q2.</span> Partial functional dependency causes violation of:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','norm',2)">A) 1NF</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','norm',2)">B) 2NF</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','norm',2)">C) 3NF</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','norm',2)">D) BCNF</button>
+              </div>
+              <div class="mcq-explanation" id="exp-norm-2"><strong>Answer: B</strong> — Partial dependency = non-key depends on part of PK → 2NF violation. 🗣️ Partial = 2NF, Transitive = 3NF — yaad rakho!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q3.</span> Roll → Dept → HOD_Name. HOD_Name has what type of dependency on Roll?</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','norm',3)">A) Partial</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','norm',3)">B) Transitive</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','norm',3)">C) Full</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','norm',3)">D) Trivial</td></tr>
+              </div>
+              <div class="mcq-explanation" id="exp-norm-3"><strong>Answer: B</strong> — HOD depends on Dept, Dept depends on Roll → HOD transitively depends on Roll. This causes 3NF violation!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q4.</span> BCNF is stricter than 3NF because:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','norm',4)">A) Every determinant must be a superkey in BCNF</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','norm',4)">B) BCNF allows partial dependencies</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','norm',4)">C) BCNF requires 4NF first</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','norm',4)">D) BCNF removes all transitive FDs</button>
+              </div>
+              <div class="mcq-explanation" id="exp-norm-4"><strong>Answer: A</strong> — BCNF: for EVERY FD α→β, α must be a superkey. 3NF allows some exceptions when β is part of candidate key. 🗣️ BCNF = no exceptions, stricter!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q5.</span> Which normal form guarantees no insertion, deletion or update anomalies?</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','norm',5)">A) 1NF</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','norm',5)">B) 2NF</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','norm',5)">C) 3NF</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','norm',5)">D) BCNF</button>
+              </div>
+              <div class="mcq-explanation" id="exp-norm-5"><strong>Answer: D</strong> — BCNF is the highest form that largely eliminates anomalies. 3NF may still have some anomalies. 🗣️ BCNF = maximum clean DB!</div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-panel" data-tab="shortq">
+          <div class="shortq-section">
+            <div class="mcq-section-header">✍️ Short Answer Questions</div>
+            <div class="shortq-item">
+              <div class="shortq-q" onclick="toggleShortQ(this)">Q1. Normalize to 3NF: STUDENT(Roll, Name, Dept, HOD, Course, Grade) <span>▾</span></div>
+              <div class="shortq-a">FDs: Roll→Name, Roll→Dept, Dept→HOD, (Roll,Course)→Grade<br><br><strong>1NF:</strong> Already atomic ✅<br><strong>2NF:</strong> Remove partials — Name, Dept, HOD depend only on Roll (partial on composite PK)<br>→ STUDENT(Roll, Name, Dept, HOD), RESULT(Roll, Course, Grade)<br><br><strong>3NF:</strong> Remove transitive — HOD depends on Dept (transitive via Roll→Dept→HOD)<br>→ STUDENT(Roll, Name, Dept), DEPARTMENT(Dept, HOD), RESULT(Roll, Course, Grade)<br><br>✅ Final: 3 tables, fully normalized to 3NF!</div>
+            </div>
+            <div class="shortq-item">
+              <div class="shortq-q" onclick="toggleShortQ(this)">Q2. Difference between 3NF and BCNF with example. <span>▾</span></div>
+              <div class="shortq-a"><strong>3NF:</strong> α→β: either α is superkey OR β is part of some candidate key.<br><strong>BCNF:</strong> α→β: α MUST be a superkey. No exceptions.<br><br>Example: R(A,B,C), FDs: AB→C, C→B. Candidate keys: {AB, AC}<br>3NF: C→B — B is part of candidate key AC, so OK for 3NF ✅<br>BCNF: C→B — C is not a superkey ❌ BCNF violation!<br><br>🗣️ 3NF mein ek exception hai — BCNF mein nahi!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== UNIT 6 ==================== -->
+    <div class="unit-header" id="unit6">
+      <div class="unit-num" style="background:rgba(255,107,107,0.15);color:var(--u6)">U6</div>
+      <div>
+        <h2 style="color:var(--u6)">Transaction Processing & Concurrency</h2>
+        <div class="unit-sub">ACID, Schedules, Serializability, Locks, Recovery</div>
+      </div>
+    </div>
+
+    <div class="topic-card" id="t-acid">
+      <div class="topic-header" onclick="toggleTopic(this)">
+        <div class="topic-title"><span class="topic-emoji">⚗️</span> Transactions & ACID Properties</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <span class="badge badge-intermediate">Intermediate</span>
+          <span class="chevron">▼</span>
+        </div>
+      </div>
+      <div class="topic-body open">
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab(this,'theory')">📖 Theory</button>
+          <button class="tab-btn" onclick="switchTab(this,'mcq')">🧠 MCQs</button>
+          <button class="tab-btn" onclick="switchTab(this,'shortq')">✍️ Short Qs</button>
+        </div>
+        <div class="tab-panel active" data-tab="theory">
+          <div class="def-block">
+            <div class="def-label">Transaction</div>
+            <p>A <strong>transaction</strong> is a unit of program execution that accesses and possibly modifies database items. It must be executed entirely or not at all (atomicity).</p>
+          </div>
+          <div class="hinglish-block">Transaction = ek kaam ki poori unit. Jaise bank transfer: account se paise nikalo AND doosre mein daalo — yeh dono ek transaction hai. Agar beech mein fail hua → ROLLBACK! Dono ho ya dono nahi!</div>
+          <h3>🧪 ACID Properties</h3>
+          <div class="tbl-wrap"><table>
+            <tr><th>Property</th><th>Definition</th><th>🗣️ Hinglish</th><th>Example</th></tr>
+            <tr><td><strong>A — Atomicity</strong></td><td>All operations execute or none do</td><td>Sab hoga ya kuch nahi</td><td>Transfer: debit + credit — dono ya kuch nahi</td></tr>
+            <tr><td><strong>C — Consistency</strong></td><td>DB moves from one consistent state to another</td><td>DB pehle sahi tha, baad mein bhi sahi hoga</td><td>Total money before = after transfer</td></tr>
+            <tr><td><strong>I — Isolation</strong></td><td>Concurrent transactions don't interfere</td><td>Ek transaction doosre ko affect nahi karta</td><td>Two transfers at same time — both correct</td></tr>
+            <tr><td><strong>D — Durability</strong></td><td>Committed changes survive system failure</td><td>COMMIT ke baad data permanent — crash ho toh bhi</td><td>After transfer committed, power cut = data still saved</td></tr>
+          </table></div>
+          <h3>📊 Transaction States</h3>
+          <div class="diagram">Active → Partially Committed → Committed
+                                ↓                  ↓
+                             Failed          (Success!)
+                                ↓
+                           Aborted/Rolled Back</div>
+          <h3>🔄 Concurrency Problems</h3>
+          <div class="tbl-wrap"><table>
+            <tr><th>Problem</th><th>Description</th><th>🗣️ Hinglish</th></tr>
+            <tr><td><strong>Dirty Read</strong></td><td>T2 reads data written by T1 (uncommitted)</td><td>T1 ne data write kiya, commit nahi kiya — T2 ne padh liya → T1 rollback kiya → T2 ka data galat!</td></tr>
+            <tr><td><strong>Lost Update</strong></td><td>T2 overwrites T1's update</td><td>Dono ne same data update kiya — ek ka update kho gaya!</td></tr>
+            <tr><td><strong>Unrepeatable Read</strong></td><td>T1 reads same data twice, gets different values</td><td>T1 ne value padhi, T2 ne update ki, T1 dobara padha — alag value!</td></tr>
+            <tr><td><strong>Phantom Read</strong></td><td>T1 reads a set, T2 inserts new rows, T1 re-reads — new rows appear</td><td>Query dobara karo — extra rows aa gaye beech mein!</td></tr>
+          </table></div>
+        </div>
+        <div class="tab-panel" data-tab="mcq">
+          <div class="mcq-section">
+            <div class="mcq-section-header">🧠 MCQ Quiz — Transactions & ACID</div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q1.</span> Which ACID property ensures that a completed transaction is never lost even after system crash?</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','acid',1)">A) Atomicity</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','acid',1)">B) Consistency</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','acid',1)">C) Isolation</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','acid',1)">D) Durability</button>
+              </div>
+              <div class="mcq-explanation" id="exp-acid-1"><strong>Answer: D</strong> — Durability = once committed, stays committed even after crash. Achieved through write-ahead logging. 🗣️ COMMIT = permanent — crash bhi nahi hila sakta!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q2.</span> T1 reads a value written by T2 before T2 commits. This is called:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','acid',2)">A) Dirty Read</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','acid',2)">B) Phantom Read</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','acid',2)">C) Lost Update</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','acid',2)">D) Unrepeatable Read</button>
+              </div>
+              <div class="mcq-explanation" id="exp-acid-2"><strong>Answer: A</strong> — Dirty Read = reading uncommitted data from another transaction. If that transaction rolls back, you've read "dirty" (invalid) data!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q3.</span> Atomicity is implemented by:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','acid',3)">A) Locking</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','acid',3)">B) Recovery Manager (ROLLBACK)</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','acid',3)">C) Two-phase locking</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','acid',3)">D) Checkpointing</button>
+              </div>
+              <div class="mcq-explanation" id="exp-acid-3"><strong>Answer: B</strong> — Atomicity is ensured by the Recovery Manager through ROLLBACK — if anything fails, all changes are undone.</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q4.</span> Which property ensures concurrent transactions don't see each other's partial results?</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','acid',4)">A) Atomicity</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','acid',4)">B) Durability</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','acid',4)">C) Isolation</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','acid',4)">D) Consistency</button>
+              </div>
+              <div class="mcq-explanation" id="exp-acid-4"><strong>Answer: C</strong> — Isolation = each transaction executes as if it's alone. Implemented through locking and MVCC. 🗣️ Isolation = ek doosre ko affect nahi karte!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q5.</span> In a banking transfer of ₹500 from A to B, if debit from A succeeds but credit to B fails, which property ensures both are rolled back?</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','acid',5)">A) Atomicity</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','acid',5)">B) Consistency</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','acid',5)">C) Isolation</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','acid',5)">D) Durability</button>
+              </div>
+              <div class="mcq-explanation" id="exp-acid-5"><strong>Answer: A</strong> — Atomicity ensures all-or-nothing. If credit fails, debit is also rolled back. 🗣️ Dono hoga ya dono nahi — Atomicity ki guarantee!</div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-panel" data-tab="shortq">
+          <div class="shortq-section">
+            <div class="mcq-section-header">✍️ Short Answer Questions</div>
+            <div class="shortq-item">
+              <div class="shortq-q" onclick="toggleShortQ(this)">Q1. What is the difference between COMMIT and ROLLBACK? <span>▾</span></div>
+              <div class="shortq-a"><strong>COMMIT:</strong> Makes all changes made in the current transaction permanent. After COMMIT, changes cannot be undone. 🗣️ COMMIT = kaam pakka — ab undo nahi hoga!<br><strong>ROLLBACK:</strong> Undoes all changes made in the current transaction. Restores DB to state before transaction began. 🗣️ ROLLBACK = sab wapas — jaise kuch hua hi nahi!</div>
+            </div>
+            <div class="shortq-item">
+              <div class="shortq-q" onclick="toggleShortQ(this)">Q2. What is serializability? Why is it important? <span>▾</span></div>
+              <div class="shortq-a">A schedule (sequence of operations from multiple transactions) is <strong>serializable</strong> if its result is equivalent to some serial execution of the transactions. It's important because it ensures the final DB state is consistent — as if transactions ran one by one. 🗣️ Concurrent transactions ka result = ek ke baad ek chalane jaisa — yahi serializability hai!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Topic: Concurrency Control -->
+    <div class="topic-card" id="t-concurrency">
+      <div class="topic-header" onclick="toggleTopic(this)">
+        <div class="topic-title"><span class="topic-emoji">🔐</span> Concurrency Control & Locking</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <span class="badge badge-advanced">Advanced</span>
+          <span class="chevron">▼</span>
+        </div>
+      </div>
+      <div class="topic-body open">
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab(this,'theory')">📖 Theory</button>
+          <button class="tab-btn" onclick="switchTab(this,'mcq')">🧠 MCQs</button>
+          <button class="tab-btn" onclick="switchTab(this,'shortq')">✍️ Short Qs</button>
+        </div>
+        <div class="tab-panel active" data-tab="theory">
+          <div class="hinglish-block">Multiple transactions ek saath chalti hain — concurrency! Problem = they might interfere. Solution = Locking! Ek transaction data use kar rahi hai toh doosri wait karo!</div>
+          <h3>🔒 Lock Types</h3>
+          <div class="tbl-wrap"><table>
+            <tr><th>Lock</th><th>Purpose</th><th>Shared?</th><th>🗣️ Hinglish</th></tr>
+            <tr><td><strong>Shared Lock (S)</strong></td><td>For reading</td><td>Multiple S locks allowed</td><td>Padh raha hoon — aur bhi padh sakte hain</td></tr>
+            <tr><td><strong>Exclusive Lock (X)</strong></td><td>For writing</td><td>No other lock allowed</td><td>Likh raha hoon — koi nahi aayega</td></tr>
+          </table></div>
+          <h3>🔄 Two-Phase Locking (2PL)</h3>
+          <div class="def-block"><div class="def-label">Protocol</div><p>A transaction must acquire all locks BEFORE releasing any lock. Two phases: Growing phase (acquire locks) and Shrinking phase (release locks).</p></div>
+          <div class="diagram">Growing Phase  |  Shrinking Phase
+acquire locks  |  release locks
+      ↑ Lock Point (max locks held)</div>
+          <div class="tip-block">2PL guarantees conflict serializability. Strict 2PL (hold all exclusive locks till commit) also ensures recoverability!</div>
+          <h3>💀 Deadlock</h3>
+          <p>T1 waits for T2's lock, T2 waits for T1's lock — circular wait! Solutions:</p>
+          <ul>
+            <li><strong>Prevention</strong> — Wait-Die or Wound-Wait protocols</li>
+            <li><strong>Detection</strong> — Wait-for graph cycle detection</li>
+            <li><strong>Timeout</strong> — Abort transaction if waits too long</li>
+          </ul>
+          <div class="hinglish-block">Deadlock = dono ek doosre ka wait kar rahe hain — koi move nahi karta! Jaise do gaadi road pe aamne saamne — koi peeche nahi jaata!</div>
+        </div>
+        <div class="tab-panel" data-tab="mcq">
+          <div class="mcq-section">
+            <div class="mcq-section-header">🧠 MCQ Quiz — Concurrency Control</div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q1.</span> Two-Phase Locking protocol ensures:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','cc',1)">A) Conflict serializability</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','cc',1)">B) Deadlock freedom</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','cc',1)">C) Maximum throughput</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','cc',1)">D) No dirty reads always</button>
+              </div>
+              <div class="mcq-explanation" id="exp-cc-1"><strong>Answer: A</strong> — 2PL guarantees conflict serializability. However it can still have deadlocks! Strict 2PL adds recoverability too.</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q2.</span> Which lock allows multiple transactions to read simultaneously?</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','cc',2)">A) Shared Lock</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','cc',2)">B) Exclusive Lock</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','cc',2)">C) Update Lock</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','cc',2)">D) Intent Lock</button>
+              </div>
+              <div class="mcq-explanation" id="exp-cc-2"><strong>Answer: A</strong> — Shared (Read) locks can coexist. Multiple transactions can read simultaneously. Only one Exclusive lock can exist at a time.</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q3.</span> Deadlock is detected using:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','cc',3)">A) Lock tables</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','cc',3)">B) Wait-for graph (cycle detection)</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','cc',3)">C) 2PL protocol</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','cc',3)">D) Timestamp ordering</button>
+              </div>
+              <div class="mcq-explanation" id="exp-cc-3"><strong>Answer: B</strong> — Deadlock detection uses a Wait-for graph. If a cycle exists → deadlock detected → abort one transaction. 🗣️ Cycle = deadlock — ek ko hatao!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q4.</span> In 2PL, the "lock point" is when:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','cc',4)">A) First lock is acquired</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','cc',4)">B) Maximum number of locks is held</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','cc',4)">C) Transaction commits</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','cc',4)">D) First lock is released</button>
+              </div>
+              <div class="mcq-explanation" id="exp-cc-4"><strong>Answer: B</strong> — Lock point = peak of locks held, transition between growing and shrinking phase. After this point, no new locks can be acquired.</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q5.</span> Timestamp-based concurrency control uses:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','cc',5)">A) Lock tables</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','cc',5)">B) Transaction start times for ordering</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','cc',5)">C) Deadlock detection graphs</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','cc',5)">D) Wait-for queues</button>
+              </div>
+              <div class="mcq-explanation" id="exp-cc-5"><strong>Answer: B</strong> — Timestamp ordering assigns each transaction a timestamp (start time). Operations are ordered based on these timestamps — no locks needed!</div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-panel" data-tab="shortq">
+          <div class="shortq-section">
+            <div class="mcq-section-header">✍️ Short Answer Questions</div>
+            <div class="shortq-item">
+              <div class="shortq-q" onclick="toggleShortQ(this)">Q1. What is deadlock? How is it handled? <span>▾</span></div>
+              <div class="shortq-a"><strong>Deadlock</strong> = a situation where two or more transactions are waiting for each other to release locks — circular dependency, nothing progresses.<br><br><strong>Handling approaches:</strong><br>1. <strong>Prevention:</strong> Wait-Die (older waits, younger dies) or Wound-Wait (older wounds/aborts younger) protocols<br>2. <strong>Detection:</strong> Maintain wait-for graph, detect cycles periodically, abort one transaction<br>3. <strong>Timeout:</strong> Abort if transaction waits too long<br>🗣️ Prevention = deadlock hone hi mat do. Detection = hua toh pakdo aur ek ko hatao!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== UNIT 7 ==================== -->
+    <div class="unit-header" id="unit7">
+      <div class="unit-num" style="background:rgba(255,111,216,0.15);color:var(--u7)">U7</div>
+      <div>
+        <h2 style="color:var(--u7)">Advanced Topics</h2>
+        <div class="unit-sub">Indexing, B+ Trees, Hashing, Recovery</div>
+      </div>
+    </div>
+
+    <div class="topic-card" id="t-indexing">
+      <div class="topic-header" onclick="toggleTopic(this)">
+        <div class="topic-title"><span class="topic-emoji">📇</span> Indexing & Hashing</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <span class="badge badge-advanced">Advanced</span>
+          <span class="chevron">▼</span>
+        </div>
+      </div>
+      <div class="topic-body open">
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab(this,'theory')">📖 Theory</button>
+          <button class="tab-btn" onclick="switchTab(this,'mcq')">🧠 MCQs</button>
+          <button class="tab-btn" onclick="switchTab(this,'shortq')">✍️ Short Qs</button>
+        </div>
+        <div class="tab-panel active" data-tab="theory">
+          <div class="def-block">
+            <div class="def-label">Index</div>
+            <p>An <strong>index</strong> is a data structure that enables fast data retrieval without scanning the entire table. Like a book's index — go directly to the page!</p>
+          </div>
+          <div class="hinglish-block">Index = book ke peeche ka index! Bina index ke har page padho (full table scan). Index ke saath seedha right page pe jao. DB performance ke liye bohot important!</div>
+          <h3>📑 Types of Indices</h3>
+          <div class="tbl-wrap"><table>
+            <tr><th>Type</th><th>Definition</th><th>🗣️ Hinglish</th></tr>
+            <tr><td><strong>Primary Index</strong></td><td>Built on ordered primary key field</td><td>PK pe bana index — sorted data pe</td></tr>
+            <tr><td><strong>Secondary Index</strong></td><td>Built on non-key or unordered field</td><td>Non-key field pe bana — search fast karo</td></tr>
+            <tr><td><strong>Dense Index</strong></td><td>One index entry per data record</td><td>Har record ka entry index mein</td></tr>
+            <tr><td><strong>Sparse Index</strong></td><td>Index entry only for some records (one per block)</td><td>Sirf kuch records ka entry — less space</td></tr>
+            <tr><td><strong>Clustered Index</strong></td><td>Data physically sorted by index key</td><td>Data khud sorted order mein store</td></tr>
+            <tr><td><strong>Non-clustered</strong></td><td>Index separate from actual data</td><td>Index alag, data alag — pointers use karo</td></tr>
+          </table></div>
+          <h3>🌳 B+ Tree Index</h3>
+          <div class="def-block"><div class="def-label">B+ Tree</div><p>A balanced tree structure where all data is stored in leaf nodes, internal nodes only contain keys for routing. Most widely used indexing structure in DBMS.</p></div>
+          <div class="diagram">         [30 | 60]          ← Internal (routing) nodes
+        /      |      \
+  [10|20]  [40|50]  [70|80]  ← Leaf nodes (actual data pointers)
+     ↕          ↕          ↕
+  (linked list of leaves)</div>
+          <ul>
+            <li>All data in leaf nodes</li>
+            <li>Leaf nodes linked (range queries efficient)</li>
+            <li>Always balanced (O(log n) search)</li>
+            <li>Insertion/Deletion maintain balance automatically</li>
+          </ul>
+          <h3>#️⃣ Hashing</h3>
+          <div class="def-block"><div class="def-label">Hashing</div><p>Apply hash function h(k) to key k to find bucket/address directly. O(1) average case for equality searches.</p></div>
+          <div class="tbl-wrap"><table>
+            <tr><th></th><th>B+ Tree</th><th>Hashing</th></tr>
+            <tr><td>Best for</td><td>Range queries</td><td>Equality queries</td></tr>
+            <tr><td>Complexity</td><td>O(log n)</td><td>O(1) average</td></tr>
+            <tr><td>Order maintained</td><td>Yes</td><td>No</td></tr>
+          </table></div>
+        </div>
+        <div class="tab-panel" data-tab="mcq">
+          <div class="mcq-section">
+            <div class="mcq-section-header">🧠 MCQ Quiz — Indexing</div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q1.</span> B+ Tree stores actual data records in:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','idx',1)">A) Root node</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','idx',1)">B) Internal nodes</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','idx',1)">C) Leaf nodes</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','idx',1)">D) Overflow pages</button>
+              </div>
+              <div class="mcq-explanation" id="exp-idx-1"><strong>Answer: C</strong> — B+ Tree: internal nodes have ONLY keys (for routing). Leaf nodes have keys + data pointers. 🗣️ Data sirf leaves mein — andar sirf directions!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q2.</span> Which indexing is best for range queries like WHERE age BETWEEN 20 AND 30?</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','idx',2)">A) B+ Tree</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','idx',2)">B) Hashing</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','idx',2)">C) Bitmap Index</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','idx',2)">D) None</button>
+              </div>
+              <div class="mcq-explanation" id="exp-idx-2"><strong>Answer: A</strong> — B+ Tree is great for range queries because leaf nodes are linked (can scan sequentially). Hashing only supports equality searches. 🗣️ Range = B+ Tree, Equality fast = Hashing!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q3.</span> Dense index has:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','idx',3)">A) One entry per data record</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','idx',3)">B) One entry per disk block</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','idx',3)">C) One entry per table</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','idx',3)">D) No entries</button>
+              </div>
+              <div class="mcq-explanation" id="exp-idx-3"><strong>Answer: A</strong> — Dense = one index entry per record. Sparse = one entry per block. Dense takes more space but faster lookup. 🗣️ Dense = har record ka entry, Sparse = thoda thoda!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q4.</span> A table can have how many clustered indexes?</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','idx',4)">A) Only one</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','idx',4)">B) As many as needed</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','idx',4)">C) Maximum five</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','idx',4)">D) Two</button>
+              </div>
+              <div class="mcq-explanation" id="exp-idx-4"><strong>Answer: A</strong> — Only ONE clustered index per table because data can be physically sorted in only ONE way. Multiple non-clustered indexes are allowed though!</div>
+            </div>
+            <div class="mcq-card">
+              <div class="mcq-q"><span>Q5.</span> Hashing provides O(1) complexity for:</div>
+              <div class="mcq-options">
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','idx',5)">A) Range queries</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'correct','idx',5)">B) Equality queries</button>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','idx',5)">C) Sorted retrieval</td></tr>
+                <button class="mcq-opt" onclick="answerMCQ(this,'wrong','idx',5)">D) Join operations</button>
+              </div>
+              <div class="mcq-explanation" id="exp-idx-5"><strong>Answer: B</strong> — Hashing directly computes location using hash function → O(1) for equality (WHERE key = value). Bad for ranges, ordering, or partial key searches.</div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-panel" data-tab="shortq">
+          <div class="shortq-section">
+            <div class="mcq-section-header">✍️ Short Answer Questions</div>
+            <div class="shortq-item">
+              <div class="shortq-q" onclick="toggleShortQ(this)">Q1. What is the difference between B-Tree and B+ Tree? <span>▾</span></div>
+              <div class="shortq-a"><strong>B-Tree:</strong> Data can be stored in ANY node (internal + leaf). Searching might stop early at internal node. No linking between leaf nodes.<br><strong>B+ Tree:</strong> Data only in LEAF nodes. Internal nodes have only keys. Leaf nodes are linked (doubly linked list) enabling efficient range scans. 🗣️ B+ Tree = better for DB because range queries bohot fast hoti hain!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== INTERVIEW QUESTIONS ==================== -->
+    <div class="unit-header" id="t-interview">
+      <div class="unit-num" style="background:rgba(255,111,216,0.15);color:var(--u7)">🎯</div>
+      <div>
+        <h2 style="color:var(--u7)">Interview Questions Bank</h2>
+        <div class="unit-sub">Most asked DBMS interview questions — Fresher to Senior</div>
+      </div>
+    </div>
+
+    <p style="color:var(--text2);font-size:0.9rem;margin-bottom:20px;">🗣️ Yeh questions real interviews mein bahut baar pooche jaate hain — inhe achhi tarah padho aur practice karo!</p>
+
+    <!-- Fresher Level -->
+    <h3 style="color:var(--green);margin:16px 0 12px;font-size:0.95rem;">🟢 Fresher Level</h3>
+
+    <div class="interview-card">
+      <div class="interview-q" onclick="toggleInterview(this)">
+        <div class="interview-q-text">1. What is the difference between SQL and NoSQL databases?</div>
+        <span class="interview-level lvl-fresher">Fresher</span>
+      </div>
+      <div class="interview-a">
+        <strong>SQL (Relational):</strong> Structured data in tables, fixed schema, ACID properties, uses SQL. Examples: MySQL, PostgreSQL, Oracle.<br><br>
+        <strong>NoSQL:</strong> Unstructured/semi-structured data, flexible schema, horizontally scalable, eventual consistency. Examples: MongoDB (document), Redis (key-value), Cassandra (wide-column).<br><br>
+        🗣️ <em>SQL = organized office with filing cabinets. NoSQL = flexible garage where you can put anything!</em><br><br>
+        <strong>Use SQL when:</strong> Relationships matter, ACID compliance needed, data is structured.<br>
+        <strong>Use NoSQL when:</strong> Big data, flexible schema needed, horizontal scaling required.
+      </div>
+    </div>
+
+    <div class="interview-card">
+      <div class="interview-q" onclick="toggleInterview(this)">
+        <div class="interview-q-text">2. What are the different types of JOINs? Explain with examples.</div>
+        <span class="interview-level lvl-fresher">Fresher</span>
+      </div>
+      <div class="interview-a">
+        <strong>INNER JOIN:</strong> Only matching rows. SELECT * FROM A INNER JOIN B ON A.id = B.id<br>
+        <strong>LEFT JOIN:</strong> All of A + matching from B (NULL if no match)<br>
+        <strong>RIGHT JOIN:</strong> All of B + matching from A<br>
+        <strong>FULL OUTER JOIN:</strong> All rows from both (NULLs where no match)<br>
+        <strong>CROSS JOIN:</strong> Cartesian product (every row × every row)<br>
+        <strong>SELF JOIN:</strong> Table joins itself (hierarchy/tree structures)<br><br>
+        🗣️ <em>Most common in interviews: INNER, LEFT, RIGHT. CROSS is rarely used in practice but often in MCQs!</em>
+      </div>
+    </div>
+
+    <div class="interview-card">
+      <div class="interview-q" onclick="toggleInterview(this)">
+        <div class="interview-q-text">3. What is normalization? Why is it important?</div>
+        <span class="interview-level lvl-fresher">Fresher</span>
+      </div>
+      <div class="interview-a">
+        <strong>Normalization</strong> is the process of organizing database tables to minimize redundancy and improve data integrity.<br><br>
+        <strong>Why important:</strong><br>
+        • Eliminates insertion, deletion, update anomalies<br>
+        • Reduces data redundancy (saves storage)<br>
+        • Improves data consistency<br>
+        • Makes database easier to maintain<br><br>
+        <strong>Normal Forms:</strong> 1NF (atomic) → 2NF (no partial) → 3NF (no transitive) → BCNF (every determinant is superkey)<br><br>
+        🗣️ <em>Interview tip: Always mention a practical example — like splitting one big Student-Course table into separate STUDENT, COURSE, ENROLLMENT tables!</em>
+      </div>
+    </div>
+
+    <div class="interview-card">
+      <div class="interview-q" onclick="toggleInterview(this)">
+        <div class="interview-q-text">4. Explain ACID properties with a real-world example.</div>
+        <span class="interview-level lvl-fresher">Fresher</span>
+      </div>
+      <div class="interview-a">
+        Using bank transfer example (₹500 from Account A to Account B):<br><br>
+        <strong>Atomicity:</strong> Debit from A AND credit to B — both must happen or neither. System crash mid-way → rollback both.<br>
+        <strong>Consistency:</strong> Total money before = total money after. No money "disappears."<br>
+        <strong>Isolation:</strong> If two transfers happen simultaneously, each should see correct balance, not interfere.<br>
+        <strong>Durability:</strong> Once transaction commits, the transfer is permanent even if server crashes immediately after.<br><br>
+        🗣️ <em>Bank example works perfectly for every ACID property — memorize it! Interviewers love this example.</em>
+      </div>
+    </div>
+
+    <div class="interview-card">
+      <div class="interview-q" onclick="toggleInterview(this)">
+        <div class="interview-q-text">5. What is the difference between WHERE and HAVING?</div>
+        <span class="interview-level lvl-fresher">Fresher</span>
+      </div>
+      <div class="interview-a">
+        <strong>WHERE:</strong> Filters individual rows BEFORE grouping. Cannot use aggregate functions.<br>
+        <code>SELECT * FROM STUDENT WHERE Age > 18</code><br><br>
+        <strong>HAVING:</strong> Filters groups AFTER GROUP BY. CAN use aggregate functions.<br>
+        <code>SELECT Dept, COUNT(*) FROM STUDENT GROUP BY Dept HAVING COUNT(*) > 5</code><br><br>
+        Execution order: WHERE → GROUP BY → HAVING → ORDER BY → LIMIT<br><br>
+        🗣️ <em>Simple trick: WHERE = row filter, HAVING = group filter. WHERE pehle, HAVING baad mein!</em>
+      </div>
+    </div>
+
+    <!-- Mid Level -->
+    <h3 style="color:var(--yellow);margin:24px 0 12px;font-size:0.95rem;">🟡 Mid Level</h3>
+
+    <div class="interview-card">
+      <div class="interview-q" onclick="toggleInterview(this)">
+        <div class="interview-q-text">6. What is a deadlock? How does DBMS handle it?</div>
+        <span class="interview-level lvl-mid">Mid</span>
+      </div>
+      <div class="interview-a">
+        <strong>Deadlock:</strong> Two or more transactions waiting for each other's locks — circular dependency, none can proceed.<br><br>
+        Example: T1 holds lock on A, wants B. T2 holds lock on B, wants A. Both waiting forever.<br><br>
+        <strong>Prevention:</strong><br>
+        • Wait-Die: Older transaction waits, younger is killed (dies)<br>
+        • Wound-Wait: Older transaction wounds (aborts) younger<br><br>
+        <strong>Detection:</strong> Maintain wait-for graph. If cycle detected → deadlock → abort one transaction (victim selection)<br><br>
+        <strong>Avoidance:</strong> Resource allocation carefully to ensure safe state (Banker's algorithm)<br><br>
+        🗣️ <em>Interview tip: Mention all three approaches — prevention, detection, avoidance. Real systems mostly use timeout + detection!</em>
+      </div>
+    </div>
+
+    <div class="interview-card">
+      <div class="interview-q" onclick="toggleInterview(this)">
+        <div class="interview-q-text">7. What is the difference between DELETE, TRUNCATE and DROP?</div>
+        <span class="interview-level lvl-mid">Mid</span>
+      </div>
+      <div class="interview-a">
+        <div style="overflow-x:auto"><table style="font-size:0.82rem">
+          <tr><th></th><th>DELETE</th><th>TRUNCATE</th><th>DROP</th></tr>
+          <tr><td>Type</td><td>DML</td><td>DDL</td><td>DDL</td></tr>
+          <tr><td>What removed</td><td>Specific rows</td><td>All rows</td><td>Table + structure</td></tr>
+          <tr><td>WHERE clause</td><td>✅ Yes</td><td>❌ No</td><td>❌ No</td></tr>
+          <tr><td>ROLLBACK possible</td><td>✅ Yes</td><td>❌ No</td><td>❌ No</td></tr>
+          <tr><td>Speed</td><td>Slow</td><td>Fast</td><td>Fast</td></tr>
+          <tr><td>Auto-increment reset</td><td>❌ No</td><td>✅ Yes</td><td>N/A</td></tr>
+        </table></div>
+        🗣️ <em>DELETE = selected row hatao. TRUNCATE = saaf safai fast. DROP = poori table uda do!</em>
+      </div>
+    </div>
+
+    <div class="interview-card">
+      <div class="interview-q" onclick="toggleInterview(this)">
+        <div class="interview-q-text">8. Write a query to find the second highest salary.</div>
+        <span class="interview-level lvl-mid">Mid</span>
+      </div>
+      <div class="interview-a">
+        Multiple approaches:<br><br>
+        <strong>Method 1 (Subquery):</strong><br>
+        <code>SELECT MAX(Salary) FROM Employee WHERE Salary < (SELECT MAX(Salary) FROM Employee);</code><br><br>
+        <strong>Method 2 (LIMIT/OFFSET):</strong><br>
+        <code>SELECT DISTINCT Salary FROM Employee ORDER BY Salary DESC LIMIT 1 OFFSET 1;</code><br><br>
+        <strong>Method 3 (Dense Rank):</strong><br>
+        <code>SELECT Salary FROM (SELECT Salary, DENSE_RANK() OVER (ORDER BY Salary DESC) as rnk FROM Employee) WHERE rnk = 2;</code><br><br>
+        🗣️ <em>Most interviewers expect at least 2 methods. DENSE_RANK approach is most scalable for Nth highest!</em>
+      </div>
+    </div>
+
+    <div class="interview-card">
+      <div class="interview-q" onclick="toggleInterview(this)">
+        <div class="interview-q-text">9. What are indexes? When should you NOT use an index?</div>
+        <span class="interview-level lvl-mid">Mid</span>
+      </div>
+      <div class="interview-a">
+        <strong>Index:</strong> Data structure that speeds up data retrieval at the cost of storage and write speed.<br><br>
+        <strong>When to USE index:</strong><br>
+        • Columns frequently used in WHERE, JOIN, ORDER BY<br>
+        • Large tables with many reads<br>
+        • High selectivity columns (many unique values)<br><br>
+        <strong>When NOT to use index:</strong><br>
+        • Small tables (full scan is faster)<br>
+        • Columns with low selectivity (e.g., gender — only M/F)<br>
+        • Tables with heavy INSERT/UPDATE/DELETE (index maintenance overhead)<br>
+        • Columns rarely used in queries<br><br>
+        🗣️ <em>Index = speed up reads, slow down writes. Trade-off ko clearly explain karo interview mein!</em>
+      </div>
+    </div>
+
+    <div class="interview-card">
+      <div class="interview-q" onclick="toggleInterview(this)">
+        <div class="interview-q-text">10. What is a view? What are its advantages?</div>
+        <span class="interview-level lvl-mid">Mid</span>
+      </div>
+      <div class="interview-a">
+        A <strong>view</strong> is a virtual table based on a SELECT query. It doesn't store data — it shows a saved query result.<br><br>
+        <code>CREATE VIEW CSE_Students AS SELECT * FROM STUDENT WHERE Dept='CSE';</code><br><br>
+        <strong>Advantages:</strong><br>
+        • <strong>Security:</strong> Expose only relevant columns to users<br>
+        • <strong>Simplicity:</strong> Complex queries simplified into view<br>
+        • <strong>Consistency:</strong> Same logic reused everywhere<br>
+        • <strong>Data Independence:</strong> Underlying table changes, view can remain same<br><br>
+        <strong>Limitations:</strong> Views based on multiple tables may not be updatable.<br><br>
+        🗣️ <em>View = window into data. You see through it but data lives in original table!</em>
+      </div>
+    </div>
+
+    <!-- Hard Level -->
+    <h3 style="color:var(--red);margin:24px 0 12px;font-size:0.95rem;">🔴 Advanced / Tricky</h3>
+
+    <div class="interview-card">
+      <div class="interview-q" onclick="toggleInterview(this)">
+        <div class="interview-q-text">11. Can a table have no primary key? What are the implications?</div>
+        <span class="interview-level lvl-hard">Advanced</span>
+      </div>
+      <div class="interview-a">
+        <strong>Yes, technically a table can exist without a primary key</strong>, but it's bad practice.<br><br>
+        <strong>Implications of no PK:</strong><br>
+        • Duplicate rows can exist (no unique identifier)<br>
+        • Foreign keys from other tables cannot reference it<br>
+        • Performance degrades (no clustered index by default)<br>
+        • Row-level operations become ambiguous<br>
+        • Most ORMs and frameworks require/assume a PK<br><br>
+        🗣️ <em>Real answer: In practice, ALWAYS have a PK. If natural key doesn't exist, use a surrogate key (auto-increment ID). Interview mein yeh bhi mention karo!</em>
+      </div>
+    </div>
+
+    <div class="interview-card">
+      <div class="interview-q" onclick="toggleInterview(this)">
+        <div class="interview-q-text">12. What is the difference between UNION and UNION ALL?</div>
+        <span class="interview-level lvl-hard">Advanced</span>
+      </div>
+      <div class="interview-a">
+        <strong>UNION:</strong> Combines results of two queries, removes duplicate rows. Slower (extra sort/distinct step).<br>
+        <strong>UNION ALL:</strong> Combines results, keeps ALL rows including duplicates. Faster.<br><br>
+        <code>SELECT name FROM students_2022 UNION SELECT name FROM students_2023; -- removes duplicates</code><br>
+        <code>SELECT name FROM students_2022 UNION ALL SELECT name FROM students_2023; -- keeps all</code><br><br>
+        <strong>When to use UNION ALL:</strong> When you know there are no duplicates, or when you WANT duplicates (e.g., counting all occurrences). Always prefer UNION ALL if duplicates are acceptable — it's significantly faster!<br><br>
+        🗣️ <em>UNION = distinct results (slow), UNION ALL = all results (fast). Performance question mein yeh puchha jaata hai!</em>
+      </div>
+    </div>
+
+    <div class="interview-card">
+      <div class="interview-q" onclick="toggleInterview(this)">
+        <div class="interview-q-text">13. What is the N+1 query problem and how to solve it?</div>
+        <span class="interview-level lvl-hard">Advanced</span>
+      </div>
+      <div class="interview-a">
+        <strong>N+1 Problem:</strong> When fetching N records, you make 1 query to get all records + N additional queries to fetch related data for each record.<br><br>
+        Example: Get 100 users + their orders<br>
+        Bad: 1 query for all users + 100 queries (one per user) for orders = 101 queries!<br><br>
+        <strong>Solutions:</strong><br>
+        1. <strong>JOIN:</strong> Fetch users and orders in one query with JOIN<br>
+        2. <strong>Eager Loading:</strong> ORM-level (include associations)<br>
+        3. <strong>Batch Loading:</strong> Fetch all IDs, then one IN query for all related records<br><br>
+        <code>-- Instead of 101 queries, use 1 JOIN:
+SELECT u.*, o.* FROM users u LEFT JOIN orders o ON u.id = o.user_id;</code><br><br>
+        🗣️ <em>Backend interview mein bohot common question hai! Especially for Node/Django/Spring developers.</em>
+      </div>
+    </div>
+
+    <div class="interview-card">
+      <div class="interview-q" onclick="toggleInterview(this)">
+        <div class="interview-q-text">14. Explain BCNF decomposition — when does it fail to preserve dependencies?</div>
+        <span class="interview-level lvl-hard">Advanced</span>
+      </div>
+      <div class="interview-a">
+        <strong>BCNF decomposition</strong> may lose functional dependency preservation when a violating FD spans across the decomposed tables.<br><br>
+        Example: R(A,B,C), FDs: AB→C, C→B<br>
+        BCNF decomposition → R1(B,C), R2(A,C)<br>
+        Lost FD: AB→C is not in R1 or R2 — we can't verify this constraint anymore!<br><br>
+        <strong>Trade-off:</strong><br>
+        • BCNF: Lossless join ✅, Dependency preservation ❌ (sometimes)<br>
+        • 3NF: Lossless join ✅, Dependency preservation ✅ (always)<br><br>
+        If dependency preservation is crucial → stay with 3NF!<br><br>
+        🗣️ <em>Yeh DBMS ka ek deep concept hai — isko clearly explain karna interviewer ko impress karta hai!</em>
+      </div>
+    </div>
+
+    <div class="interview-card">
+      <div class="interview-q" onclick="toggleInterview(this)">
+        <div class="interview-q-text">15. What is query optimization? How does DBMS optimize a query?</div>
+        <span class="interview-level lvl-hard">Advanced</span>
+      </div>
+      <div class="interview-a">
+        <strong>Query Optimization:</strong> Process by which DBMS selects the most efficient execution plan for a given SQL query.<br><br>
+        <strong>Steps in query processing:</strong><br>
+        1. <strong>Parsing:</strong> SQL → parse tree (syntax check)<br>
+        2. <strong>Logical Optimization:</strong> Algebraic transformations (push selections down, reorder joins)<br>
+        3. <strong>Physical Optimization:</strong> Choose algorithms (nested loop vs hash join), choose indexes<br>
+        4. <strong>Cost Estimation:</strong> Estimate I/O, CPU cost for each plan → choose cheapest<br>
+        5. <strong>Execution:</strong> Run chosen plan<br><br>
+        <strong>Key optimizations:</strong><br>
+        • Push WHERE conditions as early as possible (reduce intermediate results)<br>
+        • Use indexes when available<br>
+        • Choose optimal join order<br>
+        • Cache frequently used results<br><br>
+        🗣️ <em>EXPLAIN or EXPLAIN ANALYZE in PostgreSQL/MySQL shows you the query execution plan. Very useful in real projects!</em>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <div style="text-align:center;padding:32px 0 48px;color:var(--text3);font-size:0.85rem;">
+      <div style="font-size:2rem;margin-bottom:12px;">🎉</div>
+      <div style="font-weight:700;color:var(--text2);font-size:1rem;margin-bottom:8px;">You've reached the end of the DBMS Master Guide!</div>
+      <div>All units covered. Keep revising, keep practicing. <span style="color:var(--accent)">Best of luck! 🚀</span></div>
+      <div style="margin-top:8px;color:var(--text3)">🗣️ <em>Itna padh liya — ab interview mein koi nahi rok sakta!</em></div>
+    </div>
+
+  </div><!-- /content -->
+</main>
+
+<script>
+// Theme toggle
+function toggleTheme() {
+  const html = document.documentElement;
+  html.setAttribute('data-theme', html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+}
+
+// Sidebar toggle (mobile)
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+// Topic accordion
+function toggleTopic(header) {
+  const body = header.nextElementSibling;
+  const chevron = header.querySelector('.chevron');
+  body.classList.toggle('open');
+  chevron.classList.toggle('open');
+}
+
+// Nav unit toggle
+function toggleNav(unitId) {
+  const topics = document.getElementById('topics-nav-' + unitId);
+  if (topics) topics.classList.toggle('open');
+}
+
+// Tab switching inside topic
+function switchTab(btn, tabName) {
+  const body = btn.closest('.topic-body');
+  body.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  body.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  body.querySelectorAll('.tab-panel').forEach(p => {
+    if (p.getAttribute('data-tab') === tabName) p.classList.add('active');
+  });
+}
+
+// MCQ answering
+const mcqScores = {};
+function answerMCQ(btn, result, section, qNum) {
+  const card = btn.closest('.mcq-card');
+  const opts = card.querySelectorAll('.mcq-opt');
+  opts.forEach(o => {
+    o.disabled = true;
+    o.style.pointerEvents = 'none';
+  });
+  btn.classList.add(result);
+  const expId = `exp-${section}-${qNum}`;
+  const exp = document.getElementById(expId);
+  if (exp) exp.classList.add('show');
+  // Track score
+  if (!mcqScores[section]) mcqScores[section] = { correct: 0, total: 0 };
+  mcqScores[section].total++;
+  if (result === 'correct') mcqScores[section].correct++;
+  const scoreBox = document.getElementById('score-' + section);
+  const scoreNum = document.getElementById('score-' + section + '-num');
+  if (scoreBox) { scoreBox.style.display = 'flex'; }
+  if (scoreNum) scoreNum.textContent = `${mcqScores[section].correct}/${mcqScores[section].total}`;
+}
+
+// Short Q toggle
+function toggleShortQ(header) {
+  const ans = header.nextElementSibling;
+  ans.classList.toggle('open');
+  const arrow = header.querySelector('span');
+  if (arrow) arrow.textContent = ans.classList.contains('open') ? '▲' : '▾';
+}
+
+// Interview Q toggle
+function toggleInterview(header) {
+  const ans = header.nextElementSibling;
+  ans.classList.toggle('open');
+}
+
+// Search
+function searchTopics(query) {
+  if (!query) {
+    document.querySelectorAll('.nav-topic-link').forEach(l => l.style.display = '');
+    return;
+  }
+  query = query.toLowerCase();
+  document.querySelectorAll('.nav-topic-link').forEach(link => {
+    link.style.display = link.textContent.toLowerCase().includes(query) ? '' : 'none';
+  });
+  // Open all navs during search
+  document.querySelectorAll('.nav-topics').forEach(t => t.classList.add('open'));
+}
+
+// Intersection Observer for current unit tracking
+const unitObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const titleEl = document.getElementById('currentUnit');
+      const h2 = entry.target.querySelector('h2');
+      if (h2 && titleEl) titleEl.textContent = h2.textContent;
+    }
+  });
+}, { threshold: 0.3 });
+
+document.querySelectorAll('.unit-header').forEach(h => unitObserver.observe(h));
+</script>
+</body>
+</html>
