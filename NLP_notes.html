@@ -1,0 +1,2709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NLP Complete Notes — Midnight Ember</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #0f0a05;
+  --bg2:     #1a1008;
+  --bg3:     #221508;
+  --card:    #1f1409;
+  --card2:   #2a1c0a;
+  --border:  #3d2a10;
+  --border2: #5a3d18;
+  --amber:   #f59e0b;
+  --orange:  #ea580c;
+  --gold:    #d97706;
+  --cream:   #fef3c7;
+  --coral:   #fb923c;
+  --red:     #ef4444;
+  --green:   #84cc16;
+  --teal:    #2dd4bf;
+  --pink:    #f472b6;
+  --text:    #fef3c7;
+  --text2:   #d6b896;
+  --muted:   #92714a;
+  --glow:    rgba(245,158,11,0.15);
+  --glow2:   rgba(234,88,12,0.1);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background-color:var(--bg);
+  background-image:
+    radial-gradient(ellipse 80% 40% at 50% 0%, rgba(245,158,11,0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 30% at 80% 80%, rgba(234,88,12,0.05) 0%, transparent 60%);
+  color:var(--text);
+  font-family:'Crimson Pro', Georgia, serif;
+  font-size:17px;
+  line-height:1.75;
+  min-height:100vh;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:var(--bg2);}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+
+/* ── HERO ── */
+.hero{
+  text-align:center;
+  padding:80px 20px 60px;
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 60% at 50% 50%, rgba(245,158,11,0.08) 0%, transparent 70%);
+  pointer-events:none;
+}
+.hero-badge{
+  display:inline-block;
+  background:var(--card2);
+  border:1px solid var(--border2);
+  color:var(--amber);
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  padding:6px 18px;
+  border-radius:20px;
+  margin-bottom:24px;
+}
+.hero h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2.4rem,6vw,4.5rem);
+  font-weight:900;
+  color:var(--cream);
+  line-height:1.1;
+  margin-bottom:16px;
+}
+.hero h1 span{
+  background:linear-gradient(135deg,var(--amber),var(--orange));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-sub{
+  font-size:1.1rem;color:var(--text2);
+  max-width:600px;margin:0 auto 40px;
+  font-style:italic;
+}
+.hero-tags{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;}
+.hero-tag{
+  background:var(--card);border:1px solid var(--border);
+  color:var(--text2);font-size:0.8rem;
+  padding:5px 14px;border-radius:20px;
+  font-family:'JetBrains Mono',monospace;
+}
+
+/* ── LAYOUT ── */
+.wrapper{max-width:960px;margin:0 auto;padding:0 24px 80px;}
+
+/* ── TOC ── */
+.toc{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-left:4px solid var(--amber);
+  border-radius:12px;
+  padding:32px 36px;
+  margin-bottom:60px;
+}
+.toc h2{
+  font-family:'Playfair Display',serif;
+  font-size:1.5rem;color:var(--amber);
+  margin-bottom:20px;
+}
+.toc-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:8px;
+}
+.toc a{
+  color:var(--text2);text-decoration:none;
+  font-size:0.9rem;padding:6px 10px;
+  border-radius:6px;
+  border:1px solid transparent;
+  transition:all 0.2s;
+  display:flex;align-items:center;gap:8px;
+}
+.toc a:hover{
+  background:var(--card2);
+  border-color:var(--border);
+  color:var(--amber);
+}
+.toc-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.75rem;color:var(--muted);
+  min-width:22px;
+}
+
+/* ── CHAPTER HEADER ── */
+.chapter{margin-bottom:70px;}
+.chapter-header{
+  background:linear-gradient(135deg,var(--card2),var(--card));
+  border:1px solid var(--border);
+  border-top:3px solid var(--amber);
+  border-radius:16px;
+  padding:32px 36px;
+  margin-bottom:32px;
+  position:relative;overflow:hidden;
+}
+.chapter-header::after{
+  content:'';position:absolute;
+  top:-30px;right:-30px;
+  width:120px;height:120px;
+  background:radial-gradient(circle,rgba(245,158,11,0.12),transparent 70%);
+  border-radius:50%;
+}
+.chapter-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.75rem;letter-spacing:3px;
+  color:var(--amber);text-transform:uppercase;
+  margin-bottom:8px;
+}
+.chapter-header h2{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1.6rem,4vw,2.2rem);
+  color:var(--cream);font-weight:700;
+}
+.chapter-header p{
+  color:var(--text2);margin-top:8px;font-style:italic;
+}
+
+/* ── SECTION HEADING ── */
+h3{
+  font-family:'Playfair Display',serif;
+  font-size:1.3rem;color:var(--cream);
+  margin:36px 0 16px;
+  padding-left:14px;
+  border-left:3px solid var(--orange);
+}
+h4{
+  font-family:'Playfair Display',serif;
+  font-size:1.05rem;color:var(--amber);
+  margin:24px 0 12px;
+}
+
+/* ── CARDS ── */
+.card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:12px;padding:24px 28px;margin:20px 0;
+}
+.card-amber{ border-left:4px solid var(--amber);}
+.card-orange{border-left:4px solid var(--orange);}
+.card-teal{  border-left:4px solid var(--teal);}
+.card-green{ border-left:4px solid var(--green);}
+.card-red{   border-left:4px solid var(--red);}
+.card-pink{  border-left:4px solid var(--pink);}
+
+/* ── TIPBOXES ── */
+.tip,.warn,.info,.hinglish,.formula-box,.key-takeaway{
+  border-radius:10px;padding:18px 22px;margin:20px 0;
+  font-size:0.95rem;
+}
+.tip{background:rgba(132,204,22,0.08);border:1px solid rgba(132,204,22,0.25);color:#d9f99d;}
+.tip::before{content:'💡 Tip: ';font-weight:700;color:var(--green);}
+.warn{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);color:#fca5a5;}
+.warn::before{content:'⚠️ Important: ';font-weight:700;color:var(--red);}
+.info{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);color:var(--cream);}
+.info::before{content:'📌 Note: ';font-weight:700;color:var(--amber);}
+.hinglish{
+  background:rgba(45,212,191,0.07);
+  border:1px solid rgba(45,212,191,0.25);
+  color:#99f6e4;
+}
+.hinglish::before{content:'💬 Hinglish: ';font-weight:700;color:var(--teal);}
+.formula-box{
+  background:rgba(234,88,12,0.08);
+  border:1px solid rgba(234,88,12,0.3);
+  color:var(--cream);
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.9rem;line-height:2;
+}
+.formula-box::before{content:'∑ Formula';display:block;color:var(--coral);font-weight:700;margin-bottom:8px;font-size:0.75rem;letter-spacing:2px;text-transform:uppercase;}
+.key-takeaway{
+  background:linear-gradient(135deg,rgba(245,158,11,0.1),rgba(234,88,12,0.08));
+  border:1px solid var(--border2);
+  color:var(--cream);
+}
+.key-takeaway::before{content:'🔑 Key Takeaway';display:block;color:var(--amber);font-weight:700;margin-bottom:10px;font-family:'Playfair Display',serif;font-size:1.1rem;}
+
+/* ── CODE BLOCKS ── */
+pre{
+  background:#120d06;
+  border:1px solid var(--border);
+  border-left:3px solid var(--green);
+  border-radius:10px;
+  padding:22px 24px;
+  overflow-x:auto;
+  margin:20px 0;
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.82rem;
+  line-height:1.7;
+  color:#d4e6b5;
+  position:relative;
+}
+pre::before{
+  content:'Python';
+  position:absolute;top:8px;right:14px;
+  font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;
+  color:var(--green);opacity:0.7;
+}
+code{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.85em;
+  background:rgba(245,158,11,0.1);
+  border:1px solid rgba(245,158,11,0.2);
+  color:var(--amber);
+  padding:2px 7px;border-radius:4px;
+}
+pre code{background:none;border:none;color:inherit;padding:0;}
+
+/* ── DIAGRAM BLOCKS ── */
+.diagram{
+  background:#120d06;
+  border:1px solid var(--border);
+  border-left:3px solid var(--amber);
+  border-radius:10px;
+  padding:24px;margin:20px 0;
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.82rem;line-height:1.9;
+  color:var(--text2);
+  overflow-x:auto;
+  white-space:pre;
+}
+.diagram-label{
+  display:block;margin-bottom:12px;
+  font-size:0.7rem;letter-spacing:2px;text-transform:uppercase;
+  color:var(--amber);opacity:0.8;font-family:'JetBrains Mono',monospace;
+}
+
+/* ── TABLES ── */
+.tbl-wrap{overflow-x:auto;margin:20px 0;}
+table{width:100%;border-collapse:collapse;}
+th{
+  background:var(--card2);
+  color:var(--amber);
+  font-family:'Playfair Display',serif;
+  font-size:0.9rem;
+  padding:12px 16px;
+  text-align:left;
+  border-bottom:2px solid var(--border2);
+}
+td{
+  padding:11px 16px;
+  border-bottom:1px solid var(--border);
+  color:var(--text2);
+  font-size:0.92rem;
+  vertical-align:top;
+}
+tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
+tr:hover td{background:rgba(245,158,11,0.04);}
+
+/* ── COMPARISON GRID ── */
+.cmp-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0;}
+.cmp-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:10px;padding:20px;
+}
+.cmp-card h5{
+  font-family:'Playfair Display',serif;
+  font-size:1rem;margin-bottom:12px;
+  padding-bottom:8px;border-bottom:1px solid var(--border);
+}
+.cmp-card.left h5{color:var(--amber);}
+.cmp-card.right h5{color:var(--teal);}
+.cmp-card li{
+  font-size:0.88rem;color:var(--text2);
+  margin-bottom:6px;list-style:none;
+  padding-left:16px;position:relative;
+}
+.cmp-card.left li::before{content:'→';position:absolute;left:0;color:var(--amber);}
+.cmp-card.right li::before{content:'→';position:absolute;left:0;color:var(--teal);}
+
+/* ── PIPELINE FLOW ── */
+.pipeline{
+  display:flex;flex-direction:column;
+  align-items:center;gap:0;margin:24px 0;
+}
+.pipe-step{
+  background:var(--card2);
+  border:1px solid var(--border2);
+  border-radius:10px;
+  padding:12px 28px;
+  color:var(--cream);
+  font-size:0.9rem;
+  text-align:center;
+  width:100%;max-width:480px;
+  position:relative;
+}
+.pipe-step strong{color:var(--amber);}
+.pipe-step small{display:block;color:var(--muted);font-size:0.78rem;margin-top:3px;}
+.pipe-arrow{
+  width:2px;height:24px;
+  background:linear-gradient(to bottom,var(--amber),var(--orange));
+  position:relative;
+}
+.pipe-arrow::after{
+  content:'▼';position:absolute;bottom:-8px;left:50%;
+  transform:translateX(-50%);
+  color:var(--orange);font-size:0.7rem;
+}
+
+/* ── TAG PILLS ── */
+.tag{
+  display:inline-block;
+  padding:3px 10px;border-radius:12px;
+  font-size:0.78rem;font-family:'JetBrains Mono',monospace;
+  margin:2px;
+}
+.tag-amber{background:rgba(245,158,11,0.15);color:var(--amber);border:1px solid rgba(245,158,11,0.3);}
+.tag-teal{background:rgba(45,212,191,0.1);color:var(--teal);border:1px solid rgba(45,212,191,0.3);}
+.tag-green{background:rgba(132,204,22,0.1);color:var(--green);border:1px solid rgba(132,204,22,0.3);}
+.tag-coral{background:rgba(251,146,60,0.1);color:var(--coral);border:1px solid rgba(251,146,60,0.3);}
+.tag-red{background:rgba(239,68,68,0.1);color:var(--red);border:1px solid rgba(239,68,68,0.3);}
+.tag-pink{background:rgba(244,114,182,0.1);color:var(--pink);border:1px solid rgba(244,114,182,0.3);}
+
+/* ── TIMELINE ── */
+.timeline{margin:24px 0;}
+.tl-item{
+  display:flex;gap:20px;margin-bottom:16px;align-items:flex-start;
+}
+.tl-year{
+  min-width:58px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.82rem;color:var(--amber);
+  font-weight:500;padding-top:2px;
+  text-align:right;
+}
+.tl-dot{
+  width:12px;height:12px;
+  background:var(--orange);border-radius:50%;
+  margin-top:5px;flex-shrink:0;
+  box-shadow:0 0 8px rgba(234,88,12,0.5);
+}
+.tl-content{
+  flex:1;background:var(--card);
+  border:1px solid var(--border);
+  border-radius:8px;padding:10px 16px;
+  font-size:0.9rem;color:var(--text2);
+}
+.tl-content strong{color:var(--cream);}
+
+/* ── VISUAL AI TREE ── */
+.ai-tree{
+  display:flex;flex-direction:column;align-items:center;
+  gap:0;margin:24px auto;max-width:500px;
+}
+.tree-node{
+  padding:10px 24px;border-radius:8px;
+  text-align:center;font-size:0.9rem;font-weight:600;
+  position:relative;width:100%;max-width:300px;
+  text-align:center;
+}
+.tree-connector{
+  width:2px;height:20px;background:var(--border2);
+}
+.tn-ai  {background:rgba(245,158,11,0.2);border:2px solid var(--amber);color:var(--amber);}
+.tn-ml  {background:rgba(234,88,12,0.15);border:2px solid var(--orange);color:var(--orange);max-width:260px;}
+.tn-dl  {background:rgba(132,204,22,0.12);border:2px solid var(--green);color:var(--green);max-width:220px;}
+.tn-nlp {background:rgba(45,212,191,0.12);border:2px solid var(--teal);color:var(--teal);max-width:180px;font-size:1rem;}
+
+/* ── WORD2VEC VIZ ── */
+.vec-space{
+  background:#120d06;border:1px solid var(--border);
+  border-radius:10px;padding:24px;margin:20px 0;
+  position:relative;height:220px;
+  overflow:hidden;
+}
+.vec-point{
+  position:absolute;
+  width:10px;height:10px;
+  border-radius:50%;
+  transform:translate(-50%,-50%);
+}
+.vec-label{
+  position:absolute;
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.75rem;
+  transform:translate(-50%,-50%);
+}
+.vec-line{
+  position:absolute;
+  background:rgba(245,158,11,0.3);
+  height:1px;transform-origin:left center;
+}
+
+/* ── DIVIDER ── */
+.divider{
+  border:none;
+  border-top:1px solid var(--border);
+  margin:50px 0;
+  position:relative;
+}
+.divider::after{
+  content:'✦';
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  background:var(--bg);
+  color:var(--border2);padding:0 12px;
+}
+
+/* ── FOOTER ── */
+footer{
+  text-align:center;padding:40px 20px;
+  border-top:1px solid var(--border);
+  color:var(--muted);font-size:0.85rem;
+}
+footer span{color:var(--amber);}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.chapter{animation:fadeUp 0.5s ease both;}
+.chapter:nth-child(2){animation-delay:0.05s;}
+.chapter:nth-child(3){animation-delay:0.1s;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:640px){
+  .cmp-grid{grid-template-columns:1fr;}
+  .chapter-header{padding:22px 20px;}
+  .toc{padding:20px;}
+  h3{font-size:1.1rem;}
+}
+
+/* ── PROGRESS BAR ── */
+#progress-bar{
+  position:fixed;top:0;left:0;height:3px;
+  background:linear-gradient(90deg,var(--amber),var(--orange));
+  width:0%;transition:width 0.1s;z-index:999;
+  box-shadow:0 0 8px rgba(245,158,11,0.6);
+}
+
+/* ── BACK TO TOP ── */
+#btt{
+  position:fixed;bottom:24px;right:24px;
+  background:var(--card2);border:1px solid var(--border2);
+  color:var(--amber);width:44px;height:44px;
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:1.2rem;opacity:0;transition:opacity 0.3s;
+  text-decoration:none;z-index:100;
+}
+#btt.visible{opacity:1;}
+#btt:hover{background:var(--amber);color:var(--bg);}
+
+/* syntax colors in code */
+.kw{color:#fb923c;}  /* keyword */
+.fn{color:#86efac;}  /* function */
+.st{color:#fde68a;}  /* string */
+.cm{color:#78716c;}  /* comment */
+.nu{color:#93c5fd;}  /* number */
+.im{color:#c4b5fd;}  /* import */
+</style>
+</head>
+<body>
+<div id="progress-bar"></div>
+<a href="#top" id="btt" title="Back to top">↑</a>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-badge">🔥 Midnight Ember Edition</div>
+  <h1>Natural Language<br><span>Processing</span></h1>
+  <p class="hero-sub">Complete beginner-friendly notes with visuals, code, math & Hinglish explanations</p>
+  <div class="hero-tags">
+    <span class="hero-tag">🎓 University Exams</span>
+    <span class="hero-tag">📐 GATE Ready</span>
+    <span class="hero-tag">💻 Code Included</span>
+    <span class="hero-tag">🧮 Math Explained</span>
+    <span class="hero-tag">💬 Hinglish Tips</span>
+    <span class="hero-tag">🖼️ Visual Diagrams</span>
+  </div>
+</section>
+
+<div class="wrapper">
+
+<!-- TABLE OF CONTENTS -->
+<nav class="toc">
+  <h2>📖 Table of Contents</h2>
+  <div class="toc-grid">
+    <a href="#ch1"><span class="toc-num">01</span> What is NLP</a>
+    <a href="#ch2"><span class="toc-num">02</span> History & Evolution</a>
+    <a href="#ch3"><span class="toc-num">03</span> Pipeline & Linguistics</a>
+    <a href="#ch4"><span class="toc-num">04</span> Text Preprocessing</a>
+    <a href="#ch5"><span class="toc-num">05</span> Text Representation</a>
+    <a href="#ch6"><span class="toc-num">06</span> ML for NLP</a>
+    <a href="#ch7"><span class="toc-num">07</span> Deep Learning</a>
+    <a href="#ch8"><span class="toc-num">08</span> Attention & Transformers</a>
+    <a href="#ch9"><span class="toc-num">09</span> Pre-trained Models</a>
+    <a href="#ch10"><span class="toc-num">10</span> Core NLP Tasks</a>
+    <a href="#ch11"><span class="toc-num">11</span> Evaluation Metrics</a>
+    <a href="#ch12"><span class="toc-num">12</span> Advanced Topics</a>
+    <a href="#ch13"><span class="toc-num">13</span> Math Foundations</a>
+    <a href="#ch14"><span class="toc-num">14</span> GATE + Interview Q&A</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- CHAPTER 1 -->
+<!-- ═══════════════════════════════════════════════ -->
+<section class="chapter" id="ch1">
+<div class="chapter-header">
+  <div class="chapter-num">Chapter 01</div>
+  <h2>🌟 What is NLP & Why is it Hard?</h2>
+  <p>Understanding the field, its challenges, and where it fits in AI</p>
+</div>
+
+<h3>1.1 Definition</h3>
+<p><strong style="color:var(--amber)">Natural Language Processing (NLP)</strong> is the subfield of Artificial Intelligence that enables computers to understand, interpret, manipulate, and generate human language in a meaningful way.</p>
+
+<div class="card card-amber" style="margin:20px 0;">
+  <strong style="color:var(--amber)">Simple Definition:</strong><br>
+  <span style="color:var(--text2)">Computers understand numbers. Humans speak words. <strong style="color:var(--cream)">NLP builds the bridge.</strong></span>
+</div>
+
+<h3>1.2 Where NLP Sits in AI</h3>
+
+<div class="ai-tree">
+  <div class="tree-node tn-ai">🤖 Artificial Intelligence<br><small style="font-weight:400;font-size:0.75rem">Machines that simulate intelligence</small></div>
+  <div class="tree-connector"></div>
+  <div class="tree-node tn-ml">📊 Machine Learning<br><small style="font-weight:400;font-size:0.75rem">Learn from data</small></div>
+  <div class="tree-connector"></div>
+  <div class="tree-node tn-dl">🧠 Deep Learning<br><small style="font-weight:400;font-size:0.75rem">Neural networks</small></div>
+  <div class="tree-connector"></div>
+  <div class="tree-node tn-nlp">🗣️ NLP ← You are here</div>
+</div>
+
+<h3>1.3 Why is NLP Hard?</h3>
+
+<div class="tbl-wrap">
+<table>
+<tr><th>Challenge</th><th>Example</th><th>Why Machines Struggle</th></tr>
+<tr>
+  <td><span class="tag tag-red">Ambiguity</span></td>
+  <td><em>"I saw the man with the telescope."</em></td>
+  <td>Two valid parse trees — used telescope to see, or man had telescope?</td>
+</tr>
+<tr>
+  <td><span class="tag tag-amber">Context</span></td>
+  <td><em>"It's cold in here."</em></td>
+  <td>Literal vs implied meaning (please close the window)</td>
+</tr>
+<tr>
+  <td><span class="tag tag-teal">Variability</span></td>
+  <td><em>"Car is red" ≡ "Automobile looks crimson"</em></td>
+  <td>Same meaning, totally different surface form</td>
+</tr>
+<tr>
+  <td><span class="tag tag-coral">World Knowledge</span></td>
+  <td><em>"Trophy didn't fit — it was too big"</em></td>
+  <td>"it" = trophy, not suitcase — needs common sense</td>
+</tr>
+<tr>
+  <td><span class="tag tag-pink">Sarcasm</span></td>
+  <td><em>"Oh great, another Monday!"</em></td>
+  <td>Positive words, negative sentiment</td>
+</tr>
+<tr>
+  <td><span class="tag tag-green">Evolution</span></td>
+  <td><em>"That's fire 🔥"</em></td>
+  <td>Slang, emojis, code-mixing change constantly</td>
+</tr>
+</table>
+</div>
+
+<h3>1.4 Real-World Applications</h3>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin:20px 0;">
+  <div class="card card-amber"><strong>🔍 Search Engines</strong><br><small style="color:var(--muted)">Google understanding intent</small></div>
+  <div class="card card-orange"><strong>🤖 Chatbots</strong><br><small style="color:var(--muted)">ChatGPT, support bots</small></div>
+  <div class="card card-teal"><strong>🌐 Translation</strong><br><small style="color:var(--muted)">Google Translate, DeepL</small></div>
+  <div class="card card-green"><strong>🎙️ Speech</strong><br><small style="color:var(--muted)">Siri, Alexa, Assistant</small></div>
+  <div class="card card-pink"><strong>✉️ Email</strong><br><small style="color:var(--muted)">Spam filter, Smart Reply</small></div>
+  <div class="card card-red"><strong>💊 Healthcare</strong><br><small style="color:var(--muted)">Clinical note analysis</small></div>
+</div>
+
+<div class="hinglish">NLP matlab computers ko insaan jaisi baat samjhna sikhana. Jab tum Google pe search karte ho, Gmail spam pakadta hai, ya Alexa baat karti hai — ye sab NLP hai. Language bahut complex hai — ambiguity, context, sarcasm — isliye machines ke liye mushkil hai.</div>
+
+<div class="key-takeaway">NLP = AI + Linguistics. Computers naturally understand numbers — NLP teaches them to understand words. Language is hard because of ambiguity, context, variability, and the need for world knowledge.</div>
+
+</section>
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- CHAPTER 2 -->
+<!-- ═══════════════════════════════════════════════ -->
+<section class="chapter" id="ch2">
+<div class="chapter-header">
+  <div class="chapter-num">Chapter 02</div>
+  <h2>📜 History & Evolution of NLP</h2>
+  <p>From Turing's dream in 1950 to GPT-4 and beyond</p>
+</div>
+
+<h3>2.1 Three Eras</h3>
+<div class="cmp-grid" style="grid-template-columns:1fr 1fr 1fr;">
+  <div class="card card-amber">
+    <h5 style="color:var(--amber);font-family:'Playfair Display',serif;">Era 1: Rule-Based<br><small style="color:var(--muted)">1950s – 1980s</small></h5>
+    <ul style="list-style:none;">
+      <li style="color:var(--text2);font-size:0.88rem;margin-bottom:6px;">✦ Hand-crafted linguistic rules</li>
+      <li style="color:var(--text2);font-size:0.88rem;margin-bottom:6px;">✦ If-then logic</li>
+      <li style="color:var(--text2);font-size:0.88rem;margin-bottom:6px;">✦ ELIZA chatbot (1966)</li>
+      <li style="color:var(--red);font-size:0.85rem;">✗ Brittle, didn't scale</li>
+    </ul>
+  </div>
+  <div class="card card-orange">
+    <h5 style="color:var(--orange);font-family:'Playfair Display',serif;">Era 2: Statistical<br><small style="color:var(--muted)">1980s – 2012</small></h5>
+    <ul style="list-style:none;">
+      <li style="color:var(--text2);font-size:0.88rem;margin-bottom:6px;">✦ Learned from data</li>
+      <li style="color:var(--text2);font-size:0.88rem;margin-bottom:6px;">✦ HMM, SVM, Naive Bayes</li>
+      <li style="color:var(--text2);font-size:0.88rem;margin-bottom:6px;">✦ Needed feature engineering</li>
+      <li style="color:var(--green);font-size:0.85rem;">✓ Much more scalable</li>
+    </ul>
+  </div>
+  <div class="card card-teal">
+    <h5 style="color:var(--teal);font-family:'Playfair Display',serif;">Era 3: Deep Learning<br><small style="color:var(--muted)">2013 – Present</small></h5>
+    <ul style="list-style:none;">
+      <li style="color:var(--text2);font-size:0.88rem;margin-bottom:6px;">✦ Neural networks</li>
+      <li style="color:var(--text2);font-size:0.88rem;margin-bottom:6px;">✦ Auto feature learning</li>
+      <li style="color:var(--text2);font-size:0.88rem;margin-bottom:6px;">✦ Transformers + LLMs</li>
+      <li style="color:var(--green);font-size:0.85rem;">✓ State of the art</li>
+    </ul>
+  </div>
+</div>
+
+<h3>2.2 Key Milestones Timeline</h3>
+<div class="timeline">
+  <div class="tl-item"><div class="tl-year">1950</div><div class="tl-dot"></div><div class="tl-content"><strong>Turing Test</strong> — Alan Turing: "Can a machine think like a human?"</div></div>
+  <div class="tl-item"><div class="tl-year">1954</div><div class="tl-dot"></div><div class="tl-content"><strong>Georgetown-IBM</strong> — First machine translation (Russian → English)</div></div>
+  <div class="tl-item"><div class="tl-year">1966</div><div class="tl-dot"></div><div class="tl-content"><strong>ELIZA (MIT)</strong> — First chatbot using pattern matching</div></div>
+  <div class="tl-item"><div class="tl-year">1990s</div><div class="tl-dot"></div><div class="tl-content"><strong>Statistical NLP</strong> — ML applied; WordNet (1995); IBM translation models</div></div>
+  <div class="tl-item"><div class="tl-year">2013</div><div class="tl-dot"></div><div class="tl-content"><strong>Word2Vec (Google)</strong> — Neural word embeddings revolution begins</div></div>
+  <div class="tl-item"><div class="tl-year">2014</div><div class="tl-dot"></div><div class="tl-content"><strong>Seq2Seq + Attention</strong> (Bahdanau) — GloVe embeddings</div></div>
+  <div class="tl-item"><div class="tl-year">2017</div><div class="tl-dot"></div><div class="tl-content"><strong>"Attention is All You Need"</strong> — Transformer architecture — complete paradigm shift</div></div>
+  <div class="tl-item"><div class="tl-year">2018</div><div class="tl-dot"></div><div class="tl-content"><strong>BERT (Google) + GPT-1 (OpenAI)</strong> — Pre-training revolution</div></div>
+  <div class="tl-item"><div class="tl-year">2020</div><div class="tl-dot"></div><div class="tl-content"><strong>GPT-3</strong> — 175B parameters; in-context learning surprises everyone</div></div>
+  <div class="tl-item"><div class="tl-year">2022</div><div class="tl-dot"></div><div class="tl-content"><strong>ChatGPT</strong> — RLHF alignment; 100M users in 2 months</div></div>
+  <div class="tl-item"><div class="tl-year">2023–24</div><div class="tl-dot"></div><div class="tl-content"><strong>GPT-4, LLaMA, Gemini, Claude</strong> — Multimodal LLMs; open-source explosion</div></div>
+</div>
+
+<div class="hinglish">NLP ka safar 1950 mein Turing Test se shuru hua. Pehle haath se rules likhte the, phir statistics aaya, phir neural networks. 2017 mein Transformer ne sab kuch badal diya — RNN retire ho gaya! Ab GPT-4 aur LLaMA ka zamana hai.</div>
+
+<div class="key-takeaway">NLP evolved from brittle hand-crafted rules → statistical learning → deep learning → Transformers. The 2017 Transformer paper was the single biggest shift. Know your era — each built on limitations of the previous.</div>
+</section>
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- CHAPTER 3 -->
+<!-- ═══════════════════════════════════════════════ -->
+<section class="chapter" id="ch3">
+<div class="chapter-header">
+  <div class="chapter-num">Chapter 03</div>
+  <h2>🏗️ NLP Pipeline & Linguistics Fundamentals</h2>
+  <p>The processing steps every NLP system follows + language theory</p>
+</div>
+
+<h3>3.1 The NLP Pipeline</h3>
+<p>Every NLP system processes text through a series of steps — like an assembly line:</p>
+
+<div class="pipeline">
+  <div class="pipe-step"><strong>📥 Raw Text Input</strong><small>"The quick brown foxes are jumping over lazy dogs!"</small></div>
+  <div class="pipe-arrow"></div>
+  <div class="pipe-step"><strong>✂️ Sentence Segmentation</strong><small>Split paragraph → individual sentences</small></div>
+  <div class="pipe-arrow"></div>
+  <div class="pipe-step"><strong>🔪 Tokenization</strong><small>Split sentences → words/tokens/subwords</small></div>
+  <div class="pipe-arrow"></div>
+  <div class="pipe-step"><strong>🧹 Text Normalization</strong><small>Lowercase, remove noise, expand contractions</small></div>
+  <div class="pipe-arrow"></div>
+  <div class="pipe-step"><strong>🚫 Stop Word Removal</strong><small>Remove "the", "is", "a", "and"...</small></div>
+  <div class="pipe-arrow"></div>
+  <div class="pipe-step"><strong>🌱 Stemming / Lemmatization</strong><small>Reduce to root form: "running" → "run"</small></div>
+  <div class="pipe-arrow"></div>
+  <div class="pipe-step"><strong>🏷️ POS Tagging</strong><small>Label each word: NN, VB, JJ, RB...</small></div>
+  <div class="pipe-arrow"></div>
+  <div class="pipe-step"><strong>🔍 Parsing + NER</strong><small>Sentence structure + named entities</small></div>
+  <div class="pipe-arrow"></div>
+  <div class="pipe-step"><strong>🔢 Feature Extraction</strong><small>Convert text → numerical vectors</small></div>
+  <div class="pipe-arrow"></div>
+  <div class="pipe-step"><strong>🤖 Model</strong><small>ML / DL / Transformer → Task output</small></div>
+</div>
+
+<h3>3.2 Five Levels of Language Analysis</h3>
+
+<div class="tbl-wrap">
+<table>
+<tr><th>Level</th><th>What it Studies</th><th>NLP Application</th><th>Example</th></tr>
+<tr>
+  <td><span class="tag tag-amber">🔤 Phonology</span></td>
+  <td>Sounds of language</td>
+  <td>Speech recognition, TTS</td>
+  <td>"cat" = /k/ + /æ/ + /t/</td>
+</tr>
+<tr>
+  <td><span class="tag tag-coral">🧬 Morphology</span></td>
+  <td>Internal word structure</td>
+  <td>Stemming, Lemmatization</td>
+  <td>"unbelievable" = un + believe + able</td>
+</tr>
+<tr>
+  <td><span class="tag tag-orange" style="background:rgba(234,88,12,0.15);color:var(--orange);border:1px solid rgba(234,88,12,0.3);">🔡 Syntax</span></td>
+  <td>Grammar, sentence structure</td>
+  <td>Parsing, POS Tagging</td>
+  <td>S → NP VP, NP → Det N</td>
+</tr>
+<tr>
+  <td><span class="tag tag-teal">🌐 Semantics</span></td>
+  <td>Meaning of words/sentences</td>
+  <td>Word embeddings, WSD</td>
+  <td>"bank" = river OR financial</td>
+</tr>
+<tr>
+  <td><span class="tag tag-pink">🗣️ Pragmatics</span></td>
+  <td>Language in context</td>
+  <td>Dialogue, intent detection</td>
+  <td>"Can you pass salt?" = request</td>
+</tr>
+</table>
+</div>
+
+<h3>3.3 Context Free Grammar (CFG)</h3>
+<div class="diagram"><span class="diagram-label">📐 CFG Rules — Syntax Structure</span>S  → NP VP              (Sentence = Noun Phrase + Verb Phrase)
+NP → Det N             (Noun Phrase = Determiner + Noun)
+NP → Det Adj N         (or Determiner + Adjective + Noun)
+VP → V NP              (Verb Phrase = Verb + Noun Phrase)
+VP → V                 (or just Verb)
+
+Det → "the" | "a"
+N   → "dog" | "cat" | "ball"
+V   → "chases" | "sees" | "kicks"
+Adj → "big" | "small" | "quick"
+
+Parse tree for "the dog chases a ball":
+         S
+        / \
+       NP   VP
+      / \   / \
+    Det  N V   NP
+    the dog chases / \
+                 Det  N
+                  a  ball</div>
+
+<h3>3.4 Key Linguistic Concepts</h3>
+<div class="cmp-grid">
+  <div class="cmp-card left">
+    <h5>Word Meaning Types</h5>
+    <ul>
+      <li><strong style="color:var(--cream)">Polysemy:</strong> One word, related meanings<br><small style="color:var(--muted)">"bank" → river bank / financial bank</small></li>
+      <li><strong style="color:var(--cream)">Homonymy:</strong> One word, unrelated meanings<br><small style="color:var(--muted)">"bat" → animal / cricket bat</small></li>
+      <li><strong style="color:var(--cream)">Synonym:</strong> Different words, same meaning<br><small style="color:var(--muted)">"happy" ≈ "joyful" ≈ "glad"</small></li>
+    </ul>
+  </div>
+  <div class="cmp-card right">
+    <h5>Referential Relations</h5>
+    <ul>
+      <li><strong style="color:var(--cream)">Coreference:</strong> Different expressions = same entity<br><small style="color:var(--muted)">"Alice went. She bought milk." → She = Alice</small></li>
+      <li><strong style="color:var(--cream)">Anaphora:</strong> Pronoun refers to previous noun<br><small style="color:var(--muted)">"John fell. He hurt himself."</small></li>
+      <li><strong style="color:var(--cream)">Deixis:</strong> Meaning from context<br><small style="color:var(--muted)">"here", "now", "this" depend on speaker</small></li>
+    </ul>
+  </div>
+</div>
+
+<div class="hinglish">Pipeline ek assembly line ki tarah hai — raw text aata hai, saaf hota hai, tags lagte hain, numbers mein badle jaata hai, phir model kaam karta hai. Linguistics ke 5 levels basically batate hain bhasha kitne levels pe kaam karti hai — sound se lekar context tak.</div>
+
+<div class="key-takeaway">Every NLP system follows the same pipeline: raw text → clean → tokenize → normalize → features → model → output. Understanding linguistic levels (phonology to pragmatics) helps design better NLP systems.</div>
+</section>
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- CHAPTER 4 -->
+<!-- ═══════════════════════════════════════════════ -->
+<section class="chapter" id="ch4">
+<div class="chapter-header">
+  <div class="chapter-num">Chapter 04</div>
+  <h2>✂️ Text Preprocessing</h2>
+  <p>Cleaning and normalizing raw text — the foundation of every NLP system</p>
+</div>
+
+<div class="warn">Garbage in, garbage out. Even the best model fails on dirty data. Preprocessing is the most important step.</div>
+
+<h3>4.1 Tokenization</h3>
+<p>Splitting text into individual units called <strong style="color:var(--amber)">tokens</strong>.</p>
+
+<div class="tbl-wrap">
+<table>
+<tr><th>Type</th><th>Input</th><th>Output</th><th>Use Case</th></tr>
+<tr>
+  <td>Word</td>
+  <td><em>"I love NLP!"</em></td>
+  <td><code>["I","love","NLP","!"]</code></td>
+  <td>Most common</td>
+</tr>
+<tr>
+  <td>Sentence</td>
+  <td><em>"Hello. How are you?"</em></td>
+  <td><code>["Hello.", "How are you?"]</code></td>
+  <td>Summarization, MT</td>
+</tr>
+<tr>
+  <td>Character</td>
+  <td><em>"NLP"</em></td>
+  <td><code>["N","L","P"]</code></td>
+  <td>Morphology, spelling</td>
+</tr>
+<tr>
+  <td><strong style="color:var(--amber)">Subword ★</strong></td>
+  <td><em>"unhappiness"</em></td>
+  <td><code>["un","##happi","##ness"]</code></td>
+  <td>BERT, GPT, modern LLMs</td>
+</tr>
+</table>
+</div>
+
+<div class="card card-orange">
+  <strong style="color:var(--orange)">Why Subword?</strong>
+  <ul style="margin-top:10px;color:var(--text2);font-size:0.9rem;">
+    <li>✦ Handles rare / unknown words (OOV problem)</li>
+    <li>✦ Reduces vocabulary size significantly</li>
+    <li>✦ Morphologically informative</li>
+    <li>✦ Works across languages</li>
+  </ul>
+</div>
+
+<div class="diagram"><span class="diagram-label">⚙️ BPE (Byte Pair Encoding) Algorithm</span>Corpus: "low lower newest widest"
+Step 0: Start at character level
+        l-o-w  l-o-w-e-r  n-e-w-e-s-t  w-i-d-e-s-t
+
+Step 1: Count all adjacent pairs → ('e','s') = 2 most frequent
+Step 2: Merge → "es" becomes one token
+Step 3: Count again → merge again
+...
+Repeat until desired vocabulary size reached
+
+Used In: GPT (BPE), BERT (WordPiece), T5/LLaMA (SentencePiece)</div>
+
+<pre><span class="cm"># ── Tokenization Methods ──</span>
+<span class="im">import nltk</span>
+<span class="im">from nltk.tokenize import</span> word_tokenize, sent_tokenize
+nltk.download(<span class="st">'punkt'</span>)
+
+text = <span class="st">"I love NLP. It is amazing!"</span>
+<span class="fn">print</span>(word_tokenize(text))
+<span class="cm"># ['I','love','NLP','.','It','is','amazing','!']</span>
+<span class="fn">print</span>(sent_tokenize(text))
+<span class="cm"># ['I love NLP.', 'It is amazing!']</span>
+
+<span class="cm"># spaCy tokenizer</span>
+<span class="im">import spacy</span>
+nlp = spacy.<span class="fn">load</span>(<span class="st">"en_core_web_sm"</span>)
+doc = <span class="fn">nlp</span>(<span class="st">"I love NLP very much!"</span>)
+<span class="fn">print</span>([token.text <span class="kw">for</span> token <span class="kw">in</span> doc])
+
+<span class="cm"># BERT Subword tokenizer</span>
+<span class="im">from transformers import</span> BertTokenizer
+tokenizer = BertTokenizer.<span class="fn">from_pretrained</span>(<span class="st">'bert-base-uncased'</span>)
+<span class="fn">print</span>(tokenizer.<span class="fn">tokenize</span>(<span class="st">"unhappiness is temporary"</span>))
+<span class="cm"># ['un', '##happi', '##ness', 'is', 'temporary']</span></pre>
+
+<h3>4.2 Text Normalization</h3>
+
+<div class="tbl-wrap">
+<table>
+<tr><th>Step</th><th>Before</th><th>After</th></tr>
+<tr><td>Lowercase</td><td>Hello World NLP</td><td>hello world nlp</td></tr>
+<tr><td>Remove URLs</td><td>Visit https://nlp.org today</td><td>Visit  today</td></tr>
+<tr><td>Remove HTML</td><td>&lt;p&gt;Hello &lt;b&gt;World&lt;/b&gt;&lt;/p&gt;</td><td>Hello World</td></tr>
+<tr><td>Remove punctuation</td><td>Hello, World!</td><td>Hello World</td></tr>
+<tr><td>Expand contractions</td><td>I can't do this</td><td>I cannot do this</td></tr>
+</table>
+</div>
+
+<pre><span class="im">import re</span>
+<span class="im">from bs4 import</span> BeautifulSoup
+<span class="im">import contractions</span>
+
+<span class="kw">def</span> <span class="fn">clean_text</span>(text):
+    text = text.<span class="fn">lower</span>()
+    text = re.<span class="fn">sub</span>(<span class="st">r'http\S+|www\S+'</span>, <span class="st">''</span>, text)    <span class="cm"># Remove URLs</span>
+    text = BeautifulSoup(text, <span class="st">'html.parser'</span>).<span class="fn">get_text</span>()  <span class="cm"># HTML tags</span>
+    text = contractions.<span class="fn">fix</span>(text)                        <span class="cm"># Expand contractions</span>
+    text = re.<span class="fn">sub</span>(<span class="st">r'[^\w\s]'</span>, <span class="st">''</span>, text)               <span class="cm"># Punctuation</span>
+    text = re.<span class="fn">sub</span>(<span class="st">r'\s+'</span>, <span class="st">' '</span>, text).<span class="fn">strip</span>()           <span class="cm"># Extra spaces</span>
+    <span class="kw">return</span> text
+
+<span class="fn">print</span>(<span class="fn">clean_text</span>(<span class="st">"Hello! Visit https://nlp.org — it's &lt;b&gt;amazing&lt;/b&gt;."</span>))
+<span class="cm"># "hello visit it is amazing"</span></pre>
+
+<h3>4.3 Stop Word Removal</h3>
+<p>Common words with little semantic value: <code>the, is, a, and, of, to, in, that...</code></p>
+
+<div class="info">Keep stop words for: Sentiment Analysis ("not good" vs "good"), NER ("The Beatles"), Language Models (need all words for sequence understanding)</div>
+
+<pre><span class="im">from nltk.corpus import</span> stopwords
+<span class="im">from nltk.tokenize import</span> word_tokenize
+<span class="im">import nltk</span>
+nltk.<span class="fn">download</span>(<span class="st">'stopwords'</span>)
+
+stop_words = <span class="fn">set</span>(stopwords.<span class="fn">words</span>(<span class="st">'english'</span>))
+text = <span class="st">"This is a beautiful day for NLP learning"</span>
+tokens = word_tokenize(text.<span class="fn">lower</span>())
+filtered = [w <span class="kw">for</span> w <span class="kw">in</span> tokens <span class="kw">if</span> w <span class="kw">not in</span> stop_words]
+<span class="fn">print</span>(filtered)  <span class="cm"># ['beautiful', 'day', 'nlp', 'learning']</span></pre>
+
+<h3>4.4 Stemming vs Lemmatization</h3>
+
+<div class="cmp-grid">
+  <div class="cmp-card left">
+    <h5>🌱 Stemming</h5>
+    <ul>
+      <li>Heuristic suffix removal</li>
+      <li>Fast, crude</li>
+      <li>May give non-words</li>
+      <li>"studies" → <span style="color:var(--red)">"studi"</span> ❌</li>
+      <li>"happiness" → <span style="color:var(--red)">"happi"</span> ❌</li>
+      <li>Use: Search indexing</li>
+    </ul>
+  </div>
+  <div class="cmp-card right">
+    <h5>🌿 Lemmatization</h5>
+    <ul>
+      <li>Dictionary-based lookup</li>
+      <li>Slower, accurate</li>
+      <li>Always real words</li>
+      <li>"studies" → <span style="color:var(--green)">"study"</span> ✅</li>
+      <li>"better" → <span style="color:var(--green)">"good"</span> ✅</li>
+      <li>Use: NLU, classification</li>
+    </ul>
+  </div>
+</div>
+
+<pre><span class="im">from nltk.stem import</span> PorterStemmer, WordNetLemmatizer
+<span class="im">import nltk</span>
+nltk.<span class="fn">download</span>(<span class="st">'wordnet'</span>)
+
+ps  = <span class="fn">PorterStemmer</span>()
+lem = <span class="fn">WordNetLemmatizer</span>()
+
+words = [<span class="st">"running"</span>, <span class="st">"studies"</span>, <span class="st">"better"</span>, <span class="st">"happiness"</span>]
+<span class="kw">for</span> w <span class="kw">in</span> words:
+    <span class="fn">print</span>(<span class="st">f"{w:12} Stem:{ps.stem(w):12} Lemma:{lem.lemmatize(w, pos='v')}"</span>)
+<span class="cm"># running      Stem:run          Lemma:run</span>
+<span class="cm"># studies      Stem:studi        Lemma:study</span>
+<span class="cm"># better       Stem:better       Lemma:better  (use pos='a' for 'good')</span>
+<span class="cm"># happiness    Stem:happi        Lemma:happiness</span>
+
+<span class="cm"># spaCy auto-lemmatization (best practice)</span>
+<span class="im">import spacy</span>
+nlp = spacy.<span class="fn">load</span>(<span class="st">"en_core_web_sm"</span>)
+doc = <span class="fn">nlp</span>(<span class="st">"He was running and studied better than everyone"</span>)
+<span class="kw">for</span> token <span class="kw">in</span> doc:
+    <span class="fn">print</span>(<span class="st">f"{token.text:12} → {token.lemma_}"</span>)</pre>
+
+<h3>4.5 POS Tagging</h3>
+
+<div class="diagram"><span class="diagram-label">🏷️ POS Tags — Penn Treebank Tagset</span>"The  quick  brown  fox   jumps  over  the  lazy  dogs"
+  DT    JJ     JJ    NN    VBZ    IN    DT    JJ    NNS
+
+DT  = Determiner       (the, a, an)
+JJ  = Adjective        (quick, brown, lazy)
+NN  = Noun singular    (fox, dog, NLP)
+NNS = Noun plural      (dogs, cats, models)
+VBZ = Verb 3rd person  (jumps, runs, learns)
+VBG = Verb gerund      (running, jumping)
+RB  = Adverb           (quickly, very, not)
+IN  = Preposition      (over, in, on, at)
+PRP = Pronoun          (he, she, it, they)</div>
+
+<pre><span class="im">import nltk, spacy</span>
+nltk.<span class="fn">download</span>(<span class="st">'averaged_perceptron_tagger'</span>)
+
+<span class="cm"># NLTK POS tagging</span>
+tokens = nltk.<span class="fn">word_tokenize</span>(<span class="st">"The dog runs very fast"</span>)
+tagged = nltk.<span class="fn">pos_tag</span>(tokens)
+<span class="fn">print</span>(tagged)
+<span class="cm"># [('The','DT'),('dog','NN'),('runs','VBZ'),('very','RB'),('fast','JJ')]</span>
+
+<span class="cm"># spaCy POS + Dependency parsing</span>
+nlp = spacy.<span class="fn">load</span>(<span class="st">"en_core_web_sm"</span>)
+doc = <span class="fn">nlp</span>(<span class="st">"She loves NLP deeply"</span>)
+<span class="kw">for</span> token <span class="kw">in</span> doc:
+    <span class="fn">print</span>(<span class="st">f"{token.text:10} POS:{token.pos_:8} DEP:{token.dep_:10} HEAD:{token.head.text}"</span>)</pre>
+
+<div class="hinglish">Preprocessing matlab text ko dhona aur kaatna khana banane se pehle ki tarah. Stemming crude method hai — sirf kaato. Lemmatization smart hai — dictionary dekho. Stop words hatao jab meaning chahiye, rakhho jab "not good" jaisi negation important ho.</div>
+
+<div class="key-takeaway">Pipeline: Tokenize → Normalize → Remove stopwords → Stem/Lemmatize → POS tag. Use subword tokenization (BPE/WordPiece) for modern deep learning. Use lemmatization over stemming when semantic meaning matters.</div>
+</section>
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- CHAPTER 5 -->
+<!-- ═══════════════════════════════════════════════ -->
+<section class="chapter" id="ch5">
+<div class="chapter-header">
+  <div class="chapter-num">Chapter 05</div>
+  <h2>🔢 Text Representation</h2>
+  <p>Converting words to numbers — the most fundamental challenge in NLP</p>
+</div>
+
+<h3>5.1 The Core Problem</h3>
+<p>ML models understand <strong style="color:var(--amber)">numbers</strong>, not text. We must map words to vectors.</p>
+
+<div class="diagram"><span class="diagram-label">📈 Evolution of Text Representation</span>One-Hot Encoding    → Sparse, no meaning, [1,0,0,0,0...]
+       ↓
+Bag of Words        → Frequency counts, sparse, no order
+       ↓
+TF-IDF              → Weighted frequency, better discriminability
+       ↓
+N-grams             → Local context, still sparse
+       ↓
+Word2Vec / GloVe    → Dense, semantic meaning, 300 dims ★
+       ↓
+FastText            → Subword-level, handles OOV words
+       ↓
+ELMo                → Contextual embeddings (same word, diff vectors)
+       ↓
+BERT / GPT          → Contextual + transformer-powered   ★★★</div>
+
+<h3>5.2 Bag of Words (BoW)</h3>
+
+<div class="diagram"><span class="diagram-label">🎒 BoW Matrix Construction</span>Documents:
+  D1: "I love NLP and I love coding"
+  D2: "NLP is amazing and I love it"
+
+Vocabulary: [ I, love, NLP, and, coding, is, amazing, it ]
+              ↓
+         I  love  NLP  and  coding  is  amazing  it
+D1:    [ 2,   2,   1,   1,    1,    0,    0,     0 ]
+D2:    [ 1,   1,   1,   1,    0,    1,    1,     1 ]
+
+Problem: "I do not love NLP" ≈ "I love NLP"  (same words, opposite meaning!)</div>
+
+<pre><span class="im">from sklearn.feature_extraction.text import</span> CountVectorizer
+
+corpus = [
+    <span class="st">"I love NLP and I love coding"</span>,
+    <span class="st">"NLP is amazing and I love it"</span>,
+    <span class="st">"Coding is fun and amazing"</span>
+]
+vectorizer = <span class="fn">CountVectorizer</span>()
+X = vectorizer.<span class="fn">fit_transform</span>(corpus)
+<span class="fn">print</span>(vectorizer.<span class="fn">get_feature_names_out</span>())
+<span class="fn">print</span>(X.<span class="fn">toarray</span>())</pre>
+
+<h3>5.3 TF-IDF</h3>
+<p>Weight words by importance — common words get low weight, rare informative words get high weight.</p>
+
+<div class="formula-box">TF(t, d)   = Count(t in d) / Total words in d
+
+IDF(t)     = log( N / df(t) )
+             where N = total docs, df(t) = docs containing t
+
+TF-IDF(t, d) = TF(t, d) × IDF(t)
+
+Insight:  "the" → IDF ≈ 0  (in ALL docs, useless)
+          "quantum" → IDF high  (rare, discriminative)</div>
+
+<div class="diagram"><span class="diagram-label">💡 TF-IDF Worked Example</span>3 Documents:
+  D1: "the sky is blue"        (4 words)
+  D2: "the sky is not blue"    (5 words)
+  D3: "the sun is bright"      (4 words)
+
+Word = "sky", N = 3
+  TF("sky", D1) = 1/4 = 0.25
+  df("sky")     = 2   (in D1, D2 only)
+  IDF("sky")    = log(3/2) = 0.405
+  TF-IDF        = 0.25 × 0.405 = 0.101 ✓
+
+Word = "the", N = 3
+  df("the") = 3  (in ALL docs)
+  IDF("the") = log(3/3) = 0   ← ZERO importance! ✓</div>
+
+<pre><span class="im">from sklearn.feature_extraction.text import</span> TfidfVectorizer
+<span class="im">import pandas as pd</span>
+
+corpus = [<span class="st">"the sky is blue"</span>, <span class="st">"the sky is not blue"</span>, <span class="st">"the sun is bright"</span>]
+tfidf = <span class="fn">TfidfVectorizer</span>()
+X = tfidf.<span class="fn">fit_transform</span>(corpus)
+
+df = pd.<span class="fn">DataFrame</span>(X.<span class="fn">toarray</span>(),
+                  columns=tfidf.<span class="fn">get_feature_names_out</span>(),
+                  index=[<span class="st">'D1'</span>,<span class="st">'D2'</span>,<span class="st">'D3'</span>])
+<span class="fn">print</span>(df.<span class="fn">round</span>(<span class="nu">3</span>))
+
+<span class="cm"># Advanced TF-IDF with bigrams + filters</span>
+tfidf_adv = <span class="fn">TfidfVectorizer</span>(
+    max_features=<span class="nu">10000</span>,
+    ngram_range=(<span class="nu">1</span>, <span class="nu">2</span>),    <span class="cm"># Unigrams + bigrams</span>
+    min_df=<span class="nu">2</span>,              <span class="cm"># Ignore very rare words</span>
+    max_df=<span class="nu">0.95</span>,           <span class="cm"># Ignore very common words</span>
+    sublinear_tf=<span class="nu">True</span>      <span class="cm"># Use 1 + log(TF)</span>
+)</pre>
+
+<h3>5.4 N-grams</h3>
+
+<div class="diagram"><span class="diagram-label">🔗 N-gram Examples</span>Sentence: "I do not love NLP"
+
+Unigrams (N=1): ["I", "do", "not", "love", "NLP"]
+Bigrams  (N=2): ["I do", "do not", "not love", "love NLP"]
+Trigrams (N=3): ["I do not", "do not love", "not love NLP"]
+
+Why bigrams matter:
+  BoW:    "I do NOT love NLP" ≈ "I love NLP"  (same words, wrong!)
+  Bigrams: "not love" ≠ "love"  → captures negation! ✓
+
+N-gram Language Model:
+  P(w_n | w_{n-1}) = Count(w_{n-1}, w_n) / Count(w_{n-1})</div>
+
+<h3>5.5 Word2Vec — The Embedding Revolution</h3>
+
+<div class="card card-amber">
+  <strong style="color:var(--amber)">The Famous Property:</strong>
+  <div style="margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:0.9rem;color:var(--cream);line-height:2;">
+    king − man + woman ≈ <span style="color:var(--green)">queen</span><br>
+    Paris − France + Italy ≈ <span style="color:var(--green)">Rome</span><br>
+    bigger − big + tall ≈ <span style="color:var(--green)">taller</span>
+  </div>
+</div>
+
+<div class="cmp-grid">
+  <div class="cmp-card left">
+    <h5>CBOW Architecture</h5>
+    <ul>
+      <li>Context words → Predict center</li>
+      <li>["I","NLP"] → predict "love"</li>
+      <li>Faster training</li>
+      <li>Better for frequent words</li>
+    </ul>
+  </div>
+  <div class="cmp-card right">
+    <h5>Skip-gram Architecture</h5>
+    <ul>
+      <li>Center word → Predict context</li>
+      <li>"love" → predict ["I","NLP"]</li>
+      <li>Better for rare words</li>
+      <li>Better with small corpus</li>
+    </ul>
+  </div>
+</div>
+
+<div class="formula-box">Skip-gram Objective (maximize):
+  J(θ) = (1/T) Σ Σ log P(w_{t+j} | w_t)
+
+Output probability (Softmax):
+  P(w_O | w_I) = exp(v'_{w_O} · v_{w_I}) / Σ exp(v'_w · v_{w_I})
+
+Negative Sampling (makes training feasible):
+  J = log σ(v'_{w_O} · v_{w_I}) + Σ_k log σ(−v'_{w_k} · v_{w_I})
+  Compare target vs k random "negative" words instead of full softmax</div>
+
+<div class="diagram"><span class="diagram-label">🌐 Word Vector Space (2D projection)</span>
+         NLP ●          Machine ●
+                                       Learning ●
+                Deep ●
+   Neural ●
+                        ● Model
+   (Words about AI cluster together)
+
+         Dog ●
+              Cat ●
+                   Pet ●     (Words about animals cluster together)
+
+   (The two clusters are FAR apart — semantic meaning captured!)</div>
+
+<pre><span class="im">from gensim.models import</span> Word2Vec
+
+sentences = [
+    [<span class="st">"I"</span>, <span class="st">"love"</span>, <span class="st">"NLP"</span>],
+    [<span class="st">"NLP"</span>, <span class="st">"is"</span>, <span class="st">"amazing"</span>],
+    [<span class="st">"deep"</span>, <span class="st">"learning"</span>, <span class="st">"helps"</span>, <span class="st">"NLP"</span>],
+    [<span class="st">"machine"</span>, <span class="st">"learning"</span>, <span class="st">"is"</span>, <span class="st">"great"</span>]
+]
+model = <span class="fn">Word2Vec</span>(sentences, vector_size=<span class="nu">100</span>, window=<span class="nu">5</span>,
+                   min_count=<span class="nu">1</span>, sg=<span class="nu">1</span>)  <span class="cm"># sg=1: skip-gram</span>
+
+<span class="fn">print</span>(model.wv[<span class="st">"NLP"</span>][:<span class="nu">5</span>])            <span class="cm"># Get word vector</span>
+<span class="fn">print</span>(model.wv.<span class="fn">most_similar</span>(<span class="st">"NLP"</span>))  <span class="cm"># Similar words</span>
+
+<span class="cm"># Word analogy</span>
+result = model.wv.<span class="fn">most_similar</span>(
+    positive=[<span class="st">"king"</span>, <span class="st">"woman"</span>], negative=[<span class="st">"man"</span>]
+)
+<span class="fn">print</span>(result[<span class="nu">0</span>][<span class="nu">0</span>])  <span class="cm"># 'queen'</span>
+
+<span class="cm"># Pre-trained GloVe (100-dimensional)</span>
+<span class="im">import gensim.downloader as</span> api
+glove = api.<span class="fn">load</span>(<span class="st">"glove-wiki-gigaword-100"</span>)
+<span class="fn">print</span>(glove.<span class="fn">similarity</span>(<span class="st">"king"</span>, <span class="st">"queen"</span>))   <span class="cm"># ~0.75 (high)</span>
+<span class="fn">print</span>(glove.<span class="fn">similarity</span>(<span class="st">"king"</span>, <span class="st">"banana"</span>))  <span class="cm"># ~0.1 (low)</span>
+
+<span class="cm"># FastText — handles OOV words</span>
+<span class="im">from gensim.models import</span> FastText
+ft_model = <span class="fn">FastText</span>(sentences, vector_size=<span class="nu">100</span>, window=<span class="nu">5</span>)
+<span class="fn">print</span>(ft_model.wv[<span class="st">"NLProcessing"</span>])  <span class="cm"># Works even if never seen!</span></pre>
+
+<div class="hinglish">Text ko numbers mein badle bina ML possible nahi. BoW simple counting, TF-IDF smart weighting, Word2Vec revolution tha — similar words paas aate hain vector space mein! "king - man + woman = queen" — ye magic Word2Vec karta hai. FastText OOV handle karta hai subwords se.</div>
+
+<div class="key-takeaway">Use TF-IDF for classical ML baselines. Use Word2Vec/GloVe for semantic tasks. Use FastText when OOV words matter (morphologically rich languages). Use BERT/GPT embeddings for state-of-the-art results.</div>
+</section>
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- CHAPTER 6 -->
+<!-- ═══════════════════════════════════════════════ -->
+<section class="chapter" id="ch6">
+<div class="chapter-header">
+  <div class="chapter-num">Chapter 06</div>
+  <h2>🤖 Machine Learning for NLP</h2>
+  <p>Classical algorithms that still power real production NLP systems</p>
+</div>
+
+<h3>6.1 Naive Bayes Classifier</h3>
+<p>Most widely used for text classification — simple, fast, and surprisingly effective.</p>
+
+<div class="formula-box">Bayes Theorem:
+  P(class | doc) ∝ P(class) × P(doc | class)
+
+Naive Assumption (features are independent):
+  P(class | w_1...w_n) ∝ P(class) × ∏ P(w_i | class)
+
+Log form (avoid numerical underflow):
+  log P(class | doc) = log P(class) + Σ log P(w_i | class)
+
+Laplace Smoothing (handle zero probabilities):
+  P(w_i | class) = (Count(w_i, class) + 1) / (Count(class) + |V|)
+  |V| = vocabulary size</div>
+
+<div class="diagram"><span class="diagram-label">📧 Spam Detection Example</span>Training Data:
+  Spam: "win money now", "free prize claim"
+  Ham:  "meeting tomorrow", "project update"
+
+New email: "win free prize"
+
+P(spam | email) ∝ P(spam) × P(win|spam) × P(free|spam) × P(prize|spam)
+P(ham  | email) ∝ P(ham)  × P(win|ham)  × P(free|ham)  × P(prize|ham)
+
+Since "win","free","prize" appear often in spam training data:
+  P(spam|email) >> P(ham|email) → Predicted: SPAM ✓</div>
+
+<pre><span class="im">from sklearn.naive_bayes import</span> MultinomialNB
+<span class="im">from sklearn.feature_extraction.text import</span> TfidfVectorizer
+<span class="im">from sklearn.pipeline import</span> Pipeline
+<span class="im">from sklearn.metrics import</span> classification_report
+
+texts = [<span class="st">"win money now"</span>, <span class="st">"free prize claim"</span>,
+         <span class="st">"meeting tomorrow"</span>, <span class="st">"project update"</span>,
+         <span class="st">"you won a lottery"</span>, <span class="st">"see you at office"</span>]
+labels = [<span class="nu">1</span>, <span class="nu">1</span>, <span class="nu">0</span>, <span class="nu">0</span>, <span class="nu">1</span>, <span class="nu">0</span>]  <span class="cm"># 1=spam, 0=ham</span>
+
+pipeline = <span class="fn">Pipeline</span>([
+    (<span class="st">'tfidf'</span>, <span class="fn">TfidfVectorizer</span>()),
+    (<span class="st">'clf'</span>, <span class="fn">MultinomialNB</span>())
+])
+pipeline.<span class="fn">fit</span>(texts, labels)
+<span class="fn">print</span>(pipeline.<span class="fn">predict</span>([<span class="st">"claim your prize now"</span>]))  <span class="cm"># [1] → spam</span>
+<span class="fn">print</span>(pipeline.<span class="fn">predict</span>([<span class="st">"team meeting at 3pm"</span>]))    <span class="cm"># [0] → ham</span></pre>
+
+<h3>6.2 Logistic Regression</h3>
+<p>Despite the name, it is a <strong style="color:var(--amber)">classification</strong> algorithm — one of the most effective for text.</p>
+
+<div class="formula-box">Linear combination:
+  z = w_1x_1 + w_2x_2 + ... + w_nx_n + b
+
+Sigmoid (squash to probability):
+  ŷ = σ(z) = 1 / (1 + e^{-z})     →  output ∈ (0, 1)
+
+Binary Cross-Entropy Loss:
+  L = −[y × log(ŷ) + (1−y) × log(1−ŷ)]
+
+Multiclass Softmax:
+  P(class_k | x) = exp(w_k^T x) / Σ_j exp(w_j^T x)</div>
+
+<pre><span class="im">from sklearn.linear_model import</span> LogisticRegression
+<span class="im">from sklearn.model_selection import</span> train_test_split
+
+X = <span class="fn">TfidfVectorizer</span>(ngram_range=(<span class="nu">1</span>,<span class="nu">2</span>)).<span class="fn">fit_transform</span>(texts)
+X_train, X_test, y_train, y_test = <span class="fn">train_test_split</span>(
+    X, labels, test_size=<span class="nu">0.2</span>, random_state=<span class="nu">42</span>
+)
+clf = <span class="fn">LogisticRegression</span>(C=<span class="nu">1.0</span>, max_iter=<span class="nu">1000</span>)
+clf.<span class="fn">fit</span>(X_train, y_train)
+<span class="fn">print</span>(<span class="fn">classification_report</span>(y_test, clf.<span class="fn">predict</span>(X_test)))</pre>
+
+<h3>6.3 Support Vector Machine (SVM)</h3>
+<p>Finds the hyperplane with <strong style="color:var(--amber)">maximum margin</strong> between classes. Very effective for text.</p>
+
+<div class="formula-box">Hard Margin Objective:
+  minimize:   (1/2)||w||²
+  subject to: y_i(w^T x_i + b) ≥ 1
+
+Soft Margin (real data, some overlap allowed):
+  minimize:   (1/2)||w||² + C × Σ ξ_i
+  C = regularization (large C = tighter margin, more fitting)
+
+Kernel Trick for non-linear data:
+  Linear:   K(x,z) = x^T z
+  RBF:      K(x,z) = exp(−γ||x−z||²)
+  Poly:     K(x,z) = (x^T z + c)^d</div>
+
+<pre><span class="im">from sklearn.svm import</span> LinearSVC
+<span class="im">from sklearn.pipeline import</span> Pipeline
+
+svm = <span class="fn">Pipeline</span>([
+    (<span class="st">'tfidf'</span>, <span class="fn">TfidfVectorizer</span>(ngram_range=(<span class="nu">1</span>,<span class="nu">2</span>))),
+    (<span class="st">'clf'</span>, <span class="fn">LinearSVC</span>(C=<span class="nu">1.0</span>))
+])
+svm.<span class="fn">fit</span>(texts, labels)
+<span class="fn">print</span>(svm.<span class="fn">predict</span>([<span class="st">"amazing product love it"</span>]))</pre>
+
+<div class="tbl-wrap">
+<table>
+<tr><th>Algorithm</th><th>Speed</th><th>Performance</th><th>When to Use</th></tr>
+<tr><td><span class="tag tag-amber">Naive Bayes</span></td><td>⚡ Very Fast</td><td>Good baseline</td><td>Text classification, small data, spam</td></tr>
+<tr><td><span class="tag tag-teal">Logistic Regression</span></td><td>⚡ Fast</td><td>Strong</td><td>Binary/multiclass, interpretable needed</td></tr>
+<tr><td><span class="tag tag-coral">SVM</span></td><td>🐢 Slow (large data)</td><td>Excellent</td><td>High-dimensional text, small-medium data</td></tr>
+</table>
+</div>
+
+<div class="hinglish">Classical ML abhi bhi production mein use hota hai. Naive Bayes aaj bhi spam detection ke liye industry standard hai. Logistic Regression interpretable hai — business ko explain karna easy. SVM text ke liye bohot effective. Jab data kam ho toh ye deep learning se better ho sakte hain.</div>
+
+<div class="key-takeaway">Don't ignore classical ML! Naive Bayes + TF-IDF is a strong baseline. Always start simple. SVM often beats deep learning on small datasets. Logistic Regression is interpretable and production-friendly.</div>
+</section>
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- CHAPTER 7 -->
+<!-- ═══════════════════════════════════════════════ -->
+<section class="chapter" id="ch7">
+<div class="chapter-header">
+  <div class="chapter-num">Chapter 07</div>
+  <h2>🧠 Deep Learning for NLP</h2>
+  <p>RNN, LSTM, GRU — sequential models that revolutionized NLP before Transformers</p>
+</div>
+
+<h3>7.1 Why Deep Learning for NLP?</h3>
+<div class="cmp-grid">
+  <div class="cmp-card left">
+    <h5>Classical ML Problems</h5>
+    <ul>
+      <li>Manual feature engineering</li>
+      <li>Bag of Words loses word order</li>
+      <li>Can't capture long-range dependencies</li>
+      <li>Fixed-size input required</li>
+    </ul>
+  </div>
+  <div class="cmp-card right">
+    <h5>Deep Learning Solutions</h5>
+    <ul>
+      <li>Auto feature learning</li>
+      <li>Sequence processing preserves order</li>
+      <li>Memory (hidden state) across time</li>
+      <li>Variable length input/output</li>
+    </ul>
+  </div>
+</div>
+
+<h3>7.2 Recurrent Neural Network (RNN)</h3>
+<p>Processes sequences one token at a time, carrying a <strong style="color:var(--amber)">hidden state</strong> (memory) forward.</p>
+
+<div class="diagram"><span class="diagram-label">🔁 RNN Unrolled Over Time</span>
+  x_1        x_2        x_3        x_4
+   ↓          ↓          ↓          ↓
+[h_1]  →  [h_2]  →  [h_3]  →  [h_4]  → output
+ ↑          ↑          ↑          ↑
+ W_hh       W_hh       W_hh       W_hh
+(same weights W_hh and W_xh shared at every step!)
+
+"I"→[h1]→ "love"→[h2]→ "NLP"→[h3]→ "very"→[h4] → output</div>
+
+<div class="formula-box">h_t = tanh(W_hh · h_{t-1} + W_xh · x_t + b_h)
+y_t = W_hy · h_t + b_y
+
+Where:
+  h_t     = hidden state at time t  (the memory vector)
+  x_t     = input at time t  (word embedding)
+  W_hh    = hidden-to-hidden weight  (recurrent connection)
+  W_xh    = input-to-hidden weight
+  tanh    = activation function  (range: -1 to 1)</div>
+
+<div class="card card-red">
+  <strong style="color:var(--red)">⚠️ The Vanishing Gradient Problem</strong><br>
+  <span style="color:var(--text2);font-size:0.9rem;margin-top:8px;display:block;">
+    During BPTT: ∂h_t/∂h_1 = ∏ ∂h_k/∂h_{k-1}<br>
+    If values &lt; 1 → product → 0 → early layers learn nothing (Vanishing!)<br>
+    If values &gt; 1 → product → ∞ → (Exploding! Fix: gradient clipping)
+  </span>
+</div>
+
+<h3>7.3 LSTM — Long Short-Term Memory</h3>
+<p>Solves vanishing gradient with a <strong style="color:var(--amber)">cell state highway</strong> and learnable gates.</p>
+
+<div class="diagram"><span class="diagram-label">🔐 LSTM Cell — Gate Architecture</span>
+    x_t ──────────────────────────────────────────────┐
+    h_{t-1} ──────────────────────────────────────┐   │
+                                                  ↓   ↓
+    C_{t-1} ──── [×f_t] ──────── [+] ──────── C_t ──→
+                    ↑             ↑ ↑
+               FORGET GATE    INPUT GATE
+               "What to       "What new      OUTPUT GATE
+                erase?"        info add?"        ↓
+                                            h_t = o_t ⊙ tanh(C_t)
+
+    C_t = Long-term memory (cell state — the highway for gradients)
+    h_t = Short-term memory (hidden state — output)</div>
+
+<div class="formula-box">Forget Gate:    f_t = σ(W_f · [h_{t-1}, x_t] + b_f)
+Input Gate:     i_t = σ(W_i · [h_{t-1}, x_t] + b_i)
+Cell Candidate: C̃_t = tanh(W_C · [h_{t-1}, x_t] + b_C)
+Cell State:     C_t = f_t ⊙ C_{t-1} + i_t ⊙ C̃_t
+Output Gate:    o_t = σ(W_o · [h_{t-1}, x_t] + b_o)
+Hidden State:   h_t = o_t ⊙ tanh(C_t)
+
+σ = sigmoid (output 0–1)   tanh = (output -1 to 1)
+⊙ = element-wise multiplication (Hadamard product)</div>
+
+<h3>7.4 GRU — Gated Recurrent Unit</h3>
+<p>Simpler LSTM — merges forget + input into one <strong style="color:var(--amber)">update gate</strong>.</p>
+
+<div class="formula-box">Update Gate: z_t = σ(W_z · [h_{t-1}, x_t])
+Reset Gate:  r_t = σ(W_r · [h_{t-1}, x_t])
+New Memory:  h̃_t = tanh(W · [r_t ⊙ h_{t-1}, x_t])
+Output:      h_t = (1 − z_t) ⊙ h_{t-1} + z_t ⊙ h̃_t</div>
+
+<div class="tbl-wrap">
+<table>
+<tr><th>Model</th><th>Gates</th><th>States</th><th>Speed</th><th>Use When</th></tr>
+<tr><td><span class="tag tag-red">RNN</span></td><td>None</td><td>1 (hidden)</td><td>Fastest</td><td>Short sequences only</td></tr>
+<tr><td><span class="tag tag-amber">LSTM</span></td><td>3 (forget, input, output)</td><td>2 (hidden + cell)</td><td>Slowest</td><td>Long sequences, complex patterns</td></tr>
+<tr><td><span class="tag tag-teal">GRU</span></td><td>2 (update, reset)</td><td>1 (hidden)</td><td>Fast</td><td>Balance of speed and performance</td></tr>
+</table>
+</div>
+
+<h3>7.5 Bidirectional LSTM</h3>
+
+<div class="diagram"><span class="diagram-label">↔️ BiLSTM — Reading Both Directions</span>Problem:
+  "I went to the _____ to deposit money."
+  → To predict "bank", we need "deposit money" (future context!)
+
+Solution — Bidirectional LSTM:
+  Forward  LSTM:   I → went → to → the → bank → to → deposit
+  Backward LSTM:   money → deposit → to → bank → the → to → went
+
+  Final = Concat(forward_hidden, backward_hidden)
+  → Now "bank" has context from BOTH directions ✓</div>
+
+<pre><span class="im">import torch</span>
+<span class="im">import torch.nn as</span> nn
+
+<span class="kw">class</span> <span class="fn">SentimentLSTM</span>(nn.Module):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, vocab_size, embed_dim, hidden_dim, output_dim):
+        <span class="fn">super</span>().__init__()
+        self.embedding = nn.<span class="fn">Embedding</span>(vocab_size, embed_dim)
+        self.lstm = nn.<span class="fn">LSTM</span>(
+            embed_dim, hidden_dim,
+            num_layers=<span class="nu">2</span>,
+            batch_first=<span class="nu">True</span>,
+            bidirectional=<span class="nu">True</span>,
+            dropout=<span class="nu">0.5</span>
+        )
+        self.fc = nn.<span class="fn">Linear</span>(hidden_dim * <span class="nu">2</span>, output_dim)  <span class="cm"># ×2 for BiLSTM</span>
+        self.dropout = nn.<span class="fn">Dropout</span>(<span class="nu">0.5</span>)
+
+    <span class="kw">def</span> <span class="fn">forward</span>(self, text):
+        embedded = self.dropout(self.embedding(text))
+        output, (hidden, cell) = self.lstm(embedded)
+        <span class="cm"># Concat final forward + backward hidden states</span>
+        hidden = torch.<span class="fn">cat</span>((hidden[-<span class="nu">2</span>,:,:], hidden[-<span class="nu">1</span>,:,:]), dim=<span class="nu">1</span>)
+        <span class="kw">return</span> self.fc(self.dropout(hidden))
+
+model = <span class="fn">SentimentLSTM</span>(vocab_size=<span class="nu">10000</span>, embed_dim=<span class="nu">128</span>,
+                        hidden_dim=<span class="nu">256</span>, output_dim=<span class="nu">2</span>)
+<span class="fn">print</span>(model)
+<span class="fn">print</span>(<span class="st">f"Parameters: {sum(p.numel() for p in model.parameters()):,}"</span>)</pre>
+
+<div class="hinglish">RNN sequence process karta hai step by step — memory aage badhti hai. LSTM uska smart version — 3 gates decide karte hain kya yaad rakhna hai, kya bhoolna. GRU chhota bhai — 2 gates, faster. BiLSTM dono directions se padhta hai — better context. RNN family transformers se pehle NLP ka backbone tha.</div>
+
+<div class="key-takeaway">RNN processes sequences but forgets long-range patterns (vanishing gradient). LSTM adds cell state highway and gates to fix this. GRU is lighter with comparable performance. BiLSTM reads forward and backward for richer context. Still used in edge/mobile deployments where transformers are too large.</div>
+</section>
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- CHAPTER 8 -->
+<!-- ═══════════════════════════════════════════════ -->
+<section class="chapter" id="ch8">
+<div class="chapter-header">
+  <div class="chapter-num">Chapter 08</div>
+  <h2>👁️ Attention Mechanism & Transformers</h2>
+  <p>The 2017 revolution that changed everything — "Attention is All You Need"</p>
+</div>
+
+<h3>8.1 The Seq2Seq Bottleneck Problem</h3>
+
+<div class="diagram"><span class="diagram-label">❌ The Problem with Classic Encoder-Decoder</span>
+  Encoder reads: "The cat sat on the mat because it was tired"
+                                   ↓
+                      [single fixed vector c]   ← must encode EVERYTHING!
+                                   ↓
+  Decoder generates: "Le chat était assis sur le tapis..."
+
+  Problem: For long sentences, one vector CANNOT hold all info
+  Result:  Translation quality degrades significantly ✗</div>
+
+<h3>8.2 Attention — The Solution</h3>
+<p>Let the decoder <strong style="color:var(--amber)">dynamically attend</strong> to different parts of the input at each step.</p>
+
+<div class="diagram"><span class="diagram-label">✅ Attention Heatmap Visualization</span>
+                  "The  cat  sat  on  the  mat"  ← Encoder inputs
+                    ↓    ↓    ↓   ↓    ↓    ↓
+                   h1   h2   h3  h4   h5   h6    ← Encoder states
+
+When generating "chat" (cat):
+  Attention weights: [0.03, 0.89, 0.02, 0.01, 0.03, 0.02]
+  Machine FOCUSES on h2 ("cat") → correct! ✓
+
+When generating "tapis" (mat):
+  Attention weights: [0.02, 0.03, 0.03, 0.03, 0.04, 0.85]
+  Machine FOCUSES on h6 ("mat") → correct! ✓
+
+Context vector c_t = weighted sum of encoder states
+  c_t = Σ α_ti × h_i</div>
+
+<div class="formula-box">Bahdanau Attention (Step by Step):
+
+Step 1 — Alignment Score (how well do s_{t-1} and h_i match?):
+  e_ti = v_a^T · tanh(W_a · s_{t-1} + U_a · h_i)
+
+Step 2 — Attention Weights (Softmax to normalize):
+  α_ti = exp(e_ti) / Σ_j exp(e_tj)
+  Properties: α_ti ≥ 0  and  Σ_i α_ti = 1
+
+Step 3 — Context Vector (weighted sum of encoder states):
+  c_t = Σ_i α_ti · h_i
+
+Step 4 — Decoder Update:
+  s_t = f(s_{t-1}, y_{t-1}, c_t)</div>
+
+<h3>8.3 Self-Attention</h3>
+<p>Each word attends to every other word in the <strong style="color:var(--amber)">same sequence</strong>.</p>
+
+<div class="diagram"><span class="diagram-label">🔍 Self-Attention — Words Attending to Each Other</span>"The animal didn't cross the street because it was tired"
+                                                  ↑
+                                    "it" should attend to "animal"!
+                                    Self-attention resolves this! ✓
+
+For each word, create three vectors via learned weight matrices:
+  Q = X · W_Q   (Query:  "What am I looking for?")
+  K = X · W_K   (Key:    "What do I have to offer?")
+  V = X · W_V   (Value:  "What do I actually return?")
+
+Attention output for each position:
+  Step 1: Scores    = Q · K^T / √d_k     (how relevant is each word?)
+  Step 2: Weights   = softmax(Scores)    (normalize to probabilities)
+  Step 3: Output    = Weights · V        (weighted sum of values)</div>
+
+<div class="formula-box">Scaled Dot-Product Attention (THE formula):
+
+  Attention(Q, K, V) = softmax(Q · K^T / √d_k) · V
+
+Why scale by √d_k?
+  Large d_k → large dot products → softmax near 0 or 1 → vanishing gradients
+  Dividing by √d_k keeps variance = 1 → stable training ✓
+
+Dimensions:
+  Q: [seq_len × d_k]
+  K: [seq_len × d_k]
+  V: [seq_len × d_v]
+  Output: [seq_len × d_v]</div>
+
+<h3>8.4 Multi-Head Attention</h3>
+<p>Run multiple attention operations in parallel — different heads capture different relationships.</p>
+
+<div class="formula-box">MultiHead(Q, K, V) = Concat(head_1, ..., head_h) · W^O
+
+  head_i = Attention(Q·W_i^Q, K·W_i^K, V·W_i^V)
+
+With h=8 heads, d_model=512:
+  d_k = d_v = 512/8 = 64 per head
+
+What different heads learn (emergent specialization):
+  Head 1 → Syntactic dependencies (subject-verb agreement)
+  Head 2 → Coreference ("it" → "animal")
+  Head 3 → Local positional patterns
+  Head 4 → Semantic similarity
+  ... (specialization emerges automatically!)</div>
+
+<h3>8.5 Full Transformer Architecture</h3>
+
+<div class="diagram"><span class="diagram-label">⚡ Complete Transformer Block (Vaswani et al., 2017)</span>
+INPUT EMBEDDING + POSITIONAL ENCODING
+              ↓
+    ┌─────────────────────┐
+    │      ENCODER        │  ← Repeated N=6 times
+    │  ┌───────────────┐  │
+    │  │ Multi-Head    │  │
+    │  │ Self-Attention│  │
+    │  └───────┬───────┘  │
+    │    Add & LayerNorm  │  ← Residual: x + Attention(x)
+    │  ┌───────┴───────┐  │
+    │  │  Feed Forward │  │  ← FFN(x) = max(0, xW_1+b_1)W_2+b_2
+    │  └───────┬───────┘  │
+    │    Add & LayerNorm  │  ← Residual: x + FFN(x)
+    └─────────┬───────────┘
+              │ encoder output
+    ┌─────────▼───────────┐
+    │      DECODER        │  ← Repeated N=6 times
+    │  Masked Self-Attn   │  ← Can't attend to future tokens
+    │    Add & Norm       │
+    │  Cross-Attention    │  ← Attends to encoder output
+    │    Add & Norm       │
+    │  Feed Forward       │
+    │    Add & Norm       │
+    └─────────┬───────────┘
+       Linear + Softmax
+              ↓
+           OUTPUT</div>
+
+<div class="formula-box">Positional Encoding (inject position info into embeddings):
+  PE(pos, 2i)   = sin(pos / 10000^{2i/d_model})
+  PE(pos, 2i+1) = cos(pos / 10000^{2i/d_model})
+
+  pos = position (0,1,2,...), i = dimension index
+  Final input = Token Embedding + Positional Encoding
+
+Layer Normalization:
+  LayerNorm(x) = γ × (x − μ) / √(σ² + ε) + β
+  μ = mean, σ² = variance, γ,β = learned parameters
+
+Feed Forward Network:
+  FFN(x) = max(0, xW_1 + b_1)W_2 + b_2
+  Expand: d_model → d_ff (512 → 2048)
+  Compress: d_ff → d_model (2048 → 512)</div>
+
+<pre><span class="im">import torch</span>
+<span class="im">import torch.nn as</span> nn
+<span class="im">import math</span>
+
+<span class="kw">class</span> <span class="fn">MultiHeadAttention</span>(nn.Module):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, d_model, n_heads):
+        <span class="fn">super</span>().__init__()
+        self.d_k = d_model // n_heads
+        self.n_heads = n_heads
+        self.W_q = nn.<span class="fn">Linear</span>(d_model, d_model)
+        self.W_k = nn.<span class="fn">Linear</span>(d_model, d_model)
+        self.W_v = nn.<span class="fn">Linear</span>(d_model, d_model)
+        self.W_o = nn.<span class="fn">Linear</span>(d_model, d_model)
+
+    <span class="kw">def</span> <span class="fn">forward</span>(self, Q, K, V, mask=<span class="nu">None</span>):
+        B = Q.<span class="fn">size</span>(<span class="nu">0</span>)
+        Q = self.W_q(Q).<span class="fn">view</span>(B, -<span class="nu">1</span>, self.n_heads, self.d_k).<span class="fn">transpose</span>(<span class="nu">1</span>,<span class="nu">2</span>)
+        K = self.W_k(K).<span class="fn">view</span>(B, -<span class="nu">1</span>, self.n_heads, self.d_k).<span class="fn">transpose</span>(<span class="nu">1</span>,<span class="nu">2</span>)
+        V = self.W_v(V).<span class="fn">view</span>(B, -<span class="nu">1</span>, self.n_heads, self.d_k).<span class="fn">transpose</span>(<span class="nu">1</span>,<span class="nu">2</span>)
+
+        scores = torch.<span class="fn">matmul</span>(Q, K.<span class="fn">transpose</span>(-<span class="nu">2</span>,-<span class="nu">1</span>)) / math.<span class="fn">sqrt</span>(self.d_k)
+        <span class="kw">if</span> mask <span class="kw">is not</span> <span class="nu">None</span>:
+            scores = scores.<span class="fn">masked_fill</span>(mask == <span class="nu">0</span>, -<span class="nu">1e9</span>)
+        weights = torch.<span class="fn">softmax</span>(scores, dim=-<span class="nu">1</span>)
+        x = torch.<span class="fn">matmul</span>(weights, V)
+        x = x.<span class="fn">transpose</span>(<span class="nu">1</span>,<span class="nu">2</span>).<span class="fn">contiguous</span>().<span class="fn">view</span>(B, -<span class="nu">1</span>, self.n_heads * self.d_k)
+        <span class="kw">return</span> self.W_o(x)
+
+<span class="cm"># PyTorch built-in Transformer (production use)</span>
+model = nn.<span class="fn">Transformer</span>(
+    d_model=<span class="nu">512</span>, nhead=<span class="nu">8</span>,
+    num_encoder_layers=<span class="nu">6</span>, num_decoder_layers=<span class="nu">6</span>,
+    dim_feedforward=<span class="nu">2048</span>, dropout=<span class="nu">0.1</span>
+)
+<span class="fn">print</span>(<span class="st">f"Transformer parameters: {sum(p.numel() for p in model.parameters()):,}"</span>)</pre>
+
+<div class="hinglish">Attention ek magic trick hai — jaise exam mein tum poora chapter nahi padhte, sirf important parts dekhte ho. Machine bhi aise hi karta hai — har output word ke liye different input pe focus. Self-attention mein words ek dusre ko dekhte hain. Transformer ne RNN completely replace kiya 2017 mein kyunki ye parallel run hota hai — zyada fast, zyada accurate.</div>
+
+<div class="key-takeaway">Attention = dynamic weighted sum of context. Self-attention = words attend to each other in same sentence. Multi-head = multiple perspectives simultaneously. Transformer = stack of attention + FFN layers with residuals. The 2017 paradigm shift — parallelization + long-range dependencies = wins.</div>
+</section>
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- CHAPTER 9 -->
+<!-- ═══════════════════════════════════════════════ -->
+<section class="chapter" id="ch9">
+<div class="chapter-header">
+  <div class="chapter-num">Chapter 09</div>
+  <h2>🤗 Pre-trained Models — BERT, GPT & Beyond</h2>
+  <p>Transfer learning that democratized NLP — train once, fine-tune everywhere</p>
+</div>
+
+<h3>9.1 Transfer Learning — The Big Idea</h3>
+
+<div class="diagram"><span class="diagram-label">🔄 Transfer Learning Pipeline</span>PRE-TRAINING (done once, very expensive):
+  Dataset:    800M+ words (BookCorpus + Wikipedia)
+  Compute:    Weeks on hundreds of TPUs
+  Cost:       Millions of dollars
+  Result:     Model learns: grammar, facts, reasoning, world knowledge
+                                   ↓
+FINE-TUNING (done per task, affordable):
+  Dataset:    Few thousand labeled examples
+  Compute:    Hours on a few GPUs
+  Cost:       Affordable to everyone!
+  Result:     State-of-the-art on your specific task ✓
+
+Without Transfer Learning:  Need millions of labeled examples per task
+With Transfer Learning:     ~1000 examples can beat previous SOTA!</div>
+
+<h3>9.2 BERT — Bidirectional Encoder Representations</h3>
+
+<div class="card card-amber">
+  <strong style="color:var(--amber)">Key Insight:</strong> Read context from <strong>BOTH</strong> left and right simultaneously.
+  <div style="margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:var(--text2);">
+    Traditional LM:  I love NLP → (left to right only) ❌<br>
+    BERT:   I [MASK] NLP ← bidirectional → (both directions) ✅
+  </div>
+</div>
+
+<div class="diagram"><span class="diagram-label">📥 BERT Input Format</span>[CLS] sentence_A [SEP] sentence_B [SEP]
+
+Three embeddings added together:
+   Token:    [CLS]  The   cat   sat  [SEP]  It   was  [SEP]
+   Segment:   E_A   E_A   E_A   E_A   E_A  E_B  E_B   E_B
+   Position:   P0    P1    P2    P3    P4   P5   P6    P7
+                ↓     ↓     ↓     ↓     ↓    ↓    ↓     ↓
+             Token + Segment + Position = Final Input Embedding</div>
+
+<div class="diagram"><span class="diagram-label">🎭 BERT Pre-training Tasks</span>Task 1 — Masked Language Model (MLM):
+  Input:  "The cat [MASK] on the [MASK]"
+  Target: "The cat sat  on the mat"
+
+  15% of tokens are masked:
+    80% → replaced with [MASK]
+    10% → replaced with random word  (adds robustness)
+    10% → kept unchanged             (model must still be consistent)
+
+Task 2 — Next Sentence Prediction (NSP):
+  Input A: "He went to the store."
+  Input B: "He bought some milk."        → IsNext ✅
+
+  Input A: "He went to the store."
+  Input B: "Penguins live in Antarctica" → NotNext ❌</div>
+
+<div class="tbl-wrap">
+<table>
+<tr><th>Model</th><th>Layers</th><th>Hidden</th><th>Heads</th><th>Params</th></tr>
+<tr><td><span class="tag tag-amber">BERT-Base</span></td><td>12</td><td>768</td><td>12</td><td>110M</td></tr>
+<tr><td><span class="tag tag-coral">BERT-Large</span></td><td>24</td><td>1024</td><td>16</td><td>340M</td></tr>
+</table>
+</div>
+
+<h3>9.3 GPT — Generative Pre-trained Transformer</h3>
+
+<div class="diagram"><span class="diagram-label">🔥 GPT — Autoregressive Generation</span>Architecture: Decoder-only Transformer
+Direction:    Left → Right (ONLY past context)
+Training:     Predict next token from all previous tokens
+
+Pre-training Loss: L = Σ log P(w_t | w_1,...,w_{t-1})
+
+GPT Evolution:
+  GPT-1 (2018): 117M   → Fine-tuning shown to work
+  GPT-2 (2019): 1.5B   → Zero-shot capability; "too dangerous to release"
+  GPT-3 (2020): 175B   → Few-shot in-context learning
+  GPT-4 (2023): ~1T    → Multimodal, strong reasoning
+
+In-Context Learning (GPT's superpower — NO gradient updates needed!):
+  "Good morning → Bonjour
+   Thank you → Merci
+   Goodbye → ???"  → model infers: "Au revoir"</div>
+
+<h3>9.4 BERT vs GPT — Side by Side</h3>
+
+<div class="cmp-grid">
+  <div class="cmp-card left">
+    <h5>📘 BERT</h5>
+    <ul>
+      <li>Encoder-only architecture</li>
+      <li>Bidirectional context</li>
+      <li>Pre-train: MLM + NSP</li>
+      <li>Best: Understanding tasks</li>
+      <li>Classification, NER, QA</li>
+      <li>Usually needs fine-tuning</li>
+    </ul>
+  </div>
+  <div class="cmp-card right">
+    <h5>🔥 GPT</h5>
+    <ul>
+      <li>Decoder-only architecture</li>
+      <li>Unidirectional (L→R only)</li>
+      <li>Pre-train: Causal LM</li>
+      <li>Best: Generation tasks</li>
+      <li>Text gen, Translation, Chatbot</li>
+      <li>Works zero/few-shot via prompts</li>
+    </ul>
+  </div>
+</div>
+
+<h3>9.5 Other Key Models</h3>
+
+<div class="tbl-wrap">
+<table>
+<tr><th>Model</th><th>By</th><th>Key Innovation</th><th>Best For</th></tr>
+<tr><td><span class="tag tag-teal">T5</span></td><td>Google</td><td>All tasks as text-to-text</td><td>Flexible multi-task</td></tr>
+<tr><td><span class="tag tag-green">RoBERTa</span></td><td>Facebook</td><td>Better BERT training (no NSP)</td><td>Better classification</td></tr>
+<tr><td><span class="tag tag-amber">DistilBERT</span></td><td>HuggingFace</td><td>60% faster, 97% BERT perf</td><td>Production/mobile</td></tr>
+<tr><td><span class="tag tag-coral">LLaMA 3</span></td><td>Meta</td><td>Open-source foundation LLM</td><td>Research, fine-tuning</td></tr>
+<tr><td><span class="tag tag-pink">Mistral</span></td><td>Mistral AI</td><td>Efficient 7B outperforms 13B</td><td>Efficient generation</td></tr>
+</table>
+</div>
+
+<pre><span class="im">from transformers import</span> pipeline, BertTokenizer, BertForSequenceClassification
+<span class="im">import torch</span>
+
+<span class="cm"># ── Inference Pipeline (easiest way) ──</span>
+sentiment = <span class="fn">pipeline</span>(<span class="st">"sentiment-analysis"</span>,
+                     model=<span class="st">"distilbert-base-uncased-finetuned-sst-2-english"</span>)
+<span class="fn">print</span>(sentiment(<span class="st">"I love NLP!"</span>))
+<span class="cm"># [{'label': 'POSITIVE', 'score': 0.9999}]</span>
+
+ner = <span class="fn">pipeline</span>(<span class="st">"ner"</span>, aggregation_strategy=<span class="st">"simple"</span>)
+<span class="fn">print</span>(ner(<span class="st">"Elon Musk founded SpaceX in 2002"</span>))
+
+qa = <span class="fn">pipeline</span>(<span class="st">"question-answering"</span>)
+<span class="fn">print</span>(qa(question=<span class="st">"What is NLP?"</span>,
+          context=<span class="st">"NLP is AI for understanding human language."</span>))
+
+zs = <span class="fn">pipeline</span>(<span class="st">"zero-shot-classification"</span>)
+<span class="fn">print</span>(zs(<span class="st">"I love playing cricket"</span>,
+          candidate_labels=[<span class="st">"sports"</span>, <span class="st">"politics"</span>, <span class="st">"technology"</span>]))
+
+<span class="cm"># ── Fine-tuning BERT ──</span>
+<span class="im">from transformers import</span> Trainer, TrainingArguments
+
+tokenizer = BertTokenizer.<span class="fn">from_pretrained</span>(<span class="st">'bert-base-uncased'</span>)
+model = BertForSequenceClassification.<span class="fn">from_pretrained</span>(
+    <span class="st">'bert-base-uncased'</span>, num_labels=<span class="nu">2</span>
+)
+
+training_args = <span class="fn">TrainingArguments</span>(
+    output_dir=<span class="st">'./results'</span>,
+    num_train_epochs=<span class="nu">3</span>,
+    per_device_train_batch_size=<span class="nu">16</span>,
+    warmup_steps=<span class="nu">500</span>,
+    weight_decay=<span class="nu">0.01</span>,
+    evaluation_strategy=<span class="st">"epoch"</span>
+)
+trainer = <span class="fn">Trainer</span>(
+    model=model, args=training_args,
+    train_dataset=train_dataset,
+    eval_dataset=eval_dataset
+)
+trainer.<span class="fn">train</span>()</pre>
+
+<div class="hinglish">Pre-trained models ne NLP democratize kar diya. Pehle millions of dollars chahiye the ek good model ke liye. Ab BERT ya GPT lo, apne chhote dataset pe fine-tune karo — bas! BERT samajhne ke liye (classification, NER), GPT generate karne ke liye (chatbots, text generation). T5 dono karta hai text-to-text format mein.</div>
+
+<div class="key-takeaway">Pre-training on massive data → fine-tune on small task-specific data = transfer learning. BERT = bidirectional encoder for understanding. GPT = autoregressive decoder for generation. DistilBERT for production. Use HuggingFace pipelines to get started in minutes.</div>
+</section>
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- CHAPTER 10 -->
+<!-- ═══════════════════════════════════════════════ -->
+<section class="chapter" id="ch10">
+<div class="chapter-header">
+  <div class="chapter-num">Chapter 10</div>
+  <h2>🎯 Core NLP Tasks</h2>
+  <p>All the major tasks NLP systems solve — with examples and models</p>
+</div>
+
+<div class="tbl-wrap">
+<table>
+<tr><th>Task</th><th>Input → Output</th><th>Example</th><th>Best Model</th></tr>
+<tr>
+  <td><span class="tag tag-amber">Text Classification</span></td>
+  <td>Text → Label</td>
+  <td>"Great product!" → Positive</td>
+  <td>BERT, DistilBERT</td>
+</tr>
+<tr>
+  <td><span class="tag tag-teal">NER</span></td>
+  <td>Text → Entity spans</td>
+  <td>"Elon Musk" → PERSON</td>
+  <td>BERT, spaCy</td>
+</tr>
+<tr>
+  <td><span class="tag tag-green">Machine Translation</span></td>
+  <td>Text_A → Text_B</td>
+  <td>"Hello" → "Bonjour"</td>
+  <td>MarianMT, T5</td>
+</tr>
+<tr>
+  <td><span class="tag tag-coral">Summarization</span></td>
+  <td>Long text → Short text</td>
+  <td>Article → 3 sentences</td>
+  <td>BART, T5</td>
+</tr>
+<tr>
+  <td><span class="tag tag-pink">Question Answering</span></td>
+  <td>Q + Context → Answer span</td>
+  <td>"Capital of France?" → "Paris"</td>
+  <td>RoBERTa-SQuAD</td>
+</tr>
+<tr>
+  <td><span class="tag tag-amber">Sentiment Analysis</span></td>
+  <td>Text → Sentiment</td>
+  <td>"Terrible!" → Negative</td>
+  <td>BERT, VADER</td>
+</tr>
+<tr>
+  <td><span class="tag tag-teal">NLI</span></td>
+  <td>Premise + Hypothesis → Relation</td>
+  <td>Entailment / Contradiction / Neutral</td>
+  <td>DeBERTa</td>
+</tr>
+<tr>
+  <td><span class="tag tag-green">Coreference</span></td>
+  <td>Text → Entity clusters</td>
+  <td>"She" → "Alice"</td>
+  <td>SpanBERT</td>
+</tr>
+</table>
+</div>
+
+<h3>10.1 Named Entity Recognition (NER)</h3>
+
+<div class="diagram"><span class="diagram-label">🏷️ IOB Tagging Scheme for NER</span>"Sundar Pichai   CEO of Google   announced AI on March 15"
+  B-PER   I-PER    O    O  B-ORG      O       O  O  B-DATE I-DATE
+
+B = Beginning of entity
+I = Inside entity
+O = Outside (not an entity)
+
+Entity Types:
+  PER    → Person (Sundar Pichai, Marie Curie)
+  ORG    → Organization (Google, UN, Tesla)
+  LOC    → Location (Amazon River, Mount Everest)
+  GPE    → Geo-political (France, New York, India)
+  DATE   → Date/time (March 15, yesterday, 2024)
+  MONEY  → Monetary ($500, twenty dollars)
+  PRODUCT → Products (iPhone, Tesla Model S)</div>
+
+<pre><span class="im">import spacy</span>
+nlp = spacy.<span class="fn">load</span>(<span class="st">"en_core_web_sm"</span>)
+
+doc = <span class="fn">nlp</span>(<span class="st">"Elon Musk founded SpaceX in California in 2002."</span>)
+<span class="kw">for</span> ent <span class="kw">in</span> doc.ents:
+    <span class="fn">print</span>(<span class="st">f"{ent.text:20} → {ent.label_:8} ({spacy.explain(ent.label_)})"</span>)
+<span class="cm"># Elon Musk            → PERSON   (People)</span>
+<span class="cm"># SpaceX               → ORG      (Companies)</span>
+<span class="cm"># California           → GPE      (Countries, cities)</span>
+<span class="cm"># 2002                 → DATE     (Dates or periods)</span></pre>
+
+<h3>10.2 Text Summarization</h3>
+
+<div class="cmp-grid">
+  <div class="cmp-card left">
+    <h5>Extractive</h5>
+    <ul>
+      <li>Select sentences from original</li>
+      <li>No new words generated</li>
+      <li>Algorithm: TextRank</li>
+      <li>Fast, factually accurate</li>
+    </ul>
+  </div>
+  <div class="cmp-card right">
+    <h5>Abstractive</h5>
+    <ul>
+      <li>Generate new sentences</li>
+      <li>Can use new words</li>
+      <li>Model: BART, T5</li>
+      <li>More fluent, may hallucinate</li>
+    </ul>
+  </div>
+</div>
+
+<pre><span class="im">from transformers import</span> pipeline
+<span class="im">from transformers import</span> MarianMTModel, MarianTokenizer
+
+<span class="cm"># Summarization</span>
+summarizer = <span class="fn">pipeline</span>(<span class="st">"summarization"</span>, model=<span class="st">"facebook/bart-large-cnn"</span>)
+result = summarizer(<span class="st">"Long article text here..."</span>,
+                    max_length=<span class="nu">130</span>, min_length=<span class="nu">30</span>)
+<span class="fn">print</span>(result[<span class="nu">0</span>][<span class="st">'summary_text'</span>])
+
+<span class="cm"># Machine Translation (English → French)</span>
+model_name = <span class="st">"Helsinki-NLP/opus-mt-en-fr"</span>
+tok = MarianTokenizer.<span class="fn">from_pretrained</span>(model_name)
+model = MarianMTModel.<span class="fn">from_pretrained</span>(model_name)
+
+texts = [<span class="st">"I love NLP."</span>, <span class="st">"Hello, how are you?"</span>]
+inputs = <span class="fn">tok</span>(texts, return_tensors=<span class="st">"pt"</span>, padding=<span class="nu">True</span>)
+translated = model.<span class="fn">generate</span>(**inputs)
+<span class="fn">print</span>(tok.<span class="fn">batch_decode</span>(translated, skip_special_tokens=<span class="nu">True</span>))</pre>
+
+<div class="hinglish">NLP tasks ki duniya badi hai — classification, NER, translation, summarization, QA sab alag kaam hain. Lekin sab ka base same hai — pre-trained model (BERT ya GPT) ko task ke according fine-tune karo. HuggingFace pipelines se ek line mein koi bhi task kar sakte ho!</div>
+
+<div class="key-takeaway">All NLP tasks share the same foundation — pre-trained transformer fine-tuned on task-specific data. BERT family for understanding (classification, NER, QA). GPT/BART/T5 for generation (translation, summarization). Use HuggingFace pipelines for instant state-of-the-art.</div>
+</section>
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- CHAPTER 11 -->
+<!-- ═══════════════════════════════════════════════ -->
+<section class="chapter" id="ch11">
+<div class="chapter-header">
+  <div class="chapter-num">Chapter 11</div>
+  <h2>📊 Evaluation Metrics</h2>
+  <p>How do we know if an NLP model is actually good? The complete guide to metrics</p>
+</div>
+
+<h3>11.1 Classification Metrics</h3>
+
+<div class="diagram"><span class="diagram-label">📦 Confusion Matrix Explained</span>
+                    PREDICTED
+                   Pos      Neg
+    ACTUAL  Pos  [ TP    |   FN  ]   ← FN = missed positives (Type II)
+            Neg  [ FP    |   TN  ]   ← FP = false alarms (Type I)
+
+TP = True Positive   (model said YES, actually YES ✓)
+TN = True Negative   (model said NO, actually NO ✓)
+FP = False Positive  (model said YES, actually NO ✗) ← Type I Error
+FN = False Negative  (model said NO, actually YES ✗) ← Type II Error</div>
+
+<div class="formula-box">Accuracy  = (TP + TN) / (TP + TN + FP + FN)
+           "Overall correctness" — misleading on imbalanced data!
+
+Precision = TP / (TP + FP)
+           "Of all things I called positive, how many were?"
+           Use when: false positives are costly (spam filter)
+
+Recall    = TP / (TP + FN)
+           "Of all actual positives, how many did I find?"
+           Use when: false negatives are costly (cancer detection)
+
+F1 Score  = 2 × (Precision × Recall) / (Precision + Recall)
+           Harmonic mean — balanced metric for imbalanced data
+
+F_β Score = (1 + β²) × P × R / (β²P + R)
+           β > 1: Recall matters more
+           β < 1: Precision matters more</div>
+
+<div class="diagram"><span class="diagram-label">🔢 Worked Example — Spam Detection</span>100 emails: 40 spam, 60 ham
+Model predicts: TP=30, FP=5, FN=10, TN=55
+
+Accuracy  = (30+55)/100    = 85%
+Precision = 30/(30+5)      = 85.7%   ← of predicted spam, how many correct
+Recall    = 30/(30+10)     = 75.0%   ← of actual spam, how many caught
+F1        = 2×0.857×0.75/(0.857+0.75) = 80.0%</div>
+
+<pre><span class="im">from sklearn.metrics import</span> classification_report, confusion_matrix
+<span class="im">import seaborn as</span> sns
+<span class="im">import matplotlib.pyplot as</span> plt
+
+y_true = [<span class="nu">0</span>,<span class="nu">1</span>,<span class="nu">1</span>,<span class="nu">0</span>,<span class="nu">1</span>,<span class="nu">0</span>,<span class="nu">1</span>,<span class="nu">0</span>,<span class="nu">0</span>,<span class="nu">1</span>]
+y_pred = [<span class="nu">0</span>,<span class="nu">1</span>,<span class="nu">0</span>,<span class="nu">0</span>,<span class="nu">1</span>,<span class="nu">1</span>,<span class="nu">1</span>,<span class="nu">0</span>,<span class="nu">0</span>,<span class="nu">1</span>]
+
+<span class="fn">print</span>(<span class="fn">classification_report</span>(y_true, y_pred,
+      target_names=[<span class="st">'Negative'</span>, <span class="st">'Positive'</span>]))
+
+cm = <span class="fn">confusion_matrix</span>(y_true, y_pred)
+sns.<span class="fn">heatmap</span>(cm, annot=<span class="nu">True</span>, fmt=<span class="st">'d'</span>,
+           xticklabels=[<span class="st">'Pred Neg'</span>,<span class="st">'Pred Pos'</span>],
+           yticklabels=[<span class="st">'True Neg'</span>,<span class="st">'True Pos'</span>])
+plt.<span class="fn">title</span>(<span class="st">'Confusion Matrix'</span>)
+plt.<span class="fn">show</span>()</pre>
+
+<h3>11.2 BLEU Score (Translation)</h3>
+
+<div class="formula-box">BLEU = BP × exp(Σ_{n=1}^{N} w_n × log p_n)
+
+Brevity Penalty:
+  BP = 1             if c > r  (candidate longer than reference)
+  BP = exp(1 − r/c)  if c ≤ r  (penalize too-short outputs)
+
+Modified n-gram Precision:
+  p_n = Σ Count_clip(ngram) / Σ Count(ngram in candidate)
+  Count_clip = min(count in candidate, max count in any reference)
+
+Typical: BLEU-4 with w_1=w_2=w_3=w_4=0.25</div>
+
+<div class="diagram"><span class="diagram-label">💡 BLEU Worked Example</span>Reference:  "The cat is on the mat"
+Candidate:  "The cat sat on the mat"
+
+Unigrams matching: The✓ cat✓ sat✗ on✓ the✓ mat✓ → p_1 = 5/6 = 0.833
+Bigrams matching: "The cat"✓ "on the"✓ "the mat"✓ → p_2 = 3/5 = 0.600
+c = r = 6 → BP = 1
+
+BLEU-2 = 1 × exp(0.5×log(0.833) + 0.5×log(0.6)) ≈ 0.707
+
+Interpretation:
+  < 10:  Unusable    30-40: Good quality
+  10-20: Rough       40-50: Very high quality
+  20-30: Usable      > 50:  Near human level</div>
+
+<h3>11.3 ROUGE Score (Summarization)</h3>
+
+<div class="formula-box">ROUGE-N = Matching N-grams / Total N-grams in reference  (Recall-focused)
+
+ROUGE-1: Unigram overlap  (word-level recall)
+ROUGE-2: Bigram overlap   (phrase-level recall)
+ROUGE-L: Longest Common Subsequence / len(reference)
+
+F1 version: ROUGE-N F1 = 2 × Precision × Recall / (P + R)</div>
+
+<h3>11.4 Perplexity (Language Models)</h3>
+
+<div class="formula-box">PP(W) = P(w_1,...,w_N)^{-1/N} = exp(cross-entropy loss)
+
+Intuition: "How surprised is the model by the test data?"
+Lower PP = Better Language Model
+
+PP = 1:    Perfect (knows exactly what comes next)
+PP = K:    Equivalent to randomly guessing among K words
+PP → |V|:  Worst case (uniform random over entire vocabulary)
+
+Good English LM: PP ≈ 60–100
+GPT-3 on Penn Treebank: PP ≈ 20  (excellent!)</div>
+
+<pre><span class="im">import torch, math</span>
+<span class="im">from transformers import</span> GPT2LMHeadModel, GPT2Tokenizer
+
+model = GPT2LMHeadModel.<span class="fn">from_pretrained</span>(<span class="st">'gpt2'</span>)
+tokenizer = GPT2Tokenizer.<span class="fn">from_pretrained</span>(<span class="st">'gpt2'</span>)
+model.<span class="fn">eval</span>()
+
+<span class="kw">def</span> <span class="fn">perplexity</span>(text):
+    inputs = <span class="fn">tokenizer</span>(text, return_tensors=<span class="st">'pt'</span>)
+    <span class="kw">with</span> torch.<span class="fn">no_grad</span>():
+        loss = <span class="fn">model</span>(**inputs, labels=inputs[<span class="st">'input_ids'</span>]).loss
+    <span class="kw">return</span> math.<span class="fn">exp</span>(loss.<span class="fn">item</span>())
+
+<span class="fn">print</span>(<span class="fn">perplexity</span>(<span class="st">"I love natural language processing"</span>))  <span class="cm"># Low ~50</span>
+<span class="fn">print</span>(<span class="fn">perplexity</span>(<span class="st">"xkz qrm wlp tbn fgh"</span>))              <span class="cm"># High ~10000</span></pre>
+
+<div class="hinglish">Metrics matlab model ki report card. Accuracy akela misleading hai — 95% spam filter jo sabko ham bole uski accuracy 95% hogi but useless hai! Isliye F1 use karo. BLEU translation ke liye, ROUGE summarization ke liye. Perplexity language model ke liye — low confusion = better.</div>
+
+<div class="key-takeaway">Never rely on accuracy alone for NLP. F1 for classification (especially imbalanced). BLEU for translation quality (compare n-gram overlap). ROUGE for summarization (recall-oriented). Perplexity for language models (lower = better).</div>
+</section>
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- CHAPTER 12 -->
+<!-- ═══════════════════════════════════════════════ -->
+<section class="chapter" id="ch12">
+<div class="chapter-header">
+  <div class="chapter-num">Chapter 12</div>
+  <h2>🚀 Advanced Topics</h2>
+  <p>RAG, Fine-tuning, LoRA, RLHF, Prompt Engineering — modern NLP power tools</p>
+</div>
+
+<h3>12.1 RAG — Retrieval Augmented Generation</h3>
+
+<div class="card card-red">
+  <strong style="color:var(--red)">Problems with vanilla LLMs:</strong><br>
+  <span style="color:var(--text2);font-size:0.9rem;">
+    ✗ Knowledge frozen at training cutoff<br>
+    ✗ Can hallucinate (confidently make up facts)<br>
+    ✗ Cannot access your private/proprietary documents
+  </span>
+</div>
+
+<div class="diagram"><span class="diagram-label">🔍 RAG Pipeline — Solving LLM's Knowledge Problem</span>
+User Query: "What is our company's refund policy?"
+       ↓
+[QUERY ENCODER]
+Convert query → dense embedding vector
+       ↓
+[VECTOR DATABASE]  ←── Pre-indexed documents (FAISS, Pinecone, Chroma)
+Find top-k most similar document chunks (cosine similarity)
+       ↓
+[AUGMENT PROMPT]
+"Context: [retrieved doc chunks]
+ Question: [user query]
+ Answer the question based only on the context above:"
+       ↓
+[LLM GENERATOR]  (GPT-4, LLaMA, Mistral...)
+Generate answer grounded in retrieved context
+       ↓
+Final Answer — Factual, Grounded, Up-to-date! ✓</div>
+
+<pre><span class="im">from langchain.vectorstores import</span> FAISS
+<span class="im">from langchain.embeddings import</span> HuggingFaceEmbeddings
+<span class="im">from langchain.chains import</span> RetrievalQA
+
+<span class="cm"># Step 1: Embed and index your documents</span>
+embeddings = <span class="fn">HuggingFaceEmbeddings</span>(
+    model_name=<span class="st">"sentence-transformers/all-MiniLM-L6-v2"</span>
+)
+docs = [<span class="st">"BERT is bidirectional"</span>, <span class="st">"GPT uses decoder only"</span>, <span class="st">"NLP is AI for text"</span>]
+vectorstore = FAISS.<span class="fn">from_texts</span>(docs, embeddings)
+
+<span class="cm"># Step 2: Create retriever (find top 3 similar docs)</span>
+retriever = vectorstore.<span class="fn">as_retriever</span>(search_kwargs={<span class="st">"k"</span>: <span class="nu">3</span>})
+
+<span class="cm"># Step 3: RAG Chain</span>
+qa_chain = RetrievalQA.<span class="fn">from_chain_type</span>(llm=llm, retriever=retriever)
+<span class="fn">print</span>(qa_chain.<span class="fn">run</span>(<span class="st">"What is BERT?"</span>))  <span class="cm"># Grounded in your docs!</span></pre>
+
+<h3>12.2 Prompt Engineering</h3>
+
+<div class="tbl-wrap">
+<table>
+<tr><th>Technique</th><th>How</th><th>When to Use</th></tr>
+<tr>
+  <td><span class="tag tag-amber">Zero-shot</span></td>
+  <td>Direct instruction, no examples</td>
+  <td>Simple, clear tasks</td>
+</tr>
+<tr>
+  <td><span class="tag tag-teal">Few-shot</span></td>
+  <td>Provide 2–5 input/output examples</td>
+  <td>Format matters, task is nuanced</td>
+</tr>
+<tr>
+  <td><span class="tag tag-coral">Chain-of-Thought</span></td>
+  <td>"Let's think step by step..."</td>
+  <td>Math, logic, complex reasoning</td>
+</tr>
+<tr>
+  <td><span class="tag tag-green">Role Prompting</span></td>
+  <td>"You are an expert NLP researcher..."</td>
+  <td>Specialized knowledge needed</td>
+</tr>
+<tr>
+  <td><span class="tag tag-pink">Self-Consistency</span></td>
+  <td>Generate N answers → majority vote</td>
+  <td>High-stakes reasoning tasks</td>
+</tr>
+</table>
+</div>
+
+<div class="diagram"><span class="diagram-label">💡 Chain-of-Thought vs Direct Answer</span>Direct:
+  Q: "If a shirt costs $15 and you buy 3, how much change from $50?"
+  A: "$5"   ← just guesses
+
+Chain-of-Thought:
+  Q: "... Let's think step by step."
+  A: "3 shirts × $15 = $45. Change = $50 − $45 = $5."  ← correct! ✓
+
+CoT dramatically improves complex reasoning accuracy on LLMs!</div>
+
+<h3>12.3 LoRA — Parameter Efficient Fine-Tuning</h3>
+
+<div class="card card-orange">
+  <strong style="color:var(--orange)">Problem:</strong> Full fine-tuning BERT-Large = updating all 340M parameters. Expensive!<br>
+  <strong style="color:var(--green)">LoRA Solution:</strong> Learn a tiny low-rank update instead.
+</div>
+
+<div class="formula-box">Original weight matrix W ∈ R^{d×d}  (e.g., d=1024 → 1,048,576 params!)
+
+LoRA decomposes update as:
+  ΔW = B × A
+  A ∈ R^{r×d}  and  B ∈ R^{d×r}   (r = rank, e.g., r=8)
+  Total new params: 2 × r × d = 2 × 8 × 1024 = 16,384  ← 64× smaller!
+
+Forward pass (no architecture change!):
+  h = W_0 x + ΔW x = W_0 x + B A x
+
+Initialization: B=0, A~N(0,σ²) → ΔW=0 at start (safe!)
+
+Rank r trade-off:
+  r=1:   Minimal params, less expressive
+  r=8:   Good balance (most commonly used)
+  r=64:  More expressive, more params</div>
+
+<pre><span class="im">from peft import</span> LoraConfig, get_peft_model, TaskType
+<span class="im">from transformers import</span> AutoModelForSequenceClassification
+
+base_model = AutoModelForSequenceClassification.<span class="fn">from_pretrained</span>(
+    <span class="st">"bert-base-uncased"</span>, num_labels=<span class="nu">2</span>
+)
+
+lora_config = <span class="fn">LoraConfig</span>(
+    r=<span class="nu">8</span>,               <span class="cm"># Rank</span>
+    lora_alpha=<span class="nu">16</span>,    <span class="cm"># Scaling factor</span>
+    target_modules=[<span class="st">"query"</span>, <span class="st">"value"</span>],  <span class="cm"># Apply to attention layers</span>
+    lora_dropout=<span class="nu">0.1</span>,
+    task_type=TaskType.SEQ_CLS
+)
+model = <span class="fn">get_peft_model</span>(base_model, lora_config)
+model.<span class="fn">print_trainable_parameters</span>()
+<span class="cm"># trainable params: 294,912 || all params: 109,776,132 || trainable: 0.27%</span>
+<span class="cm"># Train 0.27% of params → competitive with full fine-tuning!</span></pre>
+
+<h3>12.4 RLHF — Reinforcement Learning from Human Feedback</h3>
+
+<div class="diagram"><span class="diagram-label">🤖 RLHF Pipeline — How ChatGPT was Aligned</span>Phase 1 — Supervised Fine-Tuning (SFT):
+  Base LLM → Fine-tune on human demonstrations
+                    ↓ SFT Model
+
+Phase 2 — Reward Model Training:
+  Humans rank outputs: response A > B > C
+  Train reward model: R(prompt, response) → quality score
+
+Phase 3 — PPO Optimization:
+  Optimize LLM to maximize reward while staying close to SFT
+
+Objective:
+  Maximize: E[R(x,y)] − β × KL(π_RL || π_SFT)
+  KL penalty prevents model drifting too far from original ✓
+
+Result: Model that is Helpful + Harmless + Honest (HHH)</div>
+
+<div class="hinglish">Advanced topics modern NLP ka power hai. RAG LLM ko fresh/private knowledge deta hai bina retrain kiye. Prompt engineering sikhata hai model se kaise best results lo. LoRA fine-tuning ka superpower hai — sirf 0.27% parameters train karo, 95%+ performance lo. RLHF ne ChatGPT ko helpful aur safe banaya.</div>
+
+<div class="key-takeaway">RAG = give LLMs access to your data without retraining. Prompt Engineering = free performance boost from better inputs. LoRA = fine-tune any LLM for your task with minimal compute. RLHF = align models to be helpful, harmless, and honest.</div>
+</section>
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- CHAPTER 13 -->
+<!-- ═══════════════════════════════════════════════ -->
+<section class="chapter" id="ch13">
+<div class="chapter-header">
+  <div class="chapter-num">Chapter 13</div>
+  <h2>🔢 Mathematical Foundations</h2>
+  <p>The essential math behind every NLP algorithm — explained intuitively</p>
+</div>
+
+<h3>13.1 Linear Algebra Essentials</h3>
+
+<div class="formula-box">Dot Product:
+  a · b = Σ a_i × b_i   (scalar result)
+  Meaning: How aligned are two vectors?
+
+Vector Magnitude:
+  ||a|| = √(Σ a_i²)
+
+Cosine Similarity (most used in NLP):
+  cos(a, b) = (a · b) / (||a|| × ||b||)
+  Range: −1 to +1
+  +1 = identical direction   0 = orthogonal   −1 = opposite
+  Used for: word similarity, document search, semantic comparison
+
+Matrix Multiplication:
+  A(m×n) × B(n×p) = C(m×p)
+  Transformer: Q·K^T → [seq_len × d_k] × [d_k × seq_len] = [seq_len × seq_len]</div>
+
+<h3>13.2 Probability & Information Theory</h3>
+
+<div class="formula-box">Bayes' Theorem (foundation of Naive Bayes):
+  P(A|B) = P(B|A) × P(A) / P(B)
+
+Chain Rule of Probability (foundation of language models):
+  P(w_1,...,w_n) = ∏ P(w_i | w_1,...,w_{i-1})
+
+Entropy (information content / uncertainty):
+  H(X) = −Σ P(x) log P(x)
+  High entropy = high uncertainty = hard to predict
+
+Cross-Entropy Loss (the training loss for classification):
+  H(p, q) = −Σ p(x) log q(x)
+  p = true labels, q = model predictions
+  Minimizing this IS the training objective!
+
+KL Divergence (how different are two distributions?):
+  D_KL(p || q) = Σ p(x) log(p(x) / q(x))
+  D_KL ≥ 0 always,  D_KL = 0 iff p = q,  NOT symmetric
+  Used in: RLHF penalty, VAEs, knowledge distillation</div>
+
+<h3>13.3 Key Activation Functions</h3>
+
+<div class="formula-box">Sigmoid:   σ(x) = 1/(1+e^{-x})      Range: (0,1)
+           σ'(x) = σ(x)(1 − σ(x))
+           Used in: LSTM/GRU gates, binary classification
+
+Tanh:      tanh(x) = (e^x − e^{-x})/(e^x + e^{-x})   Range: (−1,1)
+           tanh'(x) = 1 − tanh²(x)
+           Used in: LSTM cell output, RNN hidden states
+
+ReLU:      ReLU(x) = max(0, x)
+           ReLU'(x) = 1 if x > 0 else 0
+           Used in: FFN layers in Transformer
+
+Softmax:   softmax(z_i) = e^{z_i} / Σ_j e^{z_j}
+           Output: probability distribution (sums to 1)
+           Used in: Output layer (classification), Attention weights</div>
+
+<h3>13.4 Optimization</h3>
+
+<div class="formula-box">Gradient Descent:
+  θ = θ − α × ∇_θ L(θ)
+  α = learning rate,  L = loss,  ∇ = gradient
+
+Adam Optimizer (most used in NLP):
+  m_t = β_1 m_{t-1} + (1−β_1) g_t         (1st moment: mean of gradients)
+  v_t = β_2 v_{t-1} + (1−β_2) g_t²        (2nd moment: variance of gradients)
+  m̂_t = m_t / (1−β_1^t)                   (bias correction)
+  v̂_t = v_t / (1−β_2^t)
+  θ = θ − α × m̂_t / (√v̂_t + ε)
+
+Typical: α=0.001, β_1=0.9, β_2=0.999, ε=1e-8
+
+Why Adam?  Adapts learning rate per parameter.
+           Works well out of the box for NLP.
+           Handles sparse gradients (common in NLP).</div>
+
+<h3>13.5 Complete Formula Quick Reference</h3>
+
+<div class="diagram"><span class="diagram-label">📋 All Key NLP Formulas at a Glance</span>━━━ LANGUAGE MODELS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+N-gram:     P(w_n|w_{n-1}) = C(w_{n-1},w_n) / C(w_{n-1})
+Laplace:    P(w|c) = (C(w,c)+1) / (C(c)+|V|)
+Perplexity: PP = exp(−1/N × Σ log P(w_i|context))
+
+━━━ TEXT REPRESENTATION ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TF-IDF:     TF(t,d) × log(N/df(t))
+Cosine Sim: (a·b) / (||a|| × ||b||)
+
+━━━ DEEP LEARNING ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+RNN:        h_t = tanh(W_hh·h_{t-1} + W_xh·x_t + b)
+LSTM Cell:  C_t = f_t⊙C_{t-1} + i_t⊙C̃_t
+Attention:  softmax(QK^T/√d_k) · V
+
+━━━ TRANSFORMERS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PE(pos,2i) = sin(pos / 10000^{2i/d})
+LayerNorm:  γ×(x−μ)/√(σ²+ε) + β
+
+━━━ EVALUATION ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+F1:         2×P×R/(P+R)
+BLEU:       BP × exp(Σ w_n log p_n)
+ROUGE-N:    |match_n| / |reference_n|
+
+━━━ PROBABILITY ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Bayes:      P(A|B) = P(B|A)P(A)/P(B)
+Entropy:    H = −Σ P(x) log P(x)
+X-Entropy:  H(p,q) = −Σ p(x) log q(x)
+KL-Div:     D_KL = Σ p log(p/q)</div>
+
+<div class="hinglish">Math se daro mat! Ye formulas NLP ke engine hain. Softmax probabilities deta hai, cross-entropy batata hai model kitna galat hai, cosine similarity words ki closeness napti hai. Adam optimizer training ko fast aur stable banata hai. Ek baar basics clear ho gaye toh koi bhi research paper samajh sakte ho.</div>
+
+<div class="key-takeaway">Core math: Linear algebra (dot products, matrix multiply) + Probability (Bayes, chain rule, entropy) + Calculus (gradients, backprop) + Optimization (Adam). You don't need a PhD — understand the intuition and the formulas will make sense.</div>
+</section>
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- CHAPTER 14 -->
+<!-- ═══════════════════════════════════════════════ -->
+<section class="chapter" id="ch14">
+<div class="chapter-header">
+  <div class="chapter-num">Chapter 14</div>
+  <h2>🎓 GATE Revision & Interview Q&A</h2>
+  <p>Everything you need for exams — algorithms, numericals, and top interview answers</p>
+</div>
+
+<h3>14.1 Viterbi Algorithm (HMM POS Tagging) — GATE Favorite</h3>
+
+<div class="diagram"><span class="diagram-label">🔁 HMM Setup for POS Tagging</span>Hidden States:   POS tags (NN, VB, JJ, RB, DT...)
+Observations:     Words in sentence
+
+Parameters:
+  Transition Prob: A[t1][t2] = P(tag_2 | tag_1)
+                  "Probability of VB following NN"
+
+  Emission Prob:   B[t][w] = P(word | tag)
+                  "Probability of 'dog' being tagged NN"
+
+  Initial Prob:    π[t] = P(first tag = t)
+
+Joint Probability:
+  P(words, tags) = π[t_1] × B[t_1][w_1] × ∏ A[t_{i-1}][t_i] × B[t_i][w_i]</div>
+
+<div class="formula-box">Viterbi Dynamic Programming Algorithm:
+
+Initialization (position 1):
+  viterbi[t][1] = π[t] × B[t][w_1]
+  backpointer[t][1] = 0
+
+Recursion (positions 2 to n):
+  viterbi[t][i] = max_{t'} ( viterbi[t'][i-1] × A[t'][t] ) × B[t][w_i]
+  backpointer[t][i] = argmax_{t'} ( viterbi[t'][i-1] × A[t'][t] )
+
+Termination:
+  best_final_tag = argmax_t viterbi[t][n]
+  Traceback using backpointers to recover full tag sequence
+
+Time Complexity: O(n × T²)
+  n = sentence length,  T = number of POS tags</div>
+
+<h3>14.2 CYK Parsing Algorithm — GATE Important</h3>
+
+<div class="formula-box">Cocke-Younger-Kasami (CYK) Algorithm
+
+Requirement: CFG must be in Chomsky Normal Form (CNF)
+  CNF Rules: A → BC  OR  A → word  (only these two forms!)
+
+table[i][j] = set of non-terminals spanning words i to j
+
+Initialization:
+  table[i][i] = {A : A → words[i] is a grammar rule}
+
+Main Fill (bottom-up):
+  for length = 2 to n:
+    for i = 0 to n-length:
+      j = i + length - 1
+      for k = i to j-1:
+        for each rule A → B C:
+          if B ∈ table[i][k] AND C ∈ table[k+1][j]:
+            add A to table[i][j]
+
+Success: Sentence is parseable iff S ∈ table[0][n-1]
+Time Complexity: O(n³ × |G|)   |G| = number of grammar rules</div>
+
+<h3>14.3 GATE Numerical Problems</h3>
+
+<div class="card card-amber">
+<strong style="color:var(--amber)">Q1: Bigram probability with Laplace smoothing</strong><br>
+<span style="color:var(--text2);font-size:0.9rem;display:block;margin-top:10px;">
+Given: C("NLP is") = 10, C("NLP") = 100, |V| = 1000<br><br>
+<strong>Without smoothing:</strong> P("is" | "NLP") = 10/100 = 0.1<br><br>
+<strong>With Laplace:</strong><br>
+P("is" | "NLP") = (10 + 1) / (100 + 1000) = 11/1100 ≈ <span style="color:var(--green)">0.01</span>
+</span>
+</div>
+
+<div class="card card-teal">
+<strong style="color:var(--teal)">Q2: Calculate F1 given TP=50, FP=10, FN=20</strong><br>
+<span style="color:var(--text2);font-size:0.9rem;display:block;margin-top:10px;">
+Precision = 50/(50+10) = 50/60 = <strong>0.833</strong><br>
+Recall    = 50/(50+20) = 50/70 = <strong>0.714</strong><br>
+F1 = 2 × 0.833 × 0.714 / (0.833 + 0.714) = 1.189/1.547 = <span style="color:var(--green)">0.769</span>
+</span>
+</div>
+
+<div class="card card-orange">
+<strong style="color:var(--orange)">Q3: Perplexity from cross-entropy loss = 3.5 bits</strong><br>
+<span style="color:var(--text2);font-size:0.9rem;display:block;margin-top:10px;">
+Perplexity = 2^H = 2^3.5 = <span style="color:var(--green)">11.31</span><br>
+(If in nats: PP = e^3.5 = 33.1)
+</span>
+</div>
+
+<div class="card card-pink">
+<strong style="color:var(--pink)">Q4: TF-IDF for word "quantum" in D1</strong><br>
+<span style="color:var(--text2);font-size:0.9rem;display:block;margin-top:10px;">
+D1 has 200 words, "quantum" appears 4 times → TF = 4/200 = 0.02<br>
+Total docs N=10, "quantum" in 2 docs → IDF = log(10/2) = log(5) = 1.609<br>
+TF-IDF = 0.02 × 1.609 = <span style="color:var(--green)">0.032</span>
+</span>
+</div>
+
+<h3>14.4 Top Interview Questions & Answers</h3>
+
+<div class="card card-amber" style="margin-bottom:16px;">
+<strong style="color:var(--amber)">Q: Stemming vs Lemmatization — when to use which?</strong><br>
+<span style="color:var(--text2);font-size:0.92rem;display:block;margin-top:8px;">
+Stemming uses heuristic suffix removal — fast but may produce non-words ("studies"→"studi"). Lemmatization uses a dictionary to return actual base forms ("studies"→"study"). Use stemming for speed-critical tasks like search indexing. Use lemmatization when semantic meaning matters — classification, NLU, QA.
+</span>
+</div>
+
+<div class="card card-teal" style="margin-bottom:16px;">
+<strong style="color:var(--teal)">Q: Explain vanishing gradient and how LSTM solves it</strong><br>
+<span style="color:var(--text2);font-size:0.92rem;display:block;margin-top:8px;">
+In RNNs, gradients are multiplied through every time step during BPTT. If weight eigenvalues &lt; 1, gradients shrink exponentially — early layers learn nothing. LSTM introduces a cell state highway: C_{t-1} → C_t via additive path (not matrix multiply), allowing gradients to flow without decay. Gates give the model fine-grained memory control.
+</span>
+</div>
+
+<div class="card card-orange" style="margin-bottom:16px;">
+<strong style="color:var(--orange)">Q: Why does Transformer scale attention by √d_k?</strong><br>
+<span style="color:var(--text2);font-size:0.92rem;display:block;margin-top:8px;">
+Without scaling, dot products grow large in magnitude as d_k increases (variance of q·k = d_k). This pushes softmax into regions with near-zero gradients. Dividing by √d_k normalizes variance to 1, maintaining stable gradients throughout training.
+</span>
+</div>
+
+<div class="card card-pink" style="margin-bottom:16px;">
+<strong style="color:var(--pink)">Q: Difference between BERT and GPT?</strong><br>
+<span style="color:var(--text2);font-size:0.92rem;display:block;margin-top:8px;">
+BERT = Transformer encoder, bidirectional, trained with MLM+NSP. Best for understanding tasks (classification, NER, QA). GPT = Transformer decoder, unidirectional autoregressive, trained as causal LM. Best for generation (text gen, chatbots). BERT needs fine-tuning; GPT supports zero/few-shot via prompting.
+</span>
+</div>
+
+<div class="card card-green" style="margin-bottom:16px;">
+<strong style="color:var(--green)">Q: What is TF-IDF and why is IDF needed?</strong><br>
+<span style="color:var(--text2);font-size:0.92rem;display:block;margin-top:8px;">
+TF measures word frequency in a document — "the" gets high TF. IDF penalizes words that appear in many documents (low discriminative power). Without IDF, "the" would be most important word in every document. TF-IDF together gives high weight to words frequent in one document but rare across corpus — truly informative words.
+</span>
+</div>
+
+<div class="card card-amber" style="margin-bottom:16px;">
+<strong style="color:var(--amber)">Q: Explain attention mechanism intuitively</strong><br>
+<span style="color:var(--text2);font-size:0.92rem;display:block;margin-top:8px;">
+When translating "I love NLP" to French, generating "aime" (love) should pay high attention to "love" in input and low to other words. Attention computes a dynamic weighted combination: Q (what am I looking for?) × K (what is available?) gives weights; V (values) are weighted-summed. This gives the decoder dynamic access to relevant input at each step.
+</span>
+</div>
+
+<div class="card card-coral" style="margin-bottom:16px;">
+<strong style="color:var(--coral)">Q: What is RAG and why is it needed?</strong><br>
+<span style="color:var(--text2);font-size:0.92rem;display:block;margin-top:8px;">
+LLMs have frozen knowledge and can hallucinate. RAG (Retrieval Augmented Generation) retrieves relevant documents from a vector database at query time and injects them into the prompt. The LLM then generates answers grounded in retrieved facts — accurate, up-to-date, and verifiable without expensive retraining.
+</span>
+</div>
+
+<div class="card card-pink" style="margin-bottom:16px;">
+<strong style="color:var(--pink)">Q: What is LoRA and why is it useful?</strong><br>
+<span style="color:var(--text2);font-size:0.92rem;display:block;margin-top:8px;">
+Full fine-tuning updates all 340M+ parameters — expensive. LoRA learns two small low-rank matrices A and B such that ΔW = B·A approximates the weight update. For a 1024×1024 matrix, rank-8 LoRA needs only 2×8×1024 = 16,384 params vs 1M — 64× fewer. Results are competitive with full fine-tuning at fraction of compute.
+</span>
+</div>
+
+<h3>14.5 Quick Reference Datasets</h3>
+
+<div class="tbl-wrap">
+<table>
+<tr><th>Dataset</th><th>Task</th><th>Size</th><th>Get It</th></tr>
+<tr><td><span class="tag tag-amber">IMDB Reviews</span></td><td>Sentiment</td><td>50K</td><td>HuggingFace datasets</td></tr>
+<tr><td><span class="tag tag-teal">SQuAD 2.0</span></td><td>Question Answering</td><td>150K QA pairs</td><td>rajpurkar/squad_v2</td></tr>
+<tr><td><span class="tag tag-green">CoNLL-2003</span></td><td>NER</td><td>22K sentences</td><td>conll2003</td></tr>
+<tr><td><span class="tag tag-coral">SNLI</span></td><td>Textual Entailment</td><td>570K</td><td>snli</td></tr>
+<tr><td><span class="tag tag-pink">CNN/DailyMail</span></td><td>Summarization</td><td>300K</td><td>cnn_dailymail</td></tr>
+<tr><td><span class="tag tag-amber">AG News</span></td><td>Topic Classification</td><td>120K</td><td>ag_news</td></tr>
+<tr><td><span class="tag tag-teal">GLUE</span></td><td>Multi-task Benchmark</td><td>Various</td><td>glue</td></tr>
+</table>
+</div>
+
+<h3>14.6 Your NLP Learning Roadmap</h3>
+
+<div class="diagram"><span class="diagram-label">🗺️ Complete NLP Roadmap</span>🟢 BEGINNER (Month 1–2)
+  Python, NumPy, Pandas basics
+  NLTK: tokenization, stemming, POS tagging
+  BoW + TF-IDF → Naive Bayes + Logistic Regression
+  Project: Spam Detector / Movie Sentiment Classifier
+
+🟡 INTERMEDIATE (Month 3–5)
+  Word2Vec, GloVe, FastText embeddings
+  RNN → LSTM → GRU (PyTorch implementation)
+  Seq2Seq + Attention mechanism
+  HuggingFace basics: pipelines, tokenizers
+  Project: NER System, Simple Chatbot, Text Summarizer
+
+🔴 ADVANCED (Month 6–9)
+  Transformer architecture from scratch
+  BERT / GPT fine-tuning with HuggingFace Trainer
+  LoRA + PEFT for efficient fine-tuning
+  RAG systems with LangChain + FAISS
+  Model deployment: FastAPI + Docker
+  Project: End-to-End QA System, Document Chat Bot
+
+🚀 EXPERT (Month 10+)
+  LLM training from scratch
+  RLHF and alignment techniques
+  Multimodal NLP (text + images)
+  Research paper replication
+  Kaggle NLP competitions / Open-source contribution</div>
+
+<div class="hinglish">GATE ke liye: Viterbi aur CYK algorithm zaroor padhna — aksar numericals aate hain. F1, BLEU, Perplexity ke formulas yaad rakho. Interview ke liye: Stemming vs Lemmatization, BERT vs GPT, Vanishing Gradient, Attention — ye 8-10 questions almost har NLP interview mein aate hain. Strong foundation + real projects = success!</div>
+
+<div class="key-takeaway">For GATE: Master Viterbi (POS tagging), CYK (parsing), smoothing formulas, perplexity calculations. For interviews: Know BERT vs GPT differences, explain attention intuitively, understand LoRA and RAG at concept level. For jobs: Build real projects — a working RAG system or fine-tuned classifier beats 10 theoretical explanations.</div>
+
+</section>
+
+</div><!-- end wrapper -->
+
+<footer>
+  <p>🔥 <span>NLP Complete Notes — Midnight Ember Edition</span></p>
+  <p style="margin-top:8px;">14 Chapters · 18+ Diagrams · 30+ Code Blocks · GATE Ready · Interview Prep</p>
+  <p style="margin-top:12px;font-size:0.75rem;">Made with 🔥 for NLP learners everywhere</p>
+</footer>
+
+<script>
+// Progress bar
+window.addEventListener('scroll', () => {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = (scrollTop / docHeight) * 100;
+  document.getElementById('progress-bar').style.width = progress + '%';
+  
+  const btt = document.getElementById('btt');
+  btt.classList.toggle('visible', scrollTop > 400);
+});
+</script>
+</body>
+</html>
